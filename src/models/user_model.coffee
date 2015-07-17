@@ -8,7 +8,9 @@
 
 mongoose = require 'mongoose'
 
-schema = mongoose.Schema
+user = mongoose.Schema
   name: String
+  email: String
+  token: String
 
-module.exports = mongoose.model 'Schema', schema
+module.exports = mongoose.model 'user', user
