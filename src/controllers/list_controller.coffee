@@ -28,10 +28,10 @@ exports.new = (req, res) -> res.send "Not supported."
 exports.create = (req, res) ->
   list_params = req.body?.list
   if list_params and \
-    list_params.name? and \
-    list_params.desc? and \
-    list_params.contents? and \
-    list_params.tags?
+  list_params.name? and \
+  list_params.desc? and \
+  list_params.contents? and \
+  list_params.tags?
     list_params.user = req.user._id if req.user?._id
       list = new List list_params
       list.save (err) ->

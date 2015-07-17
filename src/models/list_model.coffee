@@ -11,6 +11,8 @@ mongoose = require 'mongoose'
 list = mongoose.Schema
   name: String
   desc: String
+  tags: Array
+  user: String
 
   contents: Array
 
