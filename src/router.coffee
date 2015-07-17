@@ -64,7 +64,7 @@ exports.websocket = (app) ->
               body: data
               type: 'ws'
               params:
-                list: data.list
+                list: data?.list
             ,
               send: (data) ->
                 # log the event response
