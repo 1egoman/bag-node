@@ -7,6 +7,7 @@
 ###
 
 list_ctrl = require "./controllers/list_controller"
+foodstuff_ctrl = require "./controllers/foodstuff_controller"
 user_ctrl = require "./controllers/user_controller"
 chalk = require "chalk"
 
@@ -32,6 +33,8 @@ exports.websocket = (app) ->
 
         # websocket events for each of the actions
         ["index", "show", "create", "update", "destroy"].forEach (method) ->
+          
+          # list methods
           socket.on "list:#{method}", (data) ->
 
             # log the request happening
@@ -51,8 +54,29 @@ exports.websocket = (app) ->
                   JSON.stringify data, null, 2
                 socket.emit "list:#{method}:callback", data
 
+          # foodstuff methods
+          socket.on "foodstuff:#{method}", (data) ->
+
+            # log the request happening
+            console.log chalk.green("--> ws"), "list:#{method}", data
+
+            foodstuff_ctrl[method]
+              body: data
+              type: 'ws'
+              params:
+                list: data.list
+            ,
+              send: (data) ->
+                # log the event response
+                console.log \
+                  chalk.green("<-- ws"), \
+                  "foodstuff:#{method}:callback", \
+                  JSON.stringify data, null, 2
+                socket.emit "foodstuff:#{method}:callback", data
+
 
   server
 
 exports.http = (app) ->
-  app.resource "lists", require("./controllers/list_controller")
+  app.resource "lists", list_ctrl
+  app.resource "foodstuffs", foodstuff_ctrl

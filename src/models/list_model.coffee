@@ -11,9 +11,8 @@ mongoose = require 'mongoose'
 list = mongoose.Schema
   name: String
   desc: String
-  price: String
-  store: String
 
   contents: Array
 
 module.exports = mongoose.model 'List', list
+

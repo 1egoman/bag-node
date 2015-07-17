@@ -1,0 +1,8 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+<script>
+  var socket = io('http://localhost:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
+  socket.emit('foodstuff:index', {list: "55a84255eb8799c52c643830"});
+  socket.on('foodstuff:index:callback', function(data) {
+    console.log(data);
+  });
+</script>

@@ -8,7 +8,10 @@
 
 mongoose = require 'mongoose'
 
-schema = mongoose.Schema
+foodstuff = mongoose.Schema
   name: String
+  desc: String
+  price: String
+  store: String
 
-module.exports = mongoose.model 'Schema', schema
+module.exports = mongoose.model 'foodstuff', foodstuff
