@@ -8,11 +8,22 @@
 
 list_ctrl = require "./controllers/list_controller"
 user_ctrl = require "./controllers/user_controller"
+chalk = require "chalk"
 
 exports.websocket = (app) ->
 
   server = require('http').createServer app
   io = require('socket.io') server
+
+  io.use (socket, next) ->
+    token = socket.request?._query?.token
+    user_ctrl.is_token_valid token, (valid) ->
+      if valid is true
+        next()
+      else
+        next new Error "not authorized"
+
+
 
   # iterate for each user
   user_ctrl.index {}, send: (users) ->
@@ -20,13 +31,24 @@ exports.websocket = (app) ->
       io.of(user._id).on "connection", (socket) ->
 
         # websocket events for each of the actions
-        for method in ["index", "show", "create", "update", "destroy"]
+        ["index", "show", "create", "update", "destroy"].forEach (method) ->
           socket.on "list:#{method}", (data) ->
+
+            # log the request happening
+            console.log chalk.green("--> ws"), "list:#{method}", data
+
             list_ctrl[method]
               body: data
               type: 'ws'
+              params:
+                list: data.list
             ,
               send: (data) ->
+                # log the event response
+                console.log \
+                  chalk.green("<-- ws"), \
+                  "list:#{method}:callback", \
+                  JSON.stringify data, null, 2
                 socket.emit "list:#{method}:callback", data
 
 

@@ -94,3 +94,13 @@ exports.destroy = (req, res) ->
     else
       res.send
         status: "bag.success.user.delete"
+
+# is the specified token valid?
+exports.is_token_valid = (token, cb) ->
+  User.findOne token: token, (err, data) ->
+    if data
+      cb true
+    else if err
+      cb err
+    else
+      cb false
