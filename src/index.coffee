@@ -25,10 +25,6 @@ exports.main = ->
   # include all the required middleware
   exports.middleware app
 
-  # some sample routes
-  app.get "/", (req, res) ->
-    res.send "'Allo, World!"
-
   router.http app
   server = router.websocket app
 
