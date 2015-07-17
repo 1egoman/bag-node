@@ -30,9 +30,9 @@ exports.create = (req, res) ->
   if list_params and \
     list_params.name? and \
     list_params.desc? and \
-    list_params.price? and \
-    list_params.store? and \
+    list_params.contents? and \
     list_params.tags?
+    list_params.user = req.user._id if req.user?._id
       list = new List list_params
       list.save (err) ->
         if err

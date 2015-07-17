@@ -33,6 +33,7 @@ exports.create = (req, res) ->
     foodstuff_params.price? and \
     foodstuff_params.store? and \
     foodstuff_params.tags?
+      foodstuff_params.user = req.user._id if req.user?._id
       foodstuff = new Foodstuff foodstuff_params
       foodstuff.save (err) ->
         if err
