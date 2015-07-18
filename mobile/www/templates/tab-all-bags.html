@@ -1,6 +1,13 @@
 <ion-view view-title="All Bags">
-  <ion-content class="padding">
 
+  <!-- nav bar -->
+  <ion-nav-buttons side="right">
+    <button ng-click="open_add_bag_modal()" class="button button-icon icon
+      ion-ios-plus-empty"></button>
+  </ion-nav-buttons>
+
+  <!-- content -->
+  <ion-content class="padding">
 
 
     <div class="list bag" ng-repeat="bag in bags">
@@ -15,21 +22,25 @@
       </div>
 
       <!-- all items within this bag -->
-      <li href="#" class="item item-checkbox" ng-repeat="item in bag.contents">
+      <li href="#" class="item item-checkbox" ng-repeat="item in get_all_content(bag)">
 
         <!-- Check off the item -->
         <label class="checkbox">
           <input type="checkbox" ng-model="item.checked" ng-change="check_item_on_bag(bag, item)">
         </label>
 
+        <!-- the title -->
         <span class="title" ng-class="{strike: item.checked}">
-
           <div class="line"></div>
 
           {{item.name}}
-          <span class="pull-right">{{item.price | currency}}</span>
+
+          <!-- rightmost icons -->
+          <i ng-show="item.contents" class="pull-right ion-ios-arrow-right"></i>
+          <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
         </span>
       </li>
+
 
     </div>
 

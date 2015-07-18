@@ -1,5 +1,5 @@
-
-socket = io('http://192.168.1.13:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
+// set up the socket.io conenction
+socket = io('http://192.168.1.14:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
 // # socket.emit 'foodstuff:index', list: "55a84255eb8799c52c643830"
 //
 // # get initial event info from backend
@@ -31,9 +31,11 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 // Bags Controller
 // This manages bags, which can contain recipes or foodstuffs
-.controller('BagsCtrl', function($scope, $timeout, socket) {
+.controller('BagsCtrl', function($scope, $ionicModal, socket) {
 
   // get all bags
+  // this fires once at the load of the controller, but also repeadedly when
+  // any function wants th reload the whole view.
   socket.emit('list:index')
   socket.on('list:index:callback', function(evt){
     console.log("list:index", evt)
@@ -57,6 +59,41 @@ angular.module('starter.controllers', ['btford.socket-io'])
     return total;
   };
 
+  ////
+  // Creating a bag
+  ////
+
+  // create the modal.
+  // This contains the form for creating a new bag.
+  $ionicModal.fromTemplateUrl('templates/modal-add-bag.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  $scope.open_add_bag_modal = function() {
+    $scope.modal.show();
+  };
+  $scope.close_add_bag_modal = function() {
+    $scope.modal.hide();
+  };
+  //Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+  // Execute action on hide modal
+  $scope.$on('modal.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove modal
+  $scope.$on('modal.removed', function() {
+    // Execute action
+  });
+
+
+  ////
+  // Updating a bag
+  ////
 
   // check an item on a bag
   // basically, when an item is checked it doesn't add to any totals
@@ -73,8 +110,9 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
   // get all contents, both sub-lists and foodstuffs
   $scope.get_all_content = function(bag) {
-    return bag.contents.concat(bag.contentsList || []);
+    return bag.contents.concat(bag.contentsLists || []);
   };
+
 
 
 })
