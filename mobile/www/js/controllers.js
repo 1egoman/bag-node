@@ -30,16 +30,20 @@ angular.module('starter.controllers', ['btford.socket-io'])
 })
 
 // Bags Controller
-// This manages bags, which can contain recipes or foodstuffs
-.controller('BagsCtrl', function($scope, $ionicModal, socket) {
+// This manages the bag, which can contain recipes or foodstuffs
+.controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket) {
 
   // get all bags
   // this fires once at the load of the controller, but also repeadedly when
   // any function wants th reload the whole view.
-  socket.emit('list:index')
-  socket.on('list:index:callback', function(evt){
-    console.log("list:index", evt)
-    $scope.bags = evt.data
+  socket.emit('bag:index')
+  socket.on('bag:index:callback', function(evt){
+    // console.log("bag:index:callback", evt)
+    $scope.bag = evt.data
+
+    // force the slide-box to update and make
+    // each "page" > 0px (stupid bugfix)
+    $ionicSlideBoxDelegate.update()
   });
 
   // calculate total price for a whole bag
@@ -59,36 +63,25 @@ angular.module('starter.controllers', ['btford.socket-io'])
     return total;
   };
 
+
   ////
-  // Creating a bag
+  // View mechanics
   ////
 
-  // create the modal.
-  // This contains the form for creating a new bag.
-  $ionicModal.fromTemplateUrl('templates/modal-add-bag.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-  $scope.open_add_bag_modal = function() {
-    $scope.modal.show();
+  // when a user changes the bag they are looking at, update the title
+  $scope.change_active_bag = function(index) {
+    $scope.active_card = index
+    if (index === 0) {
+      $scope.view_title = "My Bag"
+    } else {
+      $scope.view_title = "My Recipes"//$scope.bags[index-1].name
+    }
   };
-  $scope.close_add_bag_modal = function() {
-    $scope.modal.hide();
+
+  // is the user currently viewing the bag?
+  $scope.is_viewing_bag = function() {
+    return $scope.active_card === 0
   };
-  //Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.modal.remove();
-  });
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function() {
-    // Execute action
-  });
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-    // Execute action
-  });
 
 
   ////
@@ -110,12 +103,99 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
   // get all contents, both sub-lists and foodstuffs
   $scope.get_all_content = function(bag) {
-    return bag.contents.concat(bag.contentsLists || []);
+    if (bag && bag.contents) {
+      return bag.contents.concat(bag.contentsLists || []);
+    } else return []
+  };
+
+  ////
+  // Intializers
+  ////
+  $scope.change_active_bag(0);
+
+})
+
+
+
+// Recipe Card Controller
+// This manages each recipe card so that it will always stay up to date.
+.controller('RecipeCtrl', function($scope, socket) {
+
+  // calculate total price for a whole recipe
+  // this takes into account any sub-recipes
+  // through recursion. Anything checked off won't be taken into account.
+  $scope.calculate_total = function(bag) {
+    var total = 0;
+    bag.contents.forEach(function(item) {
+      if (item.contents) {
+        // this recipe has items of its own
+        total += $scope.calculate_total(item);
+      } else if (item.checked !== true) {
+        // do total
+        total += item.price
+      }
+    });
+    return total;
   };
 
 
+  ////
+  // Updating a recipe
+  ////
+
+  // check an item on a recipe
+  // basically, when an item is checked it doesn't add to any totals
+  // because the user is presumed to have bought it already.
+  $scope.check_item_on_recipe = function(recipe, item) {
+    socket.emit('list:update', {
+      list: strip_$$(recipe)
+    });
+  };
+  socket.on('list:update:callback', function(evt) {
+    if (evt.data) {
+      $scope.recipe = evt.data
+    }
+  });
+
+  // get all contents, both sub-recipes and foodstuffs
+  $scope.get_all_content = function(r) {
+    return r.contents.concat(r.contentsLists || []);
+  };
+
+  ////
+  // Intializers
+  ////
 
 })
+
+// Recipe List Controller
+// Gets a subset of all lists and returns it
+.controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+
+  // get all recipes
+  // this fires once at the load of the controller, but also repeadedly when
+  // any function wants th reload the whole view.
+  socket.emit('list:index')
+  socket.on('list:index:callback', function(evt){
+    // console.log("list:index:callback", evt)
+    $scope.recipes = evt.data
+
+    // force the slide-box to update and make
+    // each "page" > 0px (stupid bugfix)
+    $ionicSlideBoxDelegate.update()
+  });
+})
+
+
+
+
+
+
+
+
+
+
+
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called

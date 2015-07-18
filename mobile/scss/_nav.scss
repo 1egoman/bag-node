@@ -1,0 +1,28 @@
+.bar.bar-bag {
+  border-color: #b2b2b2;
+  background-color: #387ef5;
+  height: 48px;
+  
+  &, & button {
+    color: #fff;
+  }
+
+  .title {
+    margin-top: 2px;
+  }
+}
+
+.tabs.tab-nav {
+  background-color: #222;
+  height: 64px;
+
+  .tab-item {
+    margin-top: 6px;
+    color: #fff;
+
+    .icon {
+      font-size: 36px;
+      margin-bottom: 4px;
+    }
+  }
+}

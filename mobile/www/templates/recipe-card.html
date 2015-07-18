@@ -1,0 +1,32 @@
+<!-- a recipe card -->
+<div class="list recipe" ng-controller="RecipeCtrl">
+  <!-- recipe header -->
+  <div class="item item-avatar">
+    <h2>{{recipe.name}}</h2>
+    <p>
+      {{recipe.desc}}
+      <span class="pull-right">{{calculate_total(recipe) | currency}}</span>
+    </p>
+  </div>
+
+  <!-- all items within this recipe -->
+  <li href="#" class="item item-checkbox" ng-repeat="item in get_all_content(recipe)">
+
+    <!-- Check off the item -->
+    <label class="checkbox">
+      <input type="checkbox" ng-model="item.checked"
+      ng-change="check_item_on_recipe(recipe, item)">
+    </label>
+
+    <!-- the title -->
+    <span class="title" ng-class="{strike: item.checked}">
+      <div class="line"></div>
+
+      {{item.name}}
+
+      <!-- rightmost icons -->
+      <i ng-show="item.contents" class="pull-right ion-ios-arrow-right"></i>
+      <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
+    </span>
+  </li>
+</div>

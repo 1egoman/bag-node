@@ -6,6 +6,7 @@
  * Licensed under the MIT license.
 ###
 
+bag_ctrl = require "./controllers/bag_controller"
 list_ctrl = require "./controllers/list_controller"
 foodstuff_ctrl = require "./controllers/foodstuff_controller"
 user_ctrl = require "./controllers/user_controller"
@@ -34,6 +35,37 @@ exports.websocket = (app) ->
         # websocket events for each of the actions
         ["index", "show", "create", "update", "destroy"].forEach (method) ->
           
+
+          # bag methods
+          socket.on "bag:#{method}", (data) ->
+
+            # log the request happening
+            console.log chalk.green("--> ws"), "bag:#{method}", data
+
+            bag_ctrl[method]
+              body: data
+              type: 'ws'
+              params:
+                list: data?.list
+              user: user
+            ,
+              send: (data) ->
+                # log the event response
+                console.log \
+                  chalk.green("<-- ws"), \
+                  "bag:#{method}:callback", \
+                  JSON.stringify data, null, 2
+                if method in ["create", "update", "destroy"]
+                  # if we used an action of create, opdate, or destroy, let everyone know
+                  socket.broadcast.emit "bag:#{method}:callback", data
+                else
+                  # emit it to that person
+                  socket.emit "bag:#{method}:callback", data
+
+
+
+
+
           # list methods
           socket.on "list:#{method}", (data) ->
 
@@ -65,6 +97,10 @@ exports.websocket = (app) ->
 
             # log the request happening
             console.log chalk.green("--> ws"), "list:#{method}", data
+
+
+
+
 
             foodstuff_ctrl[method]
               body: data

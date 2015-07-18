@@ -1,48 +1,41 @@
-<ion-view view-title="All Bags">
+<ion-view view-title="{{view_title}}">
 
   <!-- nav bar -->
   <ion-nav-buttons side="right">
-    <button ng-click="open_add_bag_modal()" class="button button-icon icon
-      ion-ios-plus-empty"></button>
+
+    <!-- plus for adding an item or recipe to the bag -->
+    <button 
+      ng-click="open_add_bag_modal()" 
+      class="button button-icon icon ion-ios-plus-empty"
+      ng-show="is_viewing_bag()"
+      >
+    </button>
+
   </ion-nav-buttons>
 
   <!-- content -->
-  <ion-content class="padding">
+  <ion-content>
 
+    <!-- slide boxes. Each one contains a bag. -->
+    <ion-slide-box on-slide-changed="change_active_bag($index)" show-pager="false">
 
-    <div class="list bag" ng-repeat="bag in bags">
+      <!-- the main "bag" -->
+      <ion-slide>
+        <div class="item item-avatar" ng-repeat="item in get_all_content(bag)">
+          <h2>{{item.name}}</h2>
+          <p>
+            {{item.desc}}
+          </p>
+        </div>
+      </ion-slide>
 
-      <!-- bag header -->
-      <div class="item item-avatar">
-        <h2>{{bag.name}}</h2>
-        <p>
-          {{bag.desc}}
-          <span class="pull-right">{{calculate_total(bag) | currency}}</span>
-        </p>
-      </div>
-
-      <!-- all items within this bag -->
-      <li href="#" class="item item-checkbox" ng-repeat="item in get_all_content(bag)">
-
-        <!-- Check off the item -->
-        <label class="checkbox">
-          <input type="checkbox" ng-model="item.checked" ng-change="check_item_on_bag(bag, item)">
-        </label>
-
-        <!-- the title -->
-        <span class="title" ng-class="{strike: item.checked}">
-          <div class="line"></div>
-
-          {{item.name}}
-
-          <!-- rightmost icons -->
-          <i ng-show="item.contents" class="pull-right ion-ios-arrow-right"></i>
-          <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
-        </span>
-      </li>
-
-
-    </div>
+      <!-- each recipe bag -->
+      <ion-slide>
+        <div ng-controller="RecipeListCtrl">
+          <recipe-card recipe="recipe" ng-repeat="recipe in recipes"></recipe-card>
+        </div>
+      </ion-slide>
+    </ion-slide-box>
 
 
   </ion-content>
