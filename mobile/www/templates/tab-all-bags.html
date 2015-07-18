@@ -1,12 +1,38 @@
 <ion-view view-title="All Bags">
   <ion-content class="padding">
-    <div class="list card">
-      <div class="item item-divider">Recent Updates</div>
-      <div class="item item-body">
-        <div>
-          There is a fire in <b>sector 3</b>
-        </div>
+
+
+
+    <div class="list bag" ng-repeat="bag in bags">
+
+      <!-- bag header -->
+      <div class="item item-avatar">
+        <h2>{{bag.name}}</h2>
+        <p>
+          {{bag.desc}}
+          <span class="pull-right">{{calculate_total(bag) | currency}}</span>
+        </p>
       </div>
+
+      <!-- all items within this bag -->
+      <li href="#" class="item item-checkbox" ng-repeat="item in bag.contents">
+
+        <!-- Check off the item -->
+        <label class="checkbox">
+          <input type="checkbox" ng-model="item.checked" ng-change="check_item_on_bag(bag, item)">
+        </label>
+
+        <span class="title" ng-class="{strike: item.checked}">
+
+          <div class="line"></div>
+
+          {{item.name}}
+          <span class="pull-right">{{item.price | currency}}</span>
+        </span>
+      </li>
+
     </div>
+
+
   </ion-content>
 </ion-view>
