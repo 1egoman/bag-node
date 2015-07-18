@@ -73,7 +73,7 @@ exports.update = (req, res) ->
         error: err
     else
       data[k] = v for k, v of req.body?.list
-      console.log "SAVE"
+      console.log "SAVE", data
       data.save (err) ->
         # if err and err.name is "VersionError"
         #   exports.create req, res
@@ -81,6 +81,7 @@ exports.update = (req, res) ->
           res.send
             status: "bag.error.list.update"
             data: err
+            all: req.body?.list
         else
         # List.find {}, (err, all) ->
           res.send

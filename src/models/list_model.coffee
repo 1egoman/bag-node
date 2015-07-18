@@ -17,5 +17,7 @@ list = mongoose.Schema
 
   contents: Array
 
+list.set('versionKey', false)
+
 module.exports = mongoose.model 'List', list
 
