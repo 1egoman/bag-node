@@ -6,7 +6,20 @@ angular.module('starter.directives', [])
     templateUrl: "/templates/recipe-card.html",
     require: "^recipe",
     scope: {
-      recipe: '='
+      recipe: '=',
+      change: '='
+    }
+  };
+})
+
+.directive("checkableItem", function() {
+  return {
+    restrict: 'E',
+    templateUrl: "/templates/checkable-item.html",
+    require: "^item",
+    scope: {
+      item: '=',
+      change: '='
     }
   };
 })

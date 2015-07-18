@@ -46,7 +46,7 @@ exports.websocket = (app) ->
               body: data
               type: 'ws'
               params:
-                list: data?.list
+                bag: data?.bag
               user: user
             ,
               send: (data) ->

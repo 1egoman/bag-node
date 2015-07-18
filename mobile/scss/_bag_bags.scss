@@ -8,8 +8,9 @@
     //   </div>
     // </div>
 
-.recipe {
+.list.recipe, .card.single {
   @extend .card;
+  &, &:last-child { margin-bottom: 10px; }
 
   .item.item-avatar {
     padding-left: 16px;
@@ -29,4 +30,7 @@
     }
     // background-color: transparent;
   }
+}
+
+.card.single {
 }

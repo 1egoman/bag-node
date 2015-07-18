@@ -1,0 +1,62 @@
+<ion-view view-title="{{view_title}}">
+
+  <!-- nav bar -->
+  <ion-nav-buttons side="right">
+
+    <!-- plus for adding an item or recipe to the bag -->
+    <button 
+      ng-click="open_add_bag_modal()" 
+      class="button button-icon icon ion-ios-plus-empty"
+      ng-show="is_viewing_bag()"
+      >
+    </button>
+
+  </ion-nav-buttons>
+
+  <!-- content -->
+  <ion-content>
+
+    <!-- slide boxes. Each one contains a bag. -->
+    <ion-slide-box on-slide-changed="change_active_bag($index)" show-pager="false">
+
+      <!-- 
+      the main "bag"
+      this shows all the individual items
+      -->
+      <!-- <ion&#45;slide> -->
+      <!--   <checkable&#45;item -->
+      <!--     item="item" -->
+      <!--     update="check_bag_item" -->
+      <!--   </checkable&#45;item> -->
+      <!-- </ion&#45;slide> -->
+
+      <!-- each recipe bag -->
+      <ion-slide>
+        <!-- <div ng&#45;controller="RecipeListCtrl"> -->
+
+        <!-- show a combined list of recipes and foodstuffs -->
+        <div ng-repeat="item in get_all_content(bag)">
+
+          <!-- if a recipe -->
+          <recipe-card
+            recipe="item"
+            ng-show="item.contents"
+            change="update_bag"
+          ></recipe-card>
+
+          <!-- if a foodstuff -->
+          <div class="card single" ng-hide="item.contents">
+            <checkable-item
+              item="item" 
+              change="update_bag"
+            ></checkable-item>
+          </div>
+
+        </div>
+        <!-- </div> -->
+      </ion-slide>
+    </ion-slide-box>
+
+
+  </ion-content>
+</ion-view>

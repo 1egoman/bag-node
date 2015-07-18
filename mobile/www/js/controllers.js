@@ -83,21 +83,24 @@ angular.module('starter.controllers', ['btford.socket-io'])
     return $scope.active_card === 0
   };
 
+  // get the raw contents of each bag
+
+
 
   ////
   // Updating a bag
   ////
 
-  // check an item on a bag
+  // update a bag
   // basically, when an item is checked it doesn't add to any totals
   // because the user is presumed to have bought it already.
-  $scope.check_item_on_bag = function(bag, item) {
-    socket.emit('list:update', {
-      list: strip_$$(bag)
+  $scope.update_bag = function() {
+    socket.emit('bag:update', {
+      bag: strip_$$($scope.bag)
     });
   };
-  socket.on('list:update:callback', function(evt) {
-    socket.emit('list:index')
+  socket.on("bag:update:callback", function(evt) {
+    $scope.bag = evt.data
   });
 
 
@@ -126,7 +129,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
   // through recursion. Anything checked off won't be taken into account.
   $scope.calculate_total = function(bag) {
     var total = 0;
-    bag.contents.forEach(function(item) {
+    (bag.contents || []).forEach(function(item) {
       if (item.contents) {
         // this recipe has items of its own
         total += $scope.calculate_total(item);
@@ -158,10 +161,11 @@ angular.module('starter.controllers', ['btford.socket-io'])
   });
 
   // get all contents, both sub-recipes and foodstuffs
-  $scope.get_all_content = function(r) {
-    return r.contents.concat(r.contentsLists || []);
+  $scope.get_all_content = function(bag) {
+    if (bag && bag.contents) {
+      return bag.contents.concat(bag.contentsLists || []);
+    } else return []
   };
-
   ////
   // Intializers
   ////

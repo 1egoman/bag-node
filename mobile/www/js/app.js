@@ -52,25 +52,21 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
   // Each tab has its own nav history stack:
 
-  .state('tab.bags', {
-    url: '/bags',
+  .state('tab.bag', {
+    url: '/bag',
     views: {
-      'tab-all-bags': {
-        templateUrl: 'templates/tab-all-bags.html',
-        controller: 'BagsCtrl'
-      },
       'tab-bag': {
-        templateUrl: 'templates/tab-bags.html',
+        templateUrl: 'templates/tab-bag.html',
         controller: 'BagsCtrl'
       }
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.picks', {
+      url: '/picks',
       views: {
         'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
+          templateUrl: 'templates/tab-picks.html',
           controller: 'ChatsCtrl'
         }
       }
@@ -96,6 +92,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/bags');
+  $urlRouterProvider.otherwise('/tab/bag');
 
 });

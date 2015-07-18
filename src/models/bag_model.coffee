@@ -12,11 +12,7 @@ bag = mongoose.Schema
   user: String
 
   contents: Array
-  contentsLists: [
-    _id:
-      type: String
-      ref: 'List'
-  ]
+  contentsLists: Array
 
 bag.set 'versionKey', false
 

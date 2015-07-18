@@ -48,7 +48,9 @@ exports.edit = (req, res) -> res.send "Not supported."
 # update a bag
 # PUT /bag/:bag
 exports.update = (req, res) ->
+  console.log req.body
   Bag.findOne _id: req.params.bag or req.body._id, (err, data) ->
+    console.log data
     if err
       res.send
         status: "bag.error.bag.update"
