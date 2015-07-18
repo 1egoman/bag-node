@@ -73,6 +73,12 @@ angular.module('starter.controllers', ['btford.socket-io'])
   });
 
 
+  // get all contents, both sub-lists and foodstuffs
+  $scope.get_all_content = function(bag) {
+    return bag.contents.concat(bag.contentsList || []);
+  };
+
+
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
