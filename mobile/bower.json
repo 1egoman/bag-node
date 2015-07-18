@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "angular-socket-io": "~0.7.0",
-    "ngCordova": "~0.1.17-alpha"
+    "ngCordova": "~0.1.17-alpha",
+    "ionic-filter-bar": "~1.0.3"
   }
 }

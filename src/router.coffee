@@ -92,15 +92,16 @@ exports.websocket = (app) ->
                   # emit it to that person
                   socket.emit "list:#{method}:callback", data
 
+
+
+
+
+
           # foodstuff methods
           socket.on "foodstuff:#{method}", (data) ->
 
             # log the request happening
             console.log chalk.green("--> ws"), "list:#{method}", data
-
-
-
-
 
             foodstuff_ctrl[method]
               body: data

@@ -31,7 +31,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 // Bags Controller
 // This manages the bag, which can contain recipes or foodstuffs
-.controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket) {
+.controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, $ionicFilterBar, socket) {
 
   // get all bags
   // this fires once at the load of the controller, but also repeadedly when
@@ -65,6 +65,27 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 
   ////
+  // Create new item
+  ////
+  $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  $scope.open_add_modal = function() {
+    $scope.modal.show();
+  };
+  $scope.close_add_modal = function() {
+    $scope.modal.hide();
+  };
+  //Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
+
+  ////
   // View mechanics
   ////
 
@@ -83,7 +104,40 @@ angular.module('starter.controllers', ['btford.socket-io'])
     return $scope.active_card === 0
   };
 
-  // get the raw contents of each bag
+  // use ionic filter bar to filter through the bag
+  $scope.filter_bag_contents = function() {
+    $scope.filter_open = true
+    filterBarInstance = $ionicFilterBar.show({
+      items: $scope.flatten_bag(),
+      update: function (filteredItems) {
+        $scope.filtered_items = filteredItems;
+      },
+      done: function() { $scope.filtered_items = [] },
+      cancel: function() { $scope.filtered_items = []; $scope.filter_open = false },
+      filterProperties: 'name'
+    });
+  }
+
+  // flatten the bag so everything is easily indexable
+  $scope.flatten_bag = function(bag) {
+    bag = bag || $scope.bag
+    var total = [];
+
+    bag.contents.concat(bag.contentsLists || []).forEach(function(item) {
+      console.log(item);
+      if (item.contents) {
+        // this recipe has items of its own
+        total = total.concat($scope.flatten_bag(item))
+        total.push(item);
+      } else {
+        // do total
+        total.push(item)
+      }
+    });
+
+    console.log(total);
+    return total;
+  }
 
 
 
@@ -115,6 +169,30 @@ angular.module('starter.controllers', ['btford.socket-io'])
   // Intializers
   ////
   $scope.change_active_bag(0);
+  $scope.filter_open = false
+  $scope.filtered_items = []
+
+})
+
+
+// Add to bags controller
+// manages the "add to bags" modal
+.controller('AddToBagsCtrl', function($scope, $ionicFilterBar, socket) {
+
+  $scope.all = []
+  $scope.all_recipes = []
+  $scope.all_foodstuffs = []
+  socket.on("lists:index:callback", function(evt) {
+    $scope.all = evt.data
+  });
+
+  socket.on("foodstuff:index:callback", function(evt) {
+    $scope.all_foodstuffs = evt.data
+  });
+
+
+
+
 
 })
 

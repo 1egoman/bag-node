@@ -5,9 +5,15 @@
 
     <!-- plus for adding an item or recipe to the bag -->
     <button 
-      ng-click="open_add_bag_modal()" 
+      ng-click="open_add_modal()" 
       class="button button-icon icon ion-ios-plus-empty"
       ng-show="is_viewing_bag()"
+      >
+    </button>
+
+    <button 
+      ng-click="filter_bag_contents()" 
+      class="button button-icon icon ion-ios-search"
       >
     </button>
 
@@ -35,8 +41,7 @@
         <!-- <div ng&#45;controller="RecipeListCtrl"> -->
 
         <!-- show a combined list of recipes and foodstuffs -->
-        <div ng-repeat="item in get_all_content(bag)">
-
+        <div ng-repeat="item in (filter_open ? filtered_items : get_all_content(bag))">
           <!-- if a recipe -->
           <recipe-card
             recipe="item"
@@ -51,10 +56,10 @@
               change="update_bag"
             ></checkable-item>
           </div>
-
         </div>
-        <!-- </div> -->
+
       </ion-slide>
+
     </ion-slide-box>
 
 
