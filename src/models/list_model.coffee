@@ -12,6 +12,7 @@ list = mongoose.Schema
   name: String
   desc: String
   tags: Array
+  checked: Boolean
   user: String
 
   contents: Array

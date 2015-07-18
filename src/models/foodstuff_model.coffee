@@ -13,6 +13,7 @@ foodstuff = mongoose.Schema
   desc: String
   price: String
   store: String
+  checked: Boolean
   user: String
 
 module.exports = mongoose.model 'foodstuff', foodstuff

@@ -53,7 +53,12 @@ exports.websocket = (app) ->
                   chalk.green("<-- ws"), \
                   "list:#{method}:callback", \
                   JSON.stringify data, null, 2
-                socket.emit "list:#{method}:callback", data
+                if method in ["create", "update", "destroy"]
+                  # if we used an action of create, opdate, or destroy, let everyone know
+                  socket.broadcast.emit "list:#{method}:callback", data
+                else
+                  # emit it to that person
+                  socket.emit "list:#{method}:callback", data
 
           # foodstuff methods
           socket.on "foodstuff:#{method}", (data) ->

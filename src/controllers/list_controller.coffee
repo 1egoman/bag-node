@@ -33,16 +33,16 @@ exports.create = (req, res) ->
   list_params.contents? and \
   list_params.tags?
     list_params.user = req.user._id if req.user?._id
-      list = new List list_params
-      list.save (err) ->
-        if err
-          res.send
-            status: "bag.error.list.create"
-            error: err
-        else
-          res.send
-            status: "bag.success.list.create"
-            data: list
+    list = new List list_params
+    list.save (err) ->
+      if err
+        res.send
+          status: "bag.error.list.create"
+          error: err
+      else
+        res.send
+          status: "bag.success.list.create"
+          data: list
   else
     res.send
       status: "bag.error.list.create"
@@ -66,22 +66,27 @@ exports.edit = (req, res) -> res.send "Not supported."
 # update a list
 # PUT /list/:list
 exports.update = (req, res) ->
-  List.findOne _id: req.params.list, (err, data) ->
+  List.findOne _id: req.params.list or req.body._id, (err, data) ->
     if err
       res.send
         status: "bag.error.list.update"
         error: err
     else
       data[k] = v for k, v of req.body?.list
+      console.log "SAVE"
       data.save (err) ->
+        # if err and err.name is "VersionError"
+        #   exports.create req, res
         if err
           res.send
             status: "bag.error.list.update"
             data: err
         else
+        # List.find {}, (err, all) ->
           res.send
             status: "bag.success.list.update"
             data: data
+            # all: all
 
 # delete a list
 # DELETE /list/:list
