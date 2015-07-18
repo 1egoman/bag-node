@@ -16,6 +16,13 @@ list = mongoose.Schema
   user: String
 
   contents: Array
+  contentsLists: [
+    _id:
+      type: String
+      ref: 'List'
+  ]
+
+list.set 'versionKey', false
 
 module.exports = mongoose.model 'List', list
 

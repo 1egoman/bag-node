@@ -1,5 +1,5 @@
 
-socket = io('http://192.168.1.14:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
+socket = io('http://192.168.1.13:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
 // # socket.emit 'foodstuff:index', list: "55a84255eb8799c52c643830"
 //
 // # get initial event info from backend
@@ -31,12 +31,12 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 // Bags Controller
 // This manages bags, which can contain recipes or foodstuffs
-.controller('BagsCtrl', function($scope, socket) {
+.controller('BagsCtrl', function($scope, $timeout, socket) {
 
   // get all bags
   socket.emit('list:index')
   socket.on('list:index:callback', function(evt){
-    console.log(2, evt)
+    console.log("list:index", evt)
     $scope.bags = evt.data
   });
 
@@ -62,13 +62,11 @@ angular.module('starter.controllers', ['btford.socket-io'])
   // basically, when an item is checked it doesn't add to any totals
   // because the user is presumed to have bought it already.
   $scope.check_item_on_bag = function(bag, item) {
-    console.log("ORIG")
     socket.emit('list:update', {
       list: strip_$$(bag)
     });
   };
   socket.on('list:update:callback', function(evt) {
-    // console.log(1, evt.all)
     socket.emit('list:index')
   });
 
