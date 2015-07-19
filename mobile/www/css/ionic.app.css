@@ -7731,6 +7731,7 @@ a.button {
       margin-bottom: 4px; }
 
 .list.recipe, .list.recipe:last-child, .card.single, .single.list.recipe, .single.card, .card.single:last-child, .single.list.recipe:last-child, .single.card:last-child {
+  margin-top: 10px;
   margin-bottom: 10px; }
 .list.recipe .item.item-avatar, .card.single .item.item-avatar, .single.list.recipe .item.item-avatar, .single.card .item.item-avatar {
   padding-left: 16px; }
@@ -7745,3 +7746,5 @@ a.button {
     background: #444;
     margin: 0px 50px 0px -4px; }
 
+.disabled.card .title, .disabled.list.recipe .title {
+  color: #CCC; }

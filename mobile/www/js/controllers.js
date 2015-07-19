@@ -41,6 +41,9 @@ angular.module('starter.controllers', ['btford.socket-io'])
     // console.log("bag:index:callback", evt)
     $scope.bag = evt.data
 
+    // update the marked items
+    $scope.completed_items = $scope.get_marked_items($scope.bag)
+
     // force the slide-box to update and make
     // each "page" > 0px (stupid bugfix)
     $ionicSlideBoxDelegate.update()
@@ -85,6 +88,9 @@ angular.module('starter.controllers', ['btford.socket-io'])
   });
 
 
+
+
+
   ////
   // View mechanics
   ////
@@ -119,6 +125,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
   }
 
   // flatten the bag so everything is easily indexable
+  // this is used for search
   $scope.flatten_bag = function(bag) {
     bag = bag || $scope.bag
     var total = [];
@@ -134,10 +141,42 @@ angular.module('starter.controllers', ['btford.socket-io'])
         total.push(item)
       }
     });
-
-    console.log(total);
     return total;
   }
+
+  // get all contents, both sub-lists and foodstuffs
+  // this lets us recurively wander
+  $scope.get_all_content = function(bag) {
+    if (bag && bag.contents) {
+      return bag.contents.concat(bag.contentsLists || []);
+    } else return []
+  };
+
+  // get all checkmarked items
+  // this is used to place those items in the "completed" section
+  $scope.get_marked_items = function(bag) {
+    marked = $scope.get_all_content(bag).filter(function(b) {
+      return b.checked || (b.contents && $scope.all_checked(b))
+    })
+
+    return marked;
+  }
+
+  // are all items within a specific item all checked?
+  $scope.all_checked = function(item) {
+    return $scope.get_all_content(item).map(function(item) {
+      if (item.contents || item.contentsLists) {
+        // this recipe has items of its own
+        return $scope.all_checked(item);
+      } else {
+        // do total
+        return item.checked;
+      }
+    }).indexOf(false) === -1
+  };
+
+
+
 
 
 
@@ -149,21 +188,22 @@ angular.module('starter.controllers', ['btford.socket-io'])
   // basically, when an item is checked it doesn't add to any totals
   // because the user is presumed to have bought it already.
   $scope.update_bag = function() {
+    // update the marked items when you mess with the bag
+    $scope.completed_items = $scope.get_marked_items($scope.bag)
+
     socket.emit('bag:update', {
       bag: strip_$$($scope.bag)
     });
   };
   socket.on("bag:update:callback", function(evt) {
+    // update the bag
     $scope.bag = evt.data
+
+    // update the marked items when somebody else messes eith the bag
+    $scope.completed_items = $scope.get_marked_items($scope.bag)
   });
 
 
-  // get all contents, both sub-lists and foodstuffs
-  $scope.get_all_content = function(bag) {
-    if (bag && bag.contents) {
-      return bag.contents.concat(bag.contentsLists || []);
-    } else return []
-  };
 
   ////
   // Intializers
@@ -171,6 +211,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
   $scope.change_active_bag(0);
   $scope.filter_open = false
   $scope.filtered_items = []
+  $scope.completed_items = []
 
 })
 
