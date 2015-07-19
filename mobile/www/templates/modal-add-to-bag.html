@@ -1,8 +1,8 @@
 <!-- add new bag -->
-<ion-modal-view ng-controller="AddToBagsCtrl">
+<ion-modal-view>
 
-  <ion-header-bar class="bar-bag">
-    <div class="title title-center header-item">New Bag</div>
+  <ion-header-bar class="">
+    <div class="title title-center header-item">Choose new item</div>
     <div class="buttons buttons-right">
       <span class="right-buttons">
         <button ng-click="close_add_modal()" class="button button-icon icon
@@ -12,7 +12,15 @@
   </ion-header-bar>
 
   <ion-content>
-    Hello!
+    <div class="list">
+
+      <!-- show the matches -->
+      <div ng-repeat="item in add_items">
+        <p>{{item.name}}</p>
+      </div>
+
+
+    </div>
   </ion-content>
 
 </ion-modal-view>

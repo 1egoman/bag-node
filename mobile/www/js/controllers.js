@@ -76,13 +76,37 @@ angular.module('starter.controllers', ['btford.socket-io'])
   }).then(function(modal) {
     $scope.modal = modal;
   });
+
+  // user wantes to add a new item
   $scope.open_add_modal = function() {
     $scope.modal.show();
+    content = $scope.get_all_content($scope.bag)
+
+    // filter with ionic filter bar
+    $scope.hide_filter_bar = $ionicFilterBar.show({
+      items: content,
+      done: function() {
+        $scope.add_items = content
+      },
+      update: function (filteredItems) {
+        $scope.add_items = filteredItems;
+        console.log($scope.add_items)
+      },
+
+      // if the filter bar closes, close the modal
+      cancel: function() {
+        $scope.modal.hide();
+      },
+      filterProperties: 'name'
+    });
   };
+
+  // if modal closes first, close the filter bar
   $scope.close_add_modal = function() {
     $scope.modal.hide();
+    $scope.hide_filter_bar()
   };
-  //Cleanup the modal when we're done with it!
+  // cleanup the modal when we're done with it
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
   });
@@ -130,7 +154,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
     bag = bag || $scope.bag
     var total = [];
 
-    bag.contents.concat(bag.contentsLists || []).forEach(function(item) {
+    (bag.contents || []).concat(bag.contentsLists || []).forEach(function(item) {
       console.log(item);
       if (item.contents) {
         // this recipe has items of its own
@@ -220,9 +244,6 @@ angular.module('starter.controllers', ['btford.socket-io'])
 // manages the "add to bags" modal
 .controller('AddToBagsCtrl', function($scope, $ionicFilterBar, socket) {
 
-  $scope.all = []
-  $scope.all_recipes = []
-  $scope.all_foodstuffs = []
   socket.on("lists:index:callback", function(evt) {
     $scope.all = evt.data
   });
@@ -232,6 +253,20 @@ angular.module('starter.controllers', ['btford.socket-io'])
   });
 
 
+
+  // get all items that can be searched through
+  $scope.haystack = function(bag) {
+    return $scope.all_recipes.concat($scope.all_foodstuffs);
+  }
+
+
+  ////
+  // Initialization
+  ////
+  $scope.all = []
+  $scope.all_recipes = []
+  $scope.all_foodstuffs = []
+  $scope.filtered_items = []
 
 
 
