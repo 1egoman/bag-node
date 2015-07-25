@@ -1,5 +1,5 @@
 // set up the socket.io conenction
-socket = io('http://192.168.1.14:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
+socket = io('http://192.168.1.13:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
 // # socket.emit 'foodstuff:index', list: "55a84255eb8799c52c643830"
 //
 // # get initial event info from backend

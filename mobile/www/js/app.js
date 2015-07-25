@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', [
   'ionic',
-  'ngCordova',
+  // 'ngCordova',
   'jett.ionic.filter.bar',
 
   'starter.controllers',
@@ -15,7 +15,7 @@ angular.module('starter', [
   'starter.directives'
 ])
 
-.run(function($ionicPlatform, $ionicConfig, $cordovaStatusbar) {
+.run(function($ionicPlatform, $ionicConfig) {
 
   // ionic stuff
   $ionicPlatform.ready(function() {
@@ -73,7 +73,7 @@ angular.module('starter', [
   .state('tab.picks', {
       url: '/picks',
       views: {
-        'tab-chats': {
+        'tab-picks': {
           templateUrl: 'templates/tab-picks.html',
           controller: 'ChatsCtrl'
         }
