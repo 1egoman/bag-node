@@ -11,7 +11,8 @@ Foodstuff = require "../models/foodstuff_model"
 # get a foodstuff of all lists
 # GET /foodstuff
 exports.index = (req, res) ->
-  Foodstuff.find({}).limit(req.body.limit || Infinity).exec (err, data) ->
+
+  Foodstuff.find({}).limit(req?.body?.limit || Infinity).exec (err, data) ->
     if err
       res.send
         status: "bag.error.foodstuff.index"

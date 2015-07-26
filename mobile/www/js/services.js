@@ -33,8 +33,9 @@ angular.module('starter.services', [])
   }
 
   root.all = function(sc, cb) {
-    socket.emit('foodstuff:index', {limit: 25})
-    socket.emit('list:index', {limit: 25})
+    root.all_resp = []
+    socket.emit('foodstuff:index')//, {limit: 25})
+    socket.emit('list:index')//, {limit: 25})
     sc.all_calls = 0
 
     responseFoodstuff = function(evt) {

@@ -66,7 +66,7 @@ angular.module('starter.controllers')
     AllItems.all($scope, function(content) {
 
       // filter with ionic filter bar
-      $scope.hide_filter_bar = $ionicFilterBar.show({
+      hide = $ionicFilterBar.show({
         items: content,
         done: function() {
           $scope.add_items = content
@@ -81,6 +81,8 @@ angular.module('starter.controllers')
         },
         filterProperties: 'name'
       });
+
+      if (hide) $scope.hide_filter_bar = hide
 
     })
   };
