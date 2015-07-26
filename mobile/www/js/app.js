@@ -70,6 +70,17 @@ angular.module('starter', [
     }
   })
 
+  .state('tab.list', {
+    url: '/list',
+    views: {
+      'tab-bag': {
+        templateUrl: 'templates/tab-list.html',
+        controller: 'BagsCtrl'
+      }
+    }
+  })
+
+
   // more info about an item, such as a recipe or a foodstuff
   .state('iteminfo', {
     url: '/iteminfo/:id',

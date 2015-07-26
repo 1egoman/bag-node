@@ -2,16 +2,24 @@
 <ion-modal-view>
 
   <ion-header-bar class="">
-    <div class="title title-center header-item">Choose new item</div>
+    <div class="title title-center header-item">Add New</div>
     <div class="buttons buttons-right">
-,     <span class="right-buttons">
+      <span class="right-buttons">
         <button ng-click="close_add_modal()" class="button button-icon icon
           ion-ios-close-empty activated"></button>
+        <button ng-click="open_search()" class="button button-icon icon
+          ion-ios-search activated"></button>
       </span>
     </div>
   </ion-header-bar>
 
   <ion-content>
+    <!-- waiting message -->
+    <div class="item" ng-hide="add_items.length">
+      <h2>Give us a sec</h2>
+      <h4>We're loading all of your favorites...</h4>
+    </div>
+
     <div class="list">
 
       <!-- show the matches -->

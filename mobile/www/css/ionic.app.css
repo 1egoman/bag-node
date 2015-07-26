@@ -7748,3 +7748,11 @@ a.button {
 
 .disabled.card .title {
   color: #CCC; }
+
+.card.bag-list {
+  min-height: 250px; }
+  .card.bag-list .button {
+    margin: 100px auto 0px auto;
+    display: block; }
+    .card.bag-list .button:before {
+      font-size: 72px; }

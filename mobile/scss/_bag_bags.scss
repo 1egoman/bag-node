@@ -38,3 +38,14 @@
 .disabled.card .title {
   color: #CCC;
 }
+
+.card.bag-list {
+  min-height: 250px;
+  .button {
+    margin: 100px auto 0px auto;
+    display: block;
+    &:before {
+      font-size: 72px;
+    }
+  }
+}

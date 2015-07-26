@@ -1,8 +1,18 @@
 <ion-view view-title="{{view_title}}">
 
-  <!-- nav bar -->
-  <ion-nav-buttons side="right">
+  <!-- display clean list on left -->
+  <ion-nav-buttons side="left">
 
+    <button 
+      ng-click="to_list_mode()"
+      class="button button-icon icon ion-ios-cart-outline"
+      >
+    </button>
+
+  </ion-nav-buttons>
+
+  <!-- add and search are on the right -->
+  <ion-nav-buttons side="right">
     <!-- plus for adding an item or recipe to the bag -->
     <button 
       ng-click="open_add_modal()" 
@@ -11,6 +21,7 @@
       >
     </button>
 
+    <!-- search for searching through the bag -->
     <button 
       ng-click="filter_bag_contents()" 
       class="button button-icon icon ion-ios-search"
@@ -41,14 +52,18 @@
         <!-- <div ng&#45;controller="RecipeListCtrl"> -->
 
         <!-- show a combined list of recipes and foodstuffs -->
-        <div class="item item-divider">In my Bag</div>
-
-        <!-- Nothing in bag? -->
-        <div class="grayed" ng-show="get_all_content(bag).length === 0">
-          Your bag is empty... And lonely...
+        <div class="item item-divider" ng-hide="get_all_content(bag).length === 0">
+          In my Bag
         </div>
 
         <ion-list >
+
+          <!-- Nothing in bag? -->
+          <div class="grayed item" ng-show="get_all_content(bag).length === 0">
+            <h2>Your bag is empty</h2>
+            <h4>And Lonely. You should add something.</h4>
+          </div>
+
           <div ng-repeat="item in (filter_open ? filtered_items : get_all_content(bag))">
 
             <!-- if a recipe -->
@@ -73,7 +88,9 @@
         </ion-list>
 
         <!-- All the checked-off items go here -->
-        <div class="item item-divider">Complete</div>
+        <div class="item item-divider" ng-hide="get_all_content(bag).length === 0">
+          Complete
+        </div>
         <div class="diabled" ng-repeat="item in completed_items">
           <!-- if a recipe -->
           <recipe-card

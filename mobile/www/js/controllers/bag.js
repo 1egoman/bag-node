@@ -11,7 +11,8 @@ angular.module('starter.controllers')
       socket, 
       $state,
       $ionicListDelegate,
-      AllItems
+      AllItems,
+      $timeout
 ) {
 
   // get all bags
@@ -64,28 +65,27 @@ angular.module('starter.controllers')
 
     // get all items and display in the search
     AllItems.all($scope, function(content) {
-
-      // filter with ionic filter bar
-      hide = $ionicFilterBar.show({
-        items: content,
-        done: function() {
-          $scope.add_items = content
-        },
-        update: function (filteredItems) {
-          $scope.add_items = filteredItems;
-        },
-
-        // if the filter bar closes, close the modal
-        cancel: function() {
-          $scope.modal.hide();
-        },
-        filterProperties: 'name'
-      });
-
-      if (hide) $scope.hide_filter_bar = hide
-
+      $scope.add_items = content
     })
   };
+
+  // filter with ionic filter bar
+  $scope.open_search = function() {
+    hide = $ionicFilterBar.show({
+      items: $scope.add_items,
+      update: function (filteredItems) {
+        $scope.add_items = filteredItems;
+      },
+
+      // if the filter bar closes, close the modal
+      cancel: function() {
+        $scope.modal.hide();
+      },
+      filterProperties: 'name'
+    });
+
+    if (hide) $scope.hide_filter_bar = hide
+  }
 
   // if modal closes first, close the filter bar
   $scope.close_add_modal = function() {
@@ -100,6 +100,11 @@ angular.module('starter.controllers')
   // add a new item to the bag
   $scope.add_item_to_bag = function(item) {
     if (item.contents) {
+      // make sure everything inside is unchecked
+      // if this isn't done sometimes items will "gitch" into
+      // the complete section
+      item.contents.forEach(function(i) { i.checked = false  })
+
       $scope.bag.contentsLists.push(item)
     } else {
       $scope.bag.contents.push(item)
@@ -147,16 +152,17 @@ angular.module('starter.controllers')
 
   // flatten the bag so everything is easily indexable
   // this is used for search
-  $scope.flatten_bag = function(bag) {
+  $scope.flatten_bag = function(bag, opts) {
     bag = bag || $scope.bag
+    opts = opts || {}
+    if (!bag) return
     var total = [];
 
     (bag.contents || []).concat(bag.contentsLists || []).forEach(function(item) {
-      console.log(item);
       if (item.contents) {
         // this recipe has items of its own
-        total = total.concat($scope.flatten_bag(item))
-        total.push(item);
+        total = total.concat($scope.flatten_bag(item, opts))
+        if (opts.list_names_index === false) total.push(item);
       } else {
         // do total
         total.push(item)
@@ -246,6 +252,23 @@ angular.module('starter.controllers')
     $scope.update_bag()
   }
 
+
+
+  ////
+  // switching to list mode
+  ////
+
+  $scope.to_list_mode = function() {
+    $state.go("tab.list")
+  }
+
+  $scope.list_check_item = function(item, ind) {
+    item.checked = true
+      $timeout(function(){
+        $scope.update_bag()
+      }, 250);
+    $ionicSlideBoxDelegate.slide(ind+1, 250)
+  }
 
 
 
