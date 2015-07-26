@@ -12,7 +12,7 @@
 
 
     <!-- a recipe card -->
-    <div class="list" style="margin-left: -16px; width: 112%;">
+    <div class="list" style="margin-left: -16px;">
 
       <!-- all items within this recipe -->
       <li href="#" class="item item-checkbox" ng-repeat="item in get_all_content(recipe)">
@@ -30,7 +30,9 @@
 
           <!-- rightmost icons -->
           <i ng-show="item.contents" class="pull-right ion-ios-arrow-right"></i>
-          <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
+          <span class="pull-right" ng-show="item.price" style="margin-right: -16px;">
+            {{item.price | currency}}
+          </span>
         </span>
       </li>
     </div>
@@ -42,7 +44,7 @@
       </ion-option-button>
 
       <!-- <a href="/item/{{item._id}}"> -->
-      <ion-option-button class="button-positive" ng-click="more_info(recipe)">
+      <ion-option-button class="button-positive" ng-click="moreInfo(recipe)">
         More Info
       </ion-option-button>
 

@@ -10,7 +10,7 @@ angular.module('starter.controllers')
       $ionicFilterBar, 
       socket, 
       $state,
-      $location
+      $ionicListDelegate
 ) {
 
   // get all bags
@@ -181,7 +181,8 @@ angular.module('starter.controllers')
 
   // transistion to a more info page about the specified item
   $scope.more_info = function(item) {
-    $state.go('item-info', {id: item._id})
+    $ionicListDelegate.closeOptionButtons()
+    $state.go('iteminfo', {id: item._id})
   }
 
 
@@ -230,6 +231,7 @@ angular.module('starter.controllers')
 
 
 
+
   ////
   // Intializers
   ////
@@ -237,6 +239,7 @@ angular.module('starter.controllers')
   $scope.filter_open = false
   $scope.filtered_items = []
   $scope.completed_items = []
+  $scope.echo = function() {console.log("Called!"); return "Called!"}
 
 })
 

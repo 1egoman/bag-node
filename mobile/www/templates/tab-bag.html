@@ -48,7 +48,7 @@
           Your bag is empty... And lonely...
         </div>
 
-        <ion-list>
+        <ion-list >
           <div ng-repeat="item in (filter_open ? filtered_items : get_all_content(bag))">
 
             <!-- if a recipe -->
@@ -58,6 +58,7 @@
               ng-hide="all_checked(item)"
               change="update_bag"
               delete-item="delete_item(item)"
+              more-info="more_info(item)"
             ></recipe-card>
 
             <!-- if a foodstuff -->
@@ -66,6 +67,7 @@
               change="update_bag"
               ng-hide="item.checked || item.contents || item.contentsLists"
               delete-item="delete_item(item)"
+              more-info="more_info(item)"
             ></checkable-item>
           </div>
         </ion-list>

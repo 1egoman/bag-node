@@ -87,16 +87,22 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 
 // Item Info Controller
-.controller('ItemInfoCtrl', function($scope, socket, $stateParams) {
+// Fetch all info about an item so it can be displayed on the
+// more info screen for that item
+.controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state) {
   socket.emit('bag:index')
     socket.on('bag:index:callback', function(evt) {
-      all_items = evt.data.concat(evt.contentsLists)
+      all_items = evt.data.contents.concat(evt.data.contentsLists)
       $scope.item = all_items.filter(function(i) {
         return i._id === $stateParams.id
       })
 
-      if ($scope.item.length > 1) $scope.item = $scope.item[0]
+      if ($scope.item.length >= 1) $scope.item = $scope.item[0]
     });
+
+  $scope.go_back_to_bag = function() {
+    $state.go("tab.bag")
+  }
 })
 
 
