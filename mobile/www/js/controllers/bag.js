@@ -3,7 +3,14 @@ angular.module('starter.controllers')
 
 // Bags Controller
 // This manages the bag, which can contain recipes or foodstuffs
-.controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, $ionicFilterBar, socket) {
+.controller('BagsCtrl', function(
+      $scope, 
+      $ionicModal, 
+      $ionicSlideBoxDelegate, 
+      $ionicFilterBar, 
+      socket, 
+      $state
+) {
 
   // get all bags
   // this fires once at the load of the controller, but also repeadedly when
@@ -170,6 +177,12 @@ angular.module('starter.controllers')
       }
     }).indexOf(false) === -1
   };
+
+  // transistion to a more info page about the specified item
+  $scope.more_info = function(item) {
+    $state.go('item-info', {id: item._id})
+    console.log(item)
+  }
 
 
 

@@ -1,32 +1,33 @@
 <!-- all items within this recipe -->
-<ion-item>
-  <div class="item-checkbox">
+<div class="card">
+  <ion-item>
+    <div class="item-checkbox">
 
-    <!-- Check off the item -->
-    <label class="checkbox">
-      <input type="checkbox" ng-model="item.checked" ng-change="change(item)">
-    </label>
+      <!-- Check off the item -->
+      <label class="checkbox">
+        <input type="checkbox" ng-model="item.checked" ng-change="change(item)">
+      </label>
 
-    <!-- the title -->
-    <span class="title" ng-class="{strike: item.checked}">
-      <div class="line"></div>
+      <!-- the title -->
+      <span class="title" ng-class="{strike: item.checked}">
+        <div class="line"></div>
 
-      {{item.name}}
+        {{item.name}}
 
-      <!-- rightmost icons -->
-      <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
-    </span>
+        <!-- rightmost icons -->
+        <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
+      </span>
 
-      
-    <!-- delete and more info -->
-    <ion-option-button class="button-assertive" ng-click="">
-      Delete
-    </ion-option-button>
+        
+      <!-- delete and more info -->
+      <ion-option-button class="button-assertive" ng-click="">
+        Delete
+      </ion-option-button>
 
-    <!-- <a href="/item/{{item._id}}"> -->
-    <ion-option-button class="button-positive" ng-click="">
-      More Info
-    </ion-option-button>
+      <ion-option-button class="button-positive" ng-click="more_info(item)">
+        More Info
+      </ion-option-button>
 
-  </div>
-</ion-item>
+    </div>
+  </ion-item>
+</div>

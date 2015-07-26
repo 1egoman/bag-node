@@ -83,6 +83,22 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 })
 
+
+// Item Info Controller
+.controller('ItemInfoCtrl', function($scope, socket, $stateParams) {
+  socket.emit('bag:index')
+    socket.on('bag:index:callback', function(evt) {
+      all_items = evt.data.concat(evt.contentsLists)
+      $scope.item = all_items.filter(function(i) {
+        return i._id === $stateParams.id
+      })
+
+      if ($scope.item.length > 1) $scope.item = $scope.item[0]
+    });
+})
+
+
+
 // Recipe List Controller
 // Gets a subset of all lists and returns it
 .controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
