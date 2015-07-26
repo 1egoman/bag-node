@@ -1,5 +1,4 @@
 <ion-view view-title="{{item.name || 'Item Details'}}">
-  {{item.name}}
 
   <!-- nav bar -->
   <ion-nav-buttons side="right">
@@ -13,7 +12,13 @@
   <ion-content>
     <div class="list">
       <div class="item">
-        {{item.desc}}
+        <p ng-repeat="(k, v) in item" ng-show="k.indexOf('contents') === -1">
+          <strong>{{k}}:</strong>
+          <span ng-hide="v.push">{{v}}</span>
+          <span ng-show="v.push">{{v.join(', ')}}</span>
+        </p>
+        <!-- <p><strong>Description:</strong> {{item.desc}}</p> -->
+        <!-- <p><strong>Tags:</strong> {{item.tags.join(', ')}}</p> -->
       </div>
 
       <div class="item item-divider" ng-show="item.contents.length">Foodstuffs</div>
@@ -21,9 +26,9 @@
       class="item item-icon-right"
       href="#/iteminfo/{{i._id}}"
       ng-repeat="i in item.contents">
-          {{i.name}}
-          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
-        </a>
+        {{i.name}}
+        <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
+      </a>
 
 
       <div class="item item-divider" ng-show="item.contentsLists.length">Recipes</div>
@@ -31,8 +36,8 @@
       class="item item-icon-right"
       href="#/iteminfo/{{i._id}}"
       ng-repeat="i in item.contentsLists">
-          {{i.name}}
-          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
-        </a>
+        {{i.name}}
+        <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
+      </a>
   </ion-content>
 </ion-view>

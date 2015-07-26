@@ -22,7 +22,7 @@ strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io'])
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 // inject socket.io into angular
 .factory("socket", function (socketFactory) {
@@ -33,7 +33,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 // Recipe Card Controller
 // This manages each recipe card so that it will always stay up to date.
-.controller('RecipeCtrl', function($scope, socket, $state, $location) {
+.controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize) {
 
   // calculate total price for a whole recipe
   // this takes into account any sub-recipes
@@ -77,6 +77,17 @@ angular.module('starter.controllers', ['btford.socket-io'])
       return bag.contents.concat(bag.contentsLists || []);
     } else return []
   };
+
+
+  // format the name of a list
+  // shrink down the text size when the name is too long
+  $scope.format_name = function(n) {
+    if (window.innerWidth > 200 + 10 * n.length) {
+      return n;
+    } else {
+      return $sce.trustAsHtml("<span style='font-size: 75%;'>"+$sanitize(n)+"</span>")
+    }
+  }
 
 
   ////

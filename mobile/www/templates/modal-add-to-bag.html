@@ -15,9 +15,13 @@
     <div class="list">
 
       <!-- show the matches -->
-      <a class="item" ng-repeat="item in add_items"
+      <a class="item item-icon-left" ng-repeat="item in add_items"
         ng-click="add_item_to_bag(item)">
-        <p>{{item.name}}</p>
+        <i class="icon ion-ios-plus-outline"></i>
+        <p>
+          {{item.name}}
+          <span class="pull-right">{{item.price | currency}}</span>
+        </p>
       </a>
 
 

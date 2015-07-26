@@ -26,7 +26,7 @@
         <span class="title" ng-class="{strike: item.checked}">
           <div class="line"></div>
 
-          {{item.name}}
+          <span ng-bind-html="format_name(item.name)"></span>
 
           <!-- rightmost icons -->
           <i ng-show="item.contents" class="pull-right ion-ios-arrow-right"></i>
