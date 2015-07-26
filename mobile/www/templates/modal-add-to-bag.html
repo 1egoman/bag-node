@@ -15,7 +15,8 @@
     <div class="list">
 
       <!-- show the matches -->
-      <a class="item" ng-repeat="item in add_items" ng-click="">
+      <a class="item" ng-repeat="item in add_items"
+        ng-click="add_item_to_bag(item)">
         <p>{{item.name}}</p>
       </a>
 

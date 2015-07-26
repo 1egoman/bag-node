@@ -10,7 +10,8 @@ angular.module('starter.controllers')
       $ionicFilterBar, 
       socket, 
       $state,
-      $ionicListDelegate
+      $ionicListDelegate,
+      AllItems
 ) {
 
   // get all bags
@@ -60,25 +61,29 @@ angular.module('starter.controllers')
   // user wantes to add a new item
   $scope.open_add_modal = function() {
     $scope.modal.show();
-    content = $scope.get_all_content($scope.bag)
 
-    // filter with ionic filter bar
-    $scope.hide_filter_bar = $ionicFilterBar.show({
-      items: content,
-      done: function() {
-        $scope.add_items = content
-      },
-      update: function (filteredItems) {
-        $scope.add_items = filteredItems;
-        console.log($scope.add_items)
-      },
+    // get all items and display in the search
+    AllItems.all($scope, function(content) {
 
-      // if the filter bar closes, close the modal
-      cancel: function() {
-        $scope.modal.hide();
-      },
-      filterProperties: 'name'
-    });
+      // filter with ionic filter bar
+      $scope.hide_filter_bar = $ionicFilterBar.show({
+        items: content,
+        done: function() {
+          $scope.add_items = content
+        },
+        update: function (filteredItems) {
+          $scope.add_items = filteredItems;
+          console.log($scope.add_items)
+        },
+
+        // if the filter bar closes, close the modal
+        cancel: function() {
+          $scope.modal.hide();
+        },
+        filterProperties: 'name'
+      });
+
+    })
   };
 
   // if modal closes first, close the filter bar
@@ -99,6 +104,7 @@ angular.module('starter.controllers')
       $scope.bag.contents.push(item)
     }
     $scope.update_bag()
+    $scope.close_add_modal()
   }
 
 

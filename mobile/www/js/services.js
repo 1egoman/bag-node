@@ -7,6 +7,7 @@ angular.module('starter.services', [])
   root.id = {}
 
 
+  // look through all foodstuffs and items for the specified id
   root.by_id = function(sc, id, cb) {
     socket.emit('foodstuff:show', {foodstuff: id})
     socket.emit('list:show', {list: id})
@@ -31,25 +32,31 @@ angular.module('starter.services', [])
     socket.on('list:show:callback', responseList)
   }
 
+  root.all = function(sc, cb) {
+    socket.emit('foodstuff:index')
+    socket.emit('list:index')
+    sc.all_calls = 0
+
+    responseFoodstuff = function(evt) {
+      root.all = evt.data.concat(root.all || [])
+      sc.all_calls++
+      socket.removeListener('foodstuff:index:callback')
+    }
+    responseList = function(evt) {
+      root.all = evt.data.concat(root.all || [])
+      sc.all_calls++
+      socket.removeListener('list:index:callback')
+    }
+
+    sc.$watch('all_calls', function() {
+      sc.all_calls == 2 && cb(root.all)
+    });
+
+    socket.on('foodstuff:index:callback', responseFoodstuff)
+    socket.on('list:index:callback', responseList)
+  }
+
   return root
-
-
-  // root.all = function() {
-  //   socket.emit('foodstuff:index')
-  //   socket.emit('list:index')
-  //
-  //   responseFoodstuff = function(evt) {
-  //     $scope.item = evt.data || $scope.item
-  //     socket.removeListener('foodstuff:index:callback')
-  //   }
-  //   responseList = function(evt) {
-  //     $scope.item = evt.data || $scope.item
-  //     socket.removeListener('list:index:callback')
-  //   }
-  //
-  //   socket.on('foodstuff:index:callback', responseFoodstuff)
-  //   socket.on('list:index:callback', responseList)
-  // }
 
 })
 

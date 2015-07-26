@@ -90,7 +90,6 @@ angular.module('starter.controllers', ['btford.socket-io'])
 // Fetch all info about an item so it can be displayed on the
 // more info screen for that item
 .controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems) {
-
   AllItems.by_id($scope, $stateParams.id, function(val){
     $scope.item = val
   })
