@@ -7730,14 +7730,14 @@ a.button {
       font-size: 36px;
       margin-bottom: 4px; }
 
-.list.recipe, .list.recipe:last-child, .card.single, .card.single:last-child {
+.list.recipe, .list.recipe:last-child, .card, .card:last-child {
   margin-top: 10px;
   margin-bottom: 10px; }
-.list.recipe .item.item-avatar, .card.single .item.item-avatar {
+.list.recipe .item.item-avatar, .card .item.item-avatar {
   padding-left: 16px; }
-.list.recipe .title, .card.single .title {
+.list.recipe .title, .card .title {
   position: relative; }
-  .list.recipe .title.strike .line, .card.single .title.strike .line {
+  .list.recipe .title.strike .line, .card .title.strike .line {
     position: absolute;
     top: 9px;
     left: 0px;

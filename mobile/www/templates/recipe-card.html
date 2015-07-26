@@ -5,7 +5,7 @@
     <div class="item-avatar">
       <h2>{{recipe.name}}</h2>
       <p>
-        {{recipe.desc}}
+        {{recipe.tags.join(', ')}}
         <span class="pull-right">{{calculate_total(recipe) | currency}}</span>
       </p>
     </div>
