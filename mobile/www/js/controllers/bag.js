@@ -73,7 +73,6 @@ angular.module('starter.controllers')
         },
         update: function (filteredItems) {
           $scope.add_items = filteredItems;
-          console.log($scope.add_items)
         },
 
         // if the filter bar closes, close the modal

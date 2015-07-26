@@ -33,23 +33,23 @@ angular.module('starter.services', [])
   }
 
   root.all = function(sc, cb) {
-    socket.emit('foodstuff:index')
-    socket.emit('list:index')
+    socket.emit('foodstuff:index', {limit: 25})
+    socket.emit('list:index', {limit: 25})
     sc.all_calls = 0
 
     responseFoodstuff = function(evt) {
-      root.all = evt.data.concat(root.all || [])
+      root.all_resp = evt.data.concat(root.all_resp || [])
       sc.all_calls++
       socket.removeListener('foodstuff:index:callback')
     }
     responseList = function(evt) {
-      root.all = evt.data.concat(root.all || [])
+      root.all_resp = evt.data.concat(root.all_resp || [])
       sc.all_calls++
       socket.removeListener('list:index:callback')
     }
 
     sc.$watch('all_calls', function() {
-      sc.all_calls == 2 && cb(root.all)
+      sc.all_calls == 2 && cb(root.all_resp)
     });
 
     socket.on('foodstuff:index:callback', responseFoodstuff)
