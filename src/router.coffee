@@ -107,7 +107,7 @@ exports.websocket = (app) ->
               body: data
               type: 'ws'
               params:
-                list: data?.list
+                foodstuff: data?.foodstuff
               user: user
             ,
               send: (data) ->

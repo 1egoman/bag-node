@@ -21,7 +21,7 @@
       href="#/iteminfo/{{i._id}}"
       ng-repeat="i in item.contents">
           {{i.name}}
-          <i class="icon ion-ios-arrow-right"></i>
+          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
         </a>
 
 
@@ -31,7 +31,7 @@
       href="#/iteminfo/{{i._id}}"
       ng-repeat="i in item.contentsLists">
           {{i.name}}
-          <i class="icon ion-ios-arrow-right"></i>
+          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
         </a>
   </ion-content>
 </ion-view>

@@ -73,8 +73,12 @@ angular.module('starter', [
   // more info about an item, such as a recipe or a foodstuff
   .state('iteminfo', {
     url: '/iteminfo/:id',
-    templateUrl: 'templates/item-info.html',
-    controller: 'ItemInfoCtrl'
+    // views: {
+    //   'tab-bag': {
+        templateUrl: 'templates/item-info.html',
+        controller: 'ItemInfoCtrl'
+      // }
+    // }
   })
 
   .state('tab.picks', {
