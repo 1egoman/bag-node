@@ -5299,7 +5299,7 @@ a.item-content {
 
 .list:last-child {
   margin-bottom: 0px; }
-  .list:last-child.card, .list.recipe:last-child {
+  .list:last-child.card {
     margin-bottom: 40px; }
 
 /**
@@ -5313,7 +5313,7 @@ a.item-content {
   color: #222;
   font-weight: bold; }
 
-.card.list .list-item, .list.recipe .list-item {
+.card.list .list-item {
   padding-right: 1px;
   padding-left: 1px; }
 
@@ -5322,48 +5322,48 @@ a.item-content {
  * --------------------------------------------------
  * A card and list-inset are close to the same thing, except a card as a box shadow.
  */
-.card, .list.recipe, .card.single, .list-inset {
+.card, .list-inset {
   overflow: hidden;
   margin: 20px 10px;
   border-radius: 2px;
   background-color: #fff; }
 
-.card, .list.recipe, .card.single {
+.card {
   padding-top: 1px;
   padding-bottom: 1px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); }
-  .card .item, .list.recipe .item {
+  .card .item {
     border-left: 0;
     border-right: 0; }
-  .card .item:first-child, .list.recipe .item:first-child {
+  .card .item:first-child {
     border-top: 0; }
-  .card .item:last-child, .list.recipe .item:last-child {
+  .card .item:last-child {
     border-bottom: 0; }
 
-.padding .card, .padding .list.recipe, .padding .list-inset {
+.padding .card, .padding .list-inset {
   margin-left: 0;
   margin-right: 0; }
 
-.card .item:first-child, .list.recipe .item:first-child, .list-inset .item:first-child, .padding > .list .item:first-child {
+.card .item:first-child, .list-inset .item:first-child, .padding > .list .item:first-child {
   border-top-left-radius: 2px;
   border-top-right-radius: 2px; }
-  .card .item:first-child .item-content, .list.recipe .item:first-child .item-content, .list-inset .item:first-child .item-content, .padding > .list .item:first-child .item-content {
+  .card .item:first-child .item-content, .list-inset .item:first-child .item-content, .padding > .list .item:first-child .item-content {
     border-top-left-radius: 2px;
     border-top-right-radius: 2px; }
-.card .item:last-child, .list.recipe .item:last-child, .list-inset .item:last-child, .padding > .list .item:last-child {
+.card .item:last-child, .list-inset .item:last-child, .padding > .list .item:last-child {
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px; }
-  .card .item:last-child .item-content, .list.recipe .item:last-child .item-content, .list-inset .item:last-child .item-content, .padding > .list .item:last-child .item-content {
+  .card .item:last-child .item-content, .list-inset .item:last-child .item-content, .padding > .list .item:last-child .item-content {
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px; }
 
-.card .item:last-child, .list.recipe .item:last-child, .list-inset .item:last-child {
+.card .item:last-child, .list-inset .item:last-child {
   margin-bottom: -1px; }
 
-.card .item, .list.recipe .item, .list-inset .item, .padding > .list .item, .padding-horizontal > .list .item {
+.card .item, .list-inset .item, .padding > .list .item, .padding-horizontal > .list .item {
   margin-right: 0;
   margin-left: 0; }
-  .card .item.item-input input, .list.recipe .item.item-input input, .list-inset .item.item-input input, .padding > .list .item.item-input input, .padding-horizontal > .list .item.item-input input {
+  .card .item.item-input input, .list-inset .item.item-input input, .padding > .list .item.item-input input, .padding-horizontal > .list .item.item-input input {
     padding-right: 44px; }
 
 .padding-left > .list .item {
@@ -7730,14 +7730,14 @@ a.button {
       font-size: 36px;
       margin-bottom: 4px; }
 
-.list.recipe, .list.recipe:last-child, .card.single, .single.list.recipe, .single.card, .card.single:last-child, .single.list.recipe:last-child, .single.card:last-child {
+.list.recipe, .list.recipe:last-child, .card.single, .card.single:last-child {
   margin-top: 10px;
   margin-bottom: 10px; }
-.list.recipe .item.item-avatar, .card.single .item.item-avatar, .single.list.recipe .item.item-avatar, .single.card .item.item-avatar {
+.list.recipe .item.item-avatar, .card.single .item.item-avatar {
   padding-left: 16px; }
-.list.recipe .title, .card.single .title, .single.list.recipe .title, .single.card .title {
+.list.recipe .title, .card.single .title {
   position: relative; }
-  .list.recipe .title.strike .line, .card.single .title.strike .line, .single.list.recipe .title.strike .line, .single.card .title.strike .line {
+  .list.recipe .title.strike .line, .card.single .title.strike .line {
     position: absolute;
     top: 9px;
     left: 0px;
@@ -7746,5 +7746,5 @@ a.button {
     background: #444;
     margin: 0px 50px 0px -4px; }
 
-.disabled.card .title, .disabled.list.recipe .title {
+.disabled.card .title {
   color: #CCC; }

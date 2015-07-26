@@ -9,7 +9,6 @@
     // </div>
 
 .list.recipe, .card.single {
-  @extend .card;
 
   &, &:last-child {
     margin-top: 10px;
