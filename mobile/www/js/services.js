@@ -1,5 +1,60 @@
 angular.module('starter.services', [])
 
+
+// get all foodstuffs and recipes
+.factory("AllItems", function(socket) {
+  root = {}
+  root.id = {}
+
+
+  root.by_id = function(sc, id, cb) {
+    socket.emit('foodstuff:show', {foodstuff: id})
+    socket.emit('list:show', {list: id})
+    sc.id_calls = 0
+
+    responseFoodstuff = function(evt) {
+      root.id[id] = evt.data || root.id[id]
+      sc.id_calls++
+      socket.removeListener('foodstuff:show:callback')
+    }
+    responseList = function(evt) {
+      root.id[id] = evt.data || root.id[id]
+      sc.id_calls++
+      socket.removeListener('list:show:callback')
+    }
+
+    sc.$watch('id_calls', function() {
+      sc.id_calls == 2 && cb(root.id[id])
+    });
+
+    socket.on('foodstuff:show:callback', responseFoodstuff)
+    socket.on('list:show:callback', responseList)
+  }
+
+  return root
+
+
+  // root.all = function() {
+  //   socket.emit('foodstuff:index')
+  //   socket.emit('list:index')
+  //
+  //   responseFoodstuff = function(evt) {
+  //     $scope.item = evt.data || $scope.item
+  //     socket.removeListener('foodstuff:index:callback')
+  //   }
+  //   responseList = function(evt) {
+  //     $scope.item = evt.data || $scope.item
+  //     socket.removeListener('list:index:callback')
+  //   }
+  //
+  //   socket.on('foodstuff:index:callback', responseFoodstuff)
+  //   socket.on('list:index:callback', responseList)
+  // }
+
+})
+
+
+
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 

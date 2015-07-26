@@ -4,7 +4,7 @@
   <ion-header-bar class="">
     <div class="title title-center header-item">Choose new item</div>
     <div class="buttons buttons-right">
-      <span class="right-buttons">
+,     <span class="right-buttons">
         <button ng-click="close_add_modal()" class="button button-icon icon
           ion-ios-close-empty activated"></button>
       </span>
@@ -15,9 +15,9 @@
     <div class="list">
 
       <!-- show the matches -->
-      <div ng-repeat="item in add_items">
+      <a class="item" ng-repeat="item in add_items" ng-click="">
         <p>{{item.name}}</p>
-      </div>
+      </a>
 
 
     </div>

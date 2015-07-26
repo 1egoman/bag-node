@@ -91,6 +91,16 @@ angular.module('starter.controllers')
     $scope.modal.remove();
   });
 
+  // add a new item to the bag
+  $scope.add_item_to_bag = function(item) {
+    if (item.contents) {
+      $scope.bag.contentsLists.push(item)
+    } else {
+      $scope.bag.contents.push(item)
+    }
+    $scope.update_bag()
+  }
+
 
 
 
