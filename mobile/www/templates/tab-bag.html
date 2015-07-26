@@ -57,6 +57,7 @@
               ng-show="item.contents"
               ng-hide="all_checked(item)"
               change="update_bag"
+              delete-item="delete_item(item)"
             ></recipe-card>
 
             <!-- if a foodstuff -->
@@ -64,6 +65,7 @@
               item="item" 
               change="update_bag"
               ng-hide="item.checked || item.contents || item.contentsLists"
+              delete-item="delete_item(item)"
             ></checkable-item>
           </div>
         </ion-list>

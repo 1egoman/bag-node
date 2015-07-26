@@ -7,7 +7,8 @@ angular.module('starter.directives', [])
     require: "^recipe",
     scope: {
       recipe: '=',
-      change: '='
+      change: '=',
+      deleteItem: '&'
     }
   };
 })
@@ -19,7 +20,8 @@ angular.module('starter.directives', [])
     require: "^item",
     scope: {
       item: '=',
-      change: '='
+      change: '=',
+      deleteItem: '&'
     }
   };
 })

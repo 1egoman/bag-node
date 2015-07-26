@@ -9,7 +9,8 @@ angular.module('starter.controllers')
       $ionicSlideBoxDelegate, 
       $ionicFilterBar, 
       socket, 
-      $state
+      $state,
+      $location
 ) {
 
   // get all bags
@@ -181,7 +182,6 @@ angular.module('starter.controllers')
   // transistion to a more info page about the specified item
   $scope.more_info = function(item) {
     $state.go('item-info', {id: item._id})
-    console.log(item)
   }
 
 
@@ -211,6 +211,22 @@ angular.module('starter.controllers')
     // update the marked items when somebody else messes eith the bag
     $scope.completed_items = $scope.get_marked_items($scope.bag)
   });
+
+
+
+  ////
+  // Deleting an item in a bag
+  ////
+
+  $scope.delete_item = function(item) {
+    $scope.bag.contents = $scope.bag.contents.filter(function(i) {
+      return i._id !== item._id
+    })
+    $scope.bag.contentsLists = $scope.bag.contentsLists.filter(function(i) {
+      return i._id !== item._id
+    })
+    $scope.update_bag()
+  }
 
 
 

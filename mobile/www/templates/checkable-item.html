@@ -8,6 +8,7 @@
         <input type="checkbox" ng-model="item.checked" ng-change="change(item)">
       </label>
 
+
       <!-- the title -->
       <span class="title" ng-class="{strike: item.checked}">
         <div class="line"></div>
@@ -18,9 +19,10 @@
         <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
       </span>
 
+
         
       <!-- delete and more info -->
-      <ion-option-button class="button-assertive" ng-click="">
+      <ion-option-button class="button-assertive" ng-click="deleteItem(item)">
         Delete
       </ion-option-button>
 

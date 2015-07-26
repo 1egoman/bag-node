@@ -33,7 +33,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 // Recipe Card Controller
 // This manages each recipe card so that it will always stay up to date.
-.controller('RecipeCtrl', function($scope, socket) {
+.controller('RecipeCtrl', function($scope, socket, $state, $location) {
 
   // calculate total price for a whole recipe
   // this takes into account any sub-recipes
@@ -77,6 +77,8 @@ angular.module('starter.controllers', ['btford.socket-io'])
       return bag.contents.concat(bag.contentsLists || []);
     } else return []
   };
+
+
   ////
   // Intializers
   ////
