@@ -16,7 +16,7 @@
     <!-- plus for adding an item or recipe to the bag -->
     <button 
       ng-click="open_add_modal()" 
-      class="button button-icon icon ion-ios-plus-empty"
+      class="button button-icon icon ion-plus-round"
       ng-show="is_viewing_bag()"
       >
     </button>
@@ -24,7 +24,7 @@
     <!-- search for searching through the bag -->
     <button 
       ng-click="filter_bag_contents()" 
-      class="button button-icon icon ion-ios-search"
+      class="button button-icon icon ion-search"
       >
     </button>
 
@@ -60,7 +60,11 @@
             <h4>And Lonely. You should add something.</h4>
           </div>
 
-          <div ng-repeat="(section, items) in (filter_open ? filtered_items : sorted_bag)">
+          <div ng-repeat="(section, items) in (
+            filter_open ? 
+            {'Matching Results': filtered_items} :
+            sorted_bag
+          )">
             <div class="item item-divider">{{section || 'Default'}}</div>
             <div ng-repeat="item in items">
 
