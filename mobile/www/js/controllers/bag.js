@@ -25,9 +25,6 @@ angular.module('starter.controllers')
     // console.log("bag:index:callback", evt)
     $scope.bag = evt.data
 
-    // update the marked items
-    $scope.completed_items = $scope.get_marked_items($scope.bag)
-
     // force the slide-box to update and make
     // each "page" > 0px (stupid bugfix)
     $ionicSlideBoxDelegate.update()
@@ -226,9 +223,6 @@ angular.module('starter.controllers')
   // basically, when an item is checked it doesn't add to any totals
   // because the user is presumed to have bought it already.
   $scope.update_bag = function() {
-    // updating the sorting for the bag
-    $scope.sorted_bag = $scope.sort_items()
-
     socket.emit('bag:update', {
       bag: strip_$$($scope.bag)
     });
@@ -236,6 +230,9 @@ angular.module('starter.controllers')
   socket.on("bag:update:callback", function(evt) {
     // update the bag
     $scope.bag = evt.data
+
+    // updating the sorting for the bag
+    $scope.sorted_bag = $scope.sort_items()
   });
 
 
