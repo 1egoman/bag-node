@@ -61,6 +61,12 @@ angular.module('starter.services', [])
 
 })
 
+.factory("persistant", function() {
+  return {
+    sort: null
+  }
+})
+
 
 
 .factory('Chats', function() {

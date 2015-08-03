@@ -1,0 +1,10 @@
+<ion-view view-title="Sort by...">
+
+  <ion-content>
+    <div class="list">
+      <ion-radio ng-model="sort_type" ng-value="no" ng-click="change_sort('no')">No Sort</ion-radio>
+      <ion-radio ng-model="sort_type" ng-value="tags" ng-click="change_sort('tags')">Tags</ion-radio>
+      <ion-radio ng-model="sort_type" ng-value="completion" ng-click="change_sort('completion')">Item State</ion-radio>
+    </div>
+  </ion-content>
+</ion-view>

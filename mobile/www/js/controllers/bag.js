@@ -12,7 +12,9 @@ angular.module('starter.controllers')
       $state,
       $ionicListDelegate,
       AllItems,
-      $timeout
+      $timeout,
+      persistant,
+      $rootScope
 ) {
 
   // get all bags
@@ -29,6 +31,9 @@ angular.module('starter.controllers')
     // force the slide-box to update and make
     // each "page" > 0px (stupid bugfix)
     $ionicSlideBoxDelegate.update()
+
+    // updating the sorting for the bag
+    $scope.sorted_bag = $scope.sort_items()
   });
 
   // calculate total price for a whole bag
@@ -221,8 +226,8 @@ angular.module('starter.controllers')
   // basically, when an item is checked it doesn't add to any totals
   // because the user is presumed to have bought it already.
   $scope.update_bag = function() {
-    // update the marked items when you mess with the bag
-    $scope.completed_items = $scope.get_marked_items($scope.bag)
+    // updating the sorting for the bag
+    $scope.sorted_bag = $scope.sort_items()
 
     socket.emit('bag:update', {
       bag: strip_$$($scope.bag)
@@ -231,9 +236,6 @@ angular.module('starter.controllers')
   socket.on("bag:update:callback", function(evt) {
     // update the bag
     $scope.bag = evt.data
-
-    // update the marked items when somebody else messes eith the bag
-    $scope.completed_items = $scope.get_marked_items($scope.bag)
   });
 
 
@@ -259,15 +261,50 @@ angular.module('starter.controllers')
   ////
 
   $scope.to_list_mode = function() {
-    $state.go("tab.list")
+    $state.go("tab.select")
+  }
+  $rootScope.$on('$stateChangeSuccess', function(event, toState) {
+    if (toState.name === "tab.bag") {
+      $scope.sorted_bag = $scope.sort_items()
+    }
+  })
+
+
+  ////
+  // Sorting types
+  ////
+
+  $scope.sort_items = function(bag) {
+    items = $scope.get_all_content(bag || $scope.bag);
+    switch (persistant.sort) {
+
+      // sort by checked/still left
+      case "completion":
+        return _.groupBy(items, function(i) {
+          if (i.checked || (i.contents && $scope.all_checked(i))) {
+            return "Mutated";
+          } else {
+            return "In my bag";
+          }
+        })
+
+      // sort by sort tags
+      case "tags":
+        return _.groupBy(items, function(i) {
+          return _.find(i.tags, function(x) { return x.indexOf('sort-') !== -1;  }) || 'No sort';
+        });
+
+      // no sort
+      default:
+        return {"All Items": items};
+        break;
+    }
   }
 
-  $scope.list_check_item = function(item, ind) {
-    item.checked = true
-      $timeout(function(){
-        $scope.update_bag()
-      }, 250);
-    $ionicSlideBoxDelegate.slide(ind+1, 250)
+  // update the old sort to the specified one
+  $scope.change_sort = function(new_sort_name) {
+    persistant.sort = new_sort_name
+    $scope.sorted_bag = $scope.sort_items()
   }
 
 
@@ -280,6 +317,9 @@ angular.module('starter.controllers')
   $scope.filtered_items = []
   $scope.completed_items = []
   $scope.echo = function() {console.log("Called!"); return "Called!"}
+
+  $scope.sort_type = persistant.sort || 'no'
+  $scope.sorted_bag = []
 
 })
 

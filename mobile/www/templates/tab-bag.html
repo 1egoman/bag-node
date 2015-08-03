@@ -5,7 +5,7 @@
 
     <button 
       ng-click="to_list_mode()"
-      class="button button-icon icon ion-ios-cart-outline"
+      class="button button-icon icon ion-funnel"
       >
     </button>
 
@@ -52,10 +52,6 @@
         <!-- <div ng&#45;controller="RecipeListCtrl"> -->
 
         <!-- show a combined list of recipes and foodstuffs -->
-        <div class="item item-divider" ng-hide="get_all_content(bag).length === 0">
-          In my Bag
-        </div>
-
         <ion-list >
 
           <!-- Nothing in bag? -->
@@ -64,52 +60,30 @@
             <h4>And Lonely. You should add something.</h4>
           </div>
 
-          <div ng-repeat="item in (filter_open ? filtered_items : get_all_content(bag))">
+          <div ng-repeat="(section, items) in (filter_open ? filtered_items : sorted_bag)">
+            <div class="item item-divider">{{section || 'Default'}}</div>
+            <div ng-repeat="item in items">
 
-            <!-- if a recipe -->
-            <recipe-card
-              recipe="item"
-              ng-show="item.contents"
-              ng-hide="all_checked(item)"
-              change="update_bag"
-              delete-item="delete_item(item)"
-              more-info="more_info(item)"
-            ></recipe-card>
+              <!-- if a recipe -->
+              <recipe-card
+                recipe="item"
+                ng-show="item.contents"
+                change="update_bag"
+                delete-item="delete_item(item)"
+                more-info="more_info(item)"
+              ></recipe-card>
 
-            <!-- if a foodstuff -->
-            <checkable-item
-              item="item" 
-              change="update_bag"
-              ng-hide="item.checked || item.contents || item.contentsLists"
-              delete-item="delete_item(item)"
-              more-info="more_info(item)"
-            ></checkable-item>
+              <!-- if a foodstuff -->
+              <checkable-item
+                item="item" 
+                change="update_bag"
+                ng-hide="item.contents || item.contentsLists"
+                delete-item="delete_item(item)"
+                more-info="more_info(item)"
+              ></checkable-item>
+            </div>
           </div>
         </ion-list>
-
-        <!-- All the checked-off items go here -->
-        <div class="item item-divider" ng-hide="get_all_content(bag).length === 0">
-          Complete
-        </div>
-        <div class="diabled" ng-repeat="item in completed_items">
-          <!-- if a recipe -->
-          <recipe-card
-            recipe="item"
-            ng-show="item.contents && all_checked(item)"
-            change="update_bag"
-          ></recipe-card>
-
-          <!-- if a foodstuff -->
-          <checkable-item
-            item="item" 
-            change="update_bag"
-            ng-hide="item.contents"
-          ></checkable-item>
-        </div>
-
-      <!-- </ion&#45;slide> -->
-
-    <!-- </ion&#45;slide&#45;box> -->
     <br/>
 
 

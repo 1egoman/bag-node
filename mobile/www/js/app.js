@@ -70,11 +70,11 @@ angular.module('starter', [
     }
   })
 
-  .state('tab.list', {
-    url: '/list',
+  .state('tab.select', {
+    url: '/select_sort_method',
     views: {
       'tab-bag': {
-        templateUrl: 'templates/tab-list.html',
+        templateUrl: 'templates/tab-select.html',
         controller: 'BagsCtrl'
       }
     }
