@@ -97,7 +97,7 @@ angular.module('starter', [
       views: {
         'tab-picks': {
           templateUrl: 'templates/tab-picks.html',
-          controller: 'ChatsCtrl'
+          controller: 'PicksCtrl'
         }
       }
     })

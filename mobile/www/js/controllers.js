@@ -141,7 +141,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 
-.controller('ChatsCtrl', function($scope, Chats) {
+.controller('PicksCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -150,7 +150,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  $scope.chats = Chats.all();
+  $scope.picks = Chats.all();
   $scope.remove = function(chat) {
     Chats.remove(chat);
   };
