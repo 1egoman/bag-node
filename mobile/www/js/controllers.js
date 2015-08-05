@@ -1,20 +1,6 @@
 // set up the socket.io conenction
 socket = io('http://192.168.1.13:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
 // # socket.emit 'foodstuff:index', list: "55a84255eb8799c52c643830"
-//
-// # get initial event info from backend
-// # socket.emit 'foodstuff:index'
-// # socket.on 'foodstuff:index:callback', (event) =>
-// #   @push event.data
-// #
-// # socket.on 'foodstuff:create:callback', (event) =>
-// #   @push event.data
-// #
-// # socket.on 'foodstuff:update:callback', (event) =>
-// #   @push event.data
-// #
-// # socket.on 'foodstuff:delete:callback', (event) =>
-// #   @push event.data
 
 // get rid of some of the angular crud
 // this is needed when doing client <-> server stuff

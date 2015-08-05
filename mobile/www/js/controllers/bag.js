@@ -7,14 +7,14 @@ angular.module('starter.controllers')
       $scope, 
       $ionicModal, 
       $ionicSlideBoxDelegate, 
-      $ionicFilterBar, 
       socket, 
       $state,
       $ionicListDelegate,
       AllItems,
       $timeout,
       persistant,
-      $rootScope
+      $rootScope,
+      searchItem
 ) {
 
   // get all bags
@@ -73,26 +73,14 @@ angular.module('starter.controllers')
 
   // filter with ionic filter bar
   $scope.open_search = function() {
-    hide = $ionicFilterBar.show({
-      items: $scope.add_items,
-      update: function (filteredItems) {
-        $scope.add_items = filteredItems;
-      },
-
-      // if the filter bar closes, close the modal
-      cancel: function() {
-        $scope.modal.hide();
-      },
-      filterProperties: 'name'
-    });
-
-    if (hide) $scope.hide_filter_bar = hide
+    searchItem($scope.add_items, function(filtered_items) {
+      $scope.add_items = filtered_items
+    }).open()
   }
 
-  // if modal closes first, close the filter bar
+  // close the add modal
   $scope.close_add_modal = function() {
     $scope.modal.hide();
-    $scope.hide_filter_bar()
   };
   // cleanup the modal when we're done with it
   $scope.$on('$destroy', function() {
@@ -131,15 +119,13 @@ angular.module('starter.controllers')
   // use ionic filter bar to filter through the bag
   $scope.filter_bag_contents = function() {
     $scope.filter_open = true
-    filterBarInstance = $ionicFilterBar.show({
-      items: $scope.flatten_bag(),
-      update: function (filteredItems) {
-        $scope.filtered_items = filteredItems;
-      },
-      done: function() { $scope.filtered_items = [] },
-      cancel: function() { $scope.filtered_items = []; $scope.filter_open = false },
-      filterProperties: 'name'
-    });
+    searchItem($scope.flatten_bag(), function(filtered_items) {
+      $scope.filtered_items = filtered_items
+    }).open(function() {
+      // runs on close
+      $scope.filtered_items = []
+      $scope.filter_open = false
+    })
   }
 
   // flatten the bag so everything is easily indexable

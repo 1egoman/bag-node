@@ -67,6 +67,33 @@ angular.module('starter.services', [])
   }
 })
 
+.factory("searchItem", function($ionicFilterBar) {
+  return function(all_items, update_cb) {
+    $scope = {}
+
+    $scope.open = function(on_close) {
+      hide = $ionicFilterBar.show({
+        items: all_items,
+        update: function (filteredItems) {
+          all_items = filteredItems;
+          update_cb && update_cb(all_items)
+        },
+
+        // if the filter bar closes, close the modal
+        cancel: function() {
+          on_close && on_close()
+        },
+        filterProperties: 'name'
+      });
+
+      if (hide) $scope.hide_filter_bar = hide
+    }
+
+    return $scope;
+  }
+
+})
+
 
 
 .factory('Chats', function() {
