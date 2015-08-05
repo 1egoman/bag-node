@@ -127,7 +127,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 
-.controller('PicksCtrl', function($scope, Chats) {
+.controller('PicksCtrl', function($scope, Chats, $ionicModal) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -135,12 +135,98 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+  //
+  
+  ////
+  // Choose to add a new foodstuff or a recipe
+  ////
+  $ionicModal.fromTemplateUrl('templates/modal-foodstuff-or-recipe.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.foodstuff_or_recipe_modal = modal;
+  })
 
+  // open the modal to choose between adding a foodstuff or recipe
+  $scope.open_foodstuff_or_recipe_modal = function() {
+    $scope.foodstuff_or_recipe_modal.show()
+  }
+
+  $scope.close_foodstuff_or_recipe_modal = function() {
+    $scope.foodstuff_or_recipe_modal.hide()
+  }
+
+
+  ////
+  // Add a new foodstuff
+  ////
+  $ionicModal.fromTemplateUrl('templates/modal-add-foodstuff.html', {
+    scope : $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.foodstuff_modal = modal;
+  });
+
+  // user wantes to add a new foodstuff
+  // open up a new modal to do that in
+  $scope.open_add_foodstuff_modal = function() {
+    $scope.close_foodstuff_or_recipe_modal()
+    $scope.foodstuff_modal.show();
+  };
+
+  // close the add foodstuffs modal
+  $scope.close_add_foodstuff_modal = function() {
+    $scope.foodstuff_modal.hide();
+  };
+
+
+  ////
+  // Initialization
+  ////
+
+  // TODO old stuff
   $scope.picks = Chats.all();
   $scope.remove = function(chat) {
     Chats.remove(chat);
   };
 })
+
+
+
+
+
+.controller('NewFoodstuffCtrl', function($scope, socket) {
+
+  
+
+  // create a new foodstuff
+  $scope.create_foodstuff = function(name, price, desc) {
+    foodstuff = {
+      name: "fake_foodstuff",//name,
+      price: 1, //price,
+      desc: "our desc",//desc,
+      tags: []
+    }
+    socket.emit("foodstuff:create", {foodstuff: foodstuff})
+  }
+
+
+  // we got a callback!
+  socket.on("foodstuff:create:callback", function(evt) {
+    $scope.confirmed = evt.data
+  })
+
+  ////
+  // Initialization
+  ////
+  $scope.init = function() {
+    $scope.confirmed = null
+  }
+  $scope.init()
+
+})
+
+
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);

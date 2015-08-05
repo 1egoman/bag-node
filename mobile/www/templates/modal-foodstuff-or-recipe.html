@@ -1,0 +1,31 @@
+<!-- choose to use a recipe or foodstuff when adding a new item -->
+<ion-modal-view>
+
+  <ion-header-bar class="">
+    <div class="title title-center header-item">Create New Item</div>
+    <div class="buttons buttons-right">
+      <span class="right-buttons">
+        <button ng-click="close_foodstuff_or_recipe_modal()" class="button button-icon icon
+          ion-close-round activated"></button>
+      </span>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+    <!-- start with recipe -->
+    <h2>Recipe</h2>
+    <p>Describe a recipe...</p>
+    <button
+      class="button button-block button-clear button-dark"
+    >Add Recipe</button>
+
+    <!-- then, foodstuff -->
+    <h2>Foodstuff</h2>
+    <p>Describe a foodstuff...</p>
+    <button
+      class="button button-block button-clear button-dark"
+      ng-click="open_add_foodstuff_modal()"
+    >Add Foodstuff</button>
+  </ion-content>
+
+</ion-modal-view>

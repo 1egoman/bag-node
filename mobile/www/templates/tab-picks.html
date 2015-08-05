@@ -1,4 +1,13 @@
 <ion-view view-title="Your Picks">
+
+  <ion-nav-buttons side="right">
+    <!-- plus for adding a new foodstuff -->
+    <button 
+      ng-click="open_foodstuff_or_recipe_modal()" 
+      class="button button-icon icon ion-plus-round"
+    ></button>
+  </ion-nav-buttons>
+
   <ion-content>
     <ion-list>
       <ion-item>

@@ -7711,6 +7711,12 @@ a.button {
 .no-padding {
   padding: 0px; }
 
+.no-resize {
+  resize: none; }
+
+.font-size-bigger {
+  font-size: 120%; }
+
 .bar.bar-bag {
   border-color: #b2b2b2;
   background-color: #387ef5;

@@ -15,5 +15,7 @@ foodstuff = mongoose.Schema
   store: String
   checked: Boolean
   user: String
+  tags: Array
+  verified: Boolean
 
 module.exports = mongoose.model 'foodstuff', foodstuff
