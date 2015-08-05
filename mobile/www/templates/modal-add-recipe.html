@@ -59,7 +59,7 @@
       <div class="padding">
         <button
           class="button button-block button-balanced activated"
-          ng-disabled="recipe_contents.length === 0"
+          ng-disabled="!( new_recipe_name && new_recipe_desc && recipe_contents.length !== 0 )"
           ng-click="create_recipe(new_recipe_name,
           new_recipe_desc)"
         >Create Recipe
@@ -71,16 +71,11 @@
   <!-- provide confirmation -->
   <ion-content ng-show="confirmed">
     <div class="padding">
-      <h1>Cool, Thanks!</h1>
-      <p class="font-size-bigger">
-        We'll review your potential recipe and let you know if it meets our
-        specifications. This can usually take [length of time] but no more than
-        [another length of time].
-      </p>
-        <button
-          ng-click="init(); close_add_recipe_modal()"
-          class="button button-block button-royal"
-        >OK</button>
+      <h1>Your recipe has been made!</h1>
+      <button
+        ng-click="init(); close_add_recipe_modal()"
+        class="button button-block button-royal"
+      >OK</button>
     </div>
   </ion-content>
 
