@@ -18,6 +18,18 @@ $dark:                            #444 !default;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
+// colors
+$light:                           #fff !default;
+$stable:                          #f6e8e7 !default;
+$positive:                        #387ef5 !default; //
+$calm:                            #5090f0 !default;
+$balanced:                        #41c19d !default;
+$energized:                       #ffc000 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #d242ab !default;
+$dark:                            #5c5c5c !default;
+$mid:                             #e3deda !default;
+
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 @import "utils";
@@ -25,4 +37,4 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // bag stuff
 @import "_nav";
 @import "_bag_bags";
-
+@import "_modal_recipe_foodstuff";
