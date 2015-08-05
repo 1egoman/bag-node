@@ -1,7 +1,7 @@
 <!-- add new bag -->
 <ion-modal-view ng-controller="NewFoodstuffCtrl">
 
-  <ion-header-bar class="">
+  <ion-header-bar class="bar-royal">
     <div class="title title-center header-item">Add New Foodstuff</div>
     <div class="buttons buttons-right">
       <span class="right-buttons">
@@ -31,7 +31,7 @@
 
       <div class="padding">
         <button
-          class="button button-block button-balanced activated"
+          class="button button-block button-royal activated"
           ng-disabled="!( new_foodstuff_name && new_foodstuff_desc &&
           new_foodstuff_price.toString().length > 0 )"
           ng-click="create_foodstuff(new_foodstuff_name, new_foodstuff_price,
