@@ -185,7 +185,7 @@ angular.module('starter.controllers')
   // transistion to a more info page about the specified item
   $scope.more_info = function(item) {
     $ionicListDelegate.closeOptionButtons()
-    $state.go('iteminfo', {id: item._id})
+    $state.go('tab.iteminfo', {id: item._id})
   }
 
 

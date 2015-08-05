@@ -82,14 +82,14 @@ angular.module('starter', [
 
 
   // more info about an item, such as a recipe or a foodstuff
-  .state('iteminfo', {
+  .state('tab.iteminfo', {
     url: '/iteminfo/:id',
-    // views: {
-    //   'tab-bag': {
+    views: {
+      'tab-bag': {
         templateUrl: 'templates/item-info.html',
         controller: 'ItemInfoCtrl'
-      // }
-    // }
+      }
+    }
   })
 
   .state('tab.picks', {
