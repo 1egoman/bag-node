@@ -67,12 +67,13 @@ angular.module('starter.services', [])
   }
 })
 
+// search box for searching through items
 .factory("searchItem", function($ionicFilterBar) {
   return function(all_items, update_cb) {
     $scope = {}
 
     $scope.open = function(on_close) {
-      hide = $ionicFilterBar.show({
+      $scope.hide = $ionicFilterBar.show({
         items: all_items,
         update: function (filteredItems) {
           all_items = filteredItems;
@@ -85,8 +86,6 @@ angular.module('starter.services', [])
         },
         filterProperties: 'name'
       });
-
-      if (hide) $scope.hide_filter_bar = hide
     }
 
     return $scope;

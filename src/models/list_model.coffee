@@ -16,11 +16,7 @@ list = mongoose.Schema
   user: String
 
   contents: Array
-  contentsLists: [
-    _id:
-      type: String
-      ref: 'List'
-  ]
+  contentsLists: Array
 
 list.set 'versionKey', false
 

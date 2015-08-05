@@ -272,18 +272,36 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   });
 
   // create a new foodstuff
-  $scope.create_recipe = function(name, price, desc) {
+  $scope.create_recipe = function(name, desc) {
+
+    // filter recipe_contents into contents and contentsLists
+    r_contents = []
+    r_contentsLists = []
+    $scope.recipe_contents.forEach(function(i) {
+      if (i.contents) {
+        r_contentsLists.push(i)
+      } else {
+        r_contents.push(i)
+      }
+    })
+    $scope.recipe_contents = []
+
+    // assemble the recipe
     recipe = {
-      name: "fake_recipe",//name,
-      desc: "our desc",//desc,
-      tags: []
+      name: name,
+      desc: desc,
+      tags: [],
+      contents: strip_$$(r_contents),
+      contentsLists: strip_$$(r_contentsLists)
     }
-    console.log(recipe)
-    // socket.emit("list:create", {list: recipe})
+
+    // make the request
+    socket.emit("list:create", {list: recipe})
   }
 
   // we got a callback!
   socket.on("list:create:callback", function(evt) {
+    console.log(evt.data)
     $scope.confirmed = evt.data
   })
 
@@ -304,18 +322,21 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
     // close modal
     $scope.close_add_modal()
+    $scope.add_search && $scope.add_search.hide()
   }
 
   // close the add item modal
   $scope.close_add_modal = function() {
     $scope.item_modal.hide();
+    $scope.add_search && $scope.add_search.hide()
   }
 
   // open search on the add new items modal
   $scope.open_search = function() {
-    searchItem($scope.add_items, function(filtered_items) {
+    $scope.add_search = searchItem($scope.add_items, function(filtered_items) {
       $scope.add_items = filtered_items
-    }).open()
+    })
+    $scope.add_search.open()
   }
 
   // cleanup the modal when we're done with it

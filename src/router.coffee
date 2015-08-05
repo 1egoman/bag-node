@@ -87,9 +87,9 @@ exports.websocket = (app) ->
                 if method in ["create", "update", "destroy"]
                   # if we used an action of create, opdate, or destroy, let everyone know
                   socket.broadcast.emit "list:#{method}:callback", data
-                else
-                  # emit it to that person
-                  socket.emit "list:#{method}:callback", data
+                # else
+                # emit it to that person
+                socket.emit "list:#{method}:callback", data
 
 
 
