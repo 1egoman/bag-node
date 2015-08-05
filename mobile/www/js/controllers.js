@@ -26,13 +26,15 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   // through recursion. Anything checked off won't be taken into account.
   $scope.calculate_total = function(bag) {
     var total = 0;
-    (bag.contents || []).forEach(function(item) {
-      if (item.contents) {
+    $scope.get_all_content(bag).forEach(function(item) {
+      if (item.checked === true) {
+        return
+      } else if (item.contents) {
         // this recipe has items of its own
         total += $scope.calculate_total(item);
-      } else if (item.checked !== true) {
+      } else {
         // do total
-        total += item.price
+        total += parseFloat(item.price)
       }
     });
     return total;

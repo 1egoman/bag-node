@@ -38,13 +38,15 @@ angular.module('starter.controllers')
   // through recursion.
   $scope.calculate_total = function(bag) {
     var total = 0;
-    bag.contents.forEach(function(item) {
-      if (item.contents) {
+    $scope.get_all_content(bag).forEach(function(item) {
+      if (item.checked === true) {
+        return
+      } else if (item.contents) {
         // this recipe has items of its own
         total += $scope.calculate_total(item);
-      } else if (item.checked !== true) {
+      } else {
         // do total
-        total += item.price
+        total += parseFloat(item.price)
       }
     });
     return total;
