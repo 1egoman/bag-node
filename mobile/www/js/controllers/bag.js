@@ -241,6 +241,7 @@ angular.module('starter.controllers')
   $rootScope.$on('$stateChangeSuccess', function(event, toState) {
     if (toState.name === "tab.bag") {
       $scope.sorted_bag = $scope.sort_items()
+      $scope.sort_opts = persistant.sort_opts
     }
   })
 
@@ -255,6 +256,7 @@ angular.module('starter.controllers')
 
       // sort by checked/still left
       case "completion":
+        persistant.sort_opts = $scope.sort_opts = {}
         return _.groupBy(items, function(i) {
           if (i.checked || (i.contents && $scope.all_checked(i))) {
             return "Mutated";
@@ -265,18 +267,21 @@ angular.module('starter.controllers')
 
       // sort by sort tags
       case "tags":
+        persistant.sort_opts = $scope.sort_opts = {checks: true}
         return _.groupBy(items, function(i) {
           return _.find(i.tags, function(x) { return x.indexOf('sort-') !== -1;  }) || 'No sort';
         });
 
       // sort by sort tags, and seperate into each of its contents
       case "tags_list":
+        persistant.sort_opts = $scope.sort_opts = {checks: true}
         return _.groupBy($scope.flatten_bag(), function(i) {
           return _.find(i.tags, function(x) { return x.indexOf('sort-') !== -1;  }) || 'No sort';
         });
 
       // no sort
       default:
+        persistant.sort_opts = $scope.sort_opts = {}
         return {"All Items": items};
         break;
     }
@@ -285,6 +290,7 @@ angular.module('starter.controllers')
   // update the old sort to the specified one
   $scope.change_sort = function(new_sort_name) {
     persistant.sort = new_sort_name
+    $scope.sort_opts = persistant.sort_opts 
     $scope.sorted_bag = $scope.sort_items()
   }
 
@@ -302,6 +308,7 @@ angular.module('starter.controllers')
   $scope.sorted_bag = []
 
   $scope.view_title = "My Bag"
+  $scope.sort_opts = persistant.sort_opts || {}
 
 })
 
