@@ -324,7 +324,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
   // we got a callback!
   socket.on("list:create:callback", function(evt) {
-    console.log(evt.data)
+    // console.log(evt.data)
     $scope.confirmed = evt.data
   })
 
