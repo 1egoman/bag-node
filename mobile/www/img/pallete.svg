@@ -29,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284271"
-     inkscape:cx="160.46212"
-     inkscape:cy="182.83187"
+     inkscape:cx="110.99757"
+     inkscape:cy="200.3077"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -106,13 +106,13 @@
     <circle
        style="opacity:1;fill:#f6e8e7;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="circle4406"
-       cx="111.05991"
+       cx="152.77922"
        cy="725.7962"
        r="18" />
     <circle
        r="18"
        cy="725.7962"
-       cx="153.13277"
+       cx="110.70636"
        id="circle4408"
        style="opacity:1;fill:#e3deda;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <circle
@@ -132,6 +132,12 @@
        id="circle4422"
        cx="274.75513"
        cy="725.7962"
+       r="18" />
+    <circle
+       style="opacity:1;fill:#222222;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="circle5212"
+       cx="65.451523"
+       cy="767.16199"
        r="18" />
   </g>
 </svg>
