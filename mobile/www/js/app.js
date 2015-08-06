@@ -9,6 +9,7 @@ angular.module('starter', [
   'ionic',
   // 'ngCordova',
   'jett.ionic.filter.bar',
+  'ngTagsInput',
 
   'starter.controllers',
   'starter.services',

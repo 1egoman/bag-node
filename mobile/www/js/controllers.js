@@ -231,6 +231,12 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 // controller for managing the creation of new foodstuffs
 .controller('NewFoodstuffCtrl', function($scope, socket) {
 
+  // tags to search through
+  $scope.predefined_tags = function(query) {
+    console.log(query)
+    return [{text: 'abcdef'}, {text: 'abcpwn'}];
+  };
+
   // create a new foodstuff
   $scope.create_foodstuff = function(name, price, desc) {
     foodstuff = {

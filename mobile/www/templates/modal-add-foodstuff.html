@@ -18,9 +18,17 @@
       <label class="item item-input">
         <input type="text" placeholder="Name" ng-model="new_foodstuff_name"/>
       </label>
+
       <label class="item item-input">
         <input type="number" placeholder="Price" ng-model="new_foodstuff_price"/>
       </label>
+
+      <label class="item item-input">
+        <tags-input ng-model="new_foodstuff_tags" placeholder="Tags">
+          <auto-complete source="predefined_tags($query)"></auto-complete>
+        </tags-input>
+      </label>
+
       <label class="item item-input">
         <textarea
           placeholder="Description"
