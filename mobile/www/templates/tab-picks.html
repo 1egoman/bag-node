@@ -1,14 +1,24 @@
 <ion-view view-title="Your Picks">
+
+  <ion-nav-buttons side="right">
+    <!-- plus for adding a new foodstuff -->
+    <button 
+      ng-click="open_foodstuff_or_recipe_modal()" 
+      class="button button-icon icon ion-plus-round"
+    ></button>
+  </ion-nav-buttons>
+
   <ion-content>
     <ion-list>
       <ion-item>
         <h2>This, based on your history, is what we think you should be interested
           in!</h2>
       </ion-item>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
-        <img ng-src="{{chat.face}}">
-        <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
+      <ion-item class="item-remove-animate item-avatar item-icon-right"
+        ng-repeat="pick in picks" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+        <img ng-src="{{pick.face}}">
+        <h2>{{pick.name}}</h2>
+        <p>{{pick.tags.join(', ')}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-assertive" ng-click="remove(chat)">

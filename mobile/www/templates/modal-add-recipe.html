@@ -1,0 +1,83 @@
+<!-- add new bag -->
+<ion-modal-view ng-controller="NewRecipeCtrl">
+
+  <ion-header-bar class="bar-balanced">
+    <div class="title title-center header-item">Add New Recipe</div>
+    <div class="buttons buttons-right">
+      <span class="right-buttons">
+        <button ng-click="close_add_recipe_modal()" class="button button-icon icon
+          ion-close-round activated"></button>
+      </span>
+    </div>
+  </ion-header-bar>
+
+  <!-- add the recipe -->
+  <ion-content ng-hide="confirmed">
+    <div class="list">
+
+      <!-- basic info -->
+      <label class="item item-input">
+        <input type="text" placeholder="Name" ng-model="new_recipe_name"/>
+      </label>
+      <label class="item item-input">
+        <textarea
+          placeholder="Description"
+          style="min-height: 100px;"
+          ng-model="new_recipe_desc"
+          class="no-resize"></textarea>
+      </label>
+
+      <!-- all items within the recipe -->
+      <div ng-repeat="item in recipe_contents" class="card">
+        <ion-item>
+
+          <!-- the title -->
+          <span class="title" ng-class="{strike: item.checked}">
+            <div class="line"></div>
+
+            {{item.name}}
+
+            <!-- rightmost icons -->
+            <span class="pull-right" ng-show="item.price">{{item.price | currency}}</span>
+          </span>
+
+            
+          <!-- delete button; this isn't showing up correctly FIXME -->
+          <ion-option-button class="button-assertive">
+            Delete
+          </ion-option-button>
+        </ion-item>
+      </div>
+
+      <!-- Add new foodstuff to the recipe -->
+      <ion-item class="item-icon-left" ng-click="open_add_item_modal()">
+        <i class="icon ion-ios-plus-outline"></i>
+        New Item
+      </ion-item>
+
+      <!-- submit button -->
+      <div class="padding">
+        <button
+          class="button button-block button-balanced activated"
+          ng-disabled="!( new_recipe_name && new_recipe_desc && recipe_contents.length !== 0 )"
+          ng-click="create_recipe(new_recipe_name,
+          new_recipe_desc)"
+        >Create Recipe
+        </button>
+      </div>
+    </div>
+  </ion-content>
+
+  <!-- provide confirmation -->
+  <ion-content ng-show="confirmed">
+    <div class="padding">
+      <h1>Your recipe has been made!</h1>
+      <button
+        ng-click="init(); close_add_recipe_modal()"
+        class="button button-block button-royal"
+      >OK</button>
+    </div>
+  </ion-content>
+
+
+</ion-modal-view>

@@ -7,14 +7,14 @@ angular.module('starter.controllers')
       $scope, 
       $ionicModal, 
       $ionicSlideBoxDelegate, 
-      $ionicFilterBar, 
       socket, 
       $state,
       $ionicListDelegate,
       AllItems,
       $timeout,
       persistant,
-      $rootScope
+      $rootScope,
+      searchItem
 ) {
 
   // get all bags
@@ -38,13 +38,15 @@ angular.module('starter.controllers')
   // through recursion.
   $scope.calculate_total = function(bag) {
     var total = 0;
-    bag.contents.forEach(function(item) {
-      if (item.contents) {
+    $scope.get_all_content(bag).forEach(function(item) {
+      if (item.checked === true) {
+        return
+      } else if (item.contents) {
         // this recipe has items of its own
         total += $scope.calculate_total(item);
-      } else if (item.checked !== true) {
+      } else {
         // do total
-        total += item.price
+        total += parseFloat(item.price)
       }
     });
     return total;
@@ -73,26 +75,14 @@ angular.module('starter.controllers')
 
   // filter with ionic filter bar
   $scope.open_search = function() {
-    hide = $ionicFilterBar.show({
-      items: $scope.add_items,
-      update: function (filteredItems) {
-        $scope.add_items = filteredItems;
-      },
-
-      // if the filter bar closes, close the modal
-      cancel: function() {
-        $scope.modal.hide();
-      },
-      filterProperties: 'name'
-    });
-
-    if (hide) $scope.hide_filter_bar = hide
+    searchItem($scope.add_items, function(filtered_items) {
+      $scope.add_items = filtered_items
+    }).open()
   }
 
-  // if modal closes first, close the filter bar
+  // close the add modal
   $scope.close_add_modal = function() {
     $scope.modal.hide();
-    $scope.hide_filter_bar()
   };
   // cleanup the modal when we're done with it
   $scope.$on('$destroy', function() {
@@ -123,16 +113,6 @@ angular.module('starter.controllers')
   // View mechanics
   ////
 
-  // when a user changes the bag they are looking at, update the title
-  $scope.change_active_bag = function(index) {
-    $scope.active_card = index
-    if (index === 0) {
-      $scope.view_title = "My Bag"
-    } else {
-      $scope.view_title = "My Recipes"//$scope.bags[index-1].name
-    }
-  };
-
   // is the user currently viewing the bag?
   $scope.is_viewing_bag = function() {
     return $scope.active_card === 0
@@ -141,15 +121,13 @@ angular.module('starter.controllers')
   // use ionic filter bar to filter through the bag
   $scope.filter_bag_contents = function() {
     $scope.filter_open = true
-    filterBarInstance = $ionicFilterBar.show({
-      items: $scope.flatten_bag(),
-      update: function (filteredItems) {
-        $scope.filtered_items = filteredItems;
-      },
-      done: function() { $scope.filtered_items = [] },
-      cancel: function() { $scope.filtered_items = []; $scope.filter_open = false },
-      filterProperties: 'name'
-    });
+    searchItem($scope.flatten_bag(), function(filtered_items) {
+      $scope.filtered_items = filtered_items
+    }).open(function() {
+      // runs on close
+      $scope.filtered_items = []
+      $scope.filter_open = false
+    })
   }
 
   // flatten the bag so everything is easily indexable
@@ -207,7 +185,7 @@ angular.module('starter.controllers')
   // transistion to a more info page about the specified item
   $scope.more_info = function(item) {
     $ionicListDelegate.closeOptionButtons()
-    $state.go('iteminfo', {id: item._id})
+    $state.go('tab.iteminfo', {id: item._id})
   }
 
 
@@ -291,6 +269,12 @@ angular.module('starter.controllers')
           return _.find(i.tags, function(x) { return x.indexOf('sort-') !== -1;  }) || 'No sort';
         });
 
+      // sort by sort tags, and seperate into each of its contents
+      case "tags_list":
+        return _.groupBy($scope.flatten_bag(), function(i) {
+          return _.find(i.tags, function(x) { return x.indexOf('sort-') !== -1;  }) || 'No sort';
+        });
+
       // no sort
       default:
         return {"All Items": items};
@@ -309,7 +293,6 @@ angular.module('starter.controllers')
   ////
   // Intializers
   ////
-  $scope.change_active_bag(0);
   $scope.filter_open = false
   $scope.filtered_items = []
   $scope.completed_items = []
@@ -317,6 +300,8 @@ angular.module('starter.controllers')
 
   $scope.sort_type = persistant.sort || 'no'
   $scope.sorted_bag = []
+
+  $scope.view_title = "My Bag"
 
 })
 

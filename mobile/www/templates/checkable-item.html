@@ -1,10 +1,15 @@
 <!-- all items within this recipe -->
 <div class="card">
-  <ion-item>
+  <ion-item class="item-icon-right">
+    <i 
+      class="pull-right icon ion-chevron-right icon-accessory"
+      ng-click="moreInfo(item)"
+      style="padding-left: 16px;"
+    ></i>
     <div class="item-checkbox">
 
       <!-- Check off the item -->
-      <label class="checkbox">
+      <label class="checkbox" style="right: 64px;">
         <input type="checkbox" ng-model="item.checked" ng-change="change(item)">
       </label>
 
@@ -20,14 +25,9 @@
       </span>
 
 
-        
-      <!-- delete and more info -->
+      <!-- delete button -->
       <ion-option-button class="button-assertive" ng-click="deleteItem(item)">
         Delete
-      </ion-option-button>
-
-      <ion-option-button class="button-positive" ng-click="moreInfo(item)">
-        More Info
       </ion-option-button>
 
     </div>

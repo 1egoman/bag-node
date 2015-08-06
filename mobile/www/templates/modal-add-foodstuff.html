@@ -1,0 +1,62 @@
+<!-- add new bag -->
+<ion-modal-view ng-controller="NewFoodstuffCtrl">
+
+  <ion-header-bar class="bar-royal">
+    <div class="title title-center header-item">Add New Foodstuff</div>
+    <div class="buttons buttons-right">
+      <span class="right-buttons">
+        <button ng-click="close_add_foodstuff_modal()" class="button button-icon icon
+          ion-close-round activated"></button>
+      </span>
+    </div>
+  </ion-header-bar>
+
+  <!-- add the foodstuff -->
+  <ion-content ng-hide="confirmed">
+    <div class="list">
+
+      <label class="item item-input">
+        <input type="text" placeholder="Name" ng-model="new_foodstuff_name"/>
+      </label>
+      <label class="item item-input">
+        <input type="number" placeholder="Price" ng-model="new_foodstuff_price"/>
+      </label>
+      <label class="item item-input">
+        <textarea
+          placeholder="Description"
+          style="min-height: 200px;"
+          ng-model="new_foodstuff_desc"
+          class="no-resize"></textarea>
+      </label>
+
+      <div class="padding">
+        <button
+          class="button button-block button-royal activated"
+          ng-disabled="!( new_foodstuff_name && new_foodstuff_desc &&
+          new_foodstuff_price.toString().length > 0 )"
+          ng-click="create_foodstuff(new_foodstuff_name, new_foodstuff_price,
+          new_foodstuff_desc)"
+        >Create Foodstuff request
+        </button>
+      </div>
+    </div>
+  </ion-content>
+
+  <!-- provide confirmation -->
+  <ion-content ng-show="confirmed">
+    <div class="padding">
+      <h1>Cool, Thanks!</h1>
+      <p class="font-size-bigger">
+        We'll review your potential foodstuff and let you know if it meets our
+        specifications. This can usually take [length of time] but no more than
+        [another length of time].
+      </p>
+        <button
+          ng-click="init(); close_add_foodstuff_modal()"
+          class="button button-block button-royal"
+        >OK</button>
+    </div>
+  </ion-content>
+
+
+</ion-modal-view>

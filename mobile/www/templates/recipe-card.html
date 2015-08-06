@@ -1,12 +1,15 @@
 <div class="card">
-  <ion-item ng-controller="RecipeCtrl">
+  <ion-item ng-controller="RecipeCtrl" class="item-icon-right">
 
     <!-- recipe header -->
-    <div class="item-avatar" style="padding-left: 4px;">
-      <h2>{{recipe.name}}</h2>
+    <div class="item-avatar" style="padding-left: 4px;" ng-click="moreInfo(recipe)">
+      <h2>
+        {{recipe.name}}
+        <i class="pull-right icon ion-chevron-right icon-accessory"></i>
+      </h2>
       <p>
         {{recipe.tags.join(', ')}}
-        <span class="pull-right">{{calculate_total(recipe) | currency}}</span>
+        <span class="pull-right" style="margin-top: 24px;">{{calculate_total(recipe) | currency}}</span>
       </p>
     </div>
 
@@ -29,23 +32,17 @@
           <span ng-bind-html="format_name(item.name)"></span>
 
           <!-- rightmost icons -->
-          <i ng-show="item.contents" class="pull-right ion-ios-arrow-right"></i>
-          <span class="pull-right" ng-show="item.price" style="margin-right: -16px;">
-            {{item.price | currency}}
+          <span class="pull-right" ng-show="item.price || item.contents" style="margin-right: -16px;">
+            {{item.price || calculate_total(item) | currency}}
           </span>
         </span>
       </li>
     </div>
 
 
-      <!-- delete and more info -->
+      <!-- delete -->
       <ion-option-button class="button-assertive" ng-click="deleteItem(recipe)">
         Delete
-      </ion-option-button>
-
-      <!-- <a href="/item/{{item._id}}"> -->
-      <ion-option-button class="button-positive" ng-click="moreInfo(recipe)">
-        More Info
       </ion-option-button>
 
   </ion-item>

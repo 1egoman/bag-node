@@ -4,9 +4,9 @@
   <ion-nav-buttons side="right">
 
     <!-- plus for adding an item or recipe to the bag -->
-    <button class="button button-icon icon ion-ios-close-empty"
-      ng-click="go_back_to_bag()">
-    </button>
+    <!-- <button class="button button&#45;icon icon ion&#45;ios&#45;close&#45;empty" -->
+    <!--   ng&#45;click="go_back_to_bag()"> -->
+    <!-- </button> -->
   </ion-nav-buttons>
 
   <ion-content>
@@ -24,7 +24,7 @@
       <div class="item item-divider" ng-show="item.contents.length">Foodstuffs</div>
       <a
       class="item item-icon-right"
-      href="#/iteminfo/{{i._id}}"
+      href="#/tab/iteminfo/{{i._id}}"
       ng-repeat="i in item.contents">
         {{i.name}}
         <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
@@ -34,7 +34,7 @@
       <div class="item item-divider" ng-show="item.contentsLists.length">Recipes</div>
       <a
       class="item item-icon-right"
-      href="#/iteminfo/{{i._id}}"
+      href="#/tab/iteminfo/{{i._id}}"
       ng-repeat="i in item.contentsLists">
         {{i.name}}
         <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
