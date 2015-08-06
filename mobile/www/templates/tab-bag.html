@@ -64,7 +64,12 @@
             {'Matching Results': filtered_items} :
             sorted_bag
           )">
-            <div class="item item-divider">{{section || 'Default'}}</div>
+            <div class="item item-divider">
+              {{section || 'Default'}}
+              <span class="section-total pull-right">
+                {{calculate_total_section(items) | currency}}
+              </span>
+            </div>
             <div ng-repeat="item in items">
 
               <!-- if a recipe -->

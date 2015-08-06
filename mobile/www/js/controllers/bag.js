@@ -52,6 +52,13 @@ angular.module('starter.controllers')
     return total;
   };
 
+  // for an entire section, calculate the total
+  $scope.calculate_total_section = function(items) {
+    return _(items).map(function(i) {
+      return $scope.calculate_total(i)
+    }).reduce(function(m,x) { return m + x }, 0)
+  }
+
 
   ////
   // Create new item
