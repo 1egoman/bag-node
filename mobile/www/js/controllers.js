@@ -229,21 +229,25 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 // controller for managing the creation of new foodstuffs
-.controller('NewFoodstuffCtrl', function($scope, socket) {
+.controller('NewFoodstuffCtrl', function($scope, socket, $q) {
 
   // tags to search through
   $scope.predefined_tags = function(query) {
-    console.log(query)
-    return [{text: 'abcdef'}, {text: 'abcpwn'}];
+    defer = $q.defer()
+    socket.emit("tags:index")
+    socket.once("tags:index:callback", function(evt) {
+      defer.resolve(evt.data)
+    })
+    return defer.promise
   };
 
   // create a new foodstuff
-  $scope.create_foodstuff = function(name, price, desc) {
+  $scope.create_foodstuff = function(name, price, tags, desc) {
     foodstuff = {
       name: name,
       price: price,
       desc: desc,
-      tags: []
+      tags: (tags || []).map(function(i) { return i.text })
     }
     socket.emit("foodstuff:create", {foodstuff: foodstuff})
   }
@@ -268,7 +272,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 // controller for managing the creation of new foodstuffs
-.controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem) {
+.controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q) {
 
 
   // new item modal of adding items to the recipe
@@ -279,8 +283,19 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
     $scope.item_modal = modal;
   });
 
+
+  // tags to search through
+  $scope.predefined_tags = function(query) {
+    defer = $q.defer()
+    socket.emit("tags:index")
+    socket.once("tags:index:callback", function(evt) {
+      defer.resolve(evt.data)
+    })
+    return defer.promise
+  };
+
   // create a new foodstuff
-  $scope.create_recipe = function(name, desc) {
+  $scope.create_recipe = function(name, tags, desc) {
 
     // filter recipe_contents into contents and contentsLists
     r_contents = []
@@ -298,7 +313,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
     recipe = {
       name: name,
       desc: desc,
-      tags: [],
+      tags: (tags || []).map(function(i) { return i.text }),
       contents: strip_$$(r_contents),
       contentsLists: strip_$$(r_contentsLists)
     }

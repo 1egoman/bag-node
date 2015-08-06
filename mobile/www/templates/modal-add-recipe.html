@@ -19,6 +19,13 @@
       <label class="item item-input">
         <input type="text" placeholder="Name" ng-model="new_recipe_name"/>
       </label>
+
+      <label class="item item-input">
+        <tags-input ng-model="new_recipe_tags" placeholder="Tags">
+          <auto-complete source="predefined_tags($query)"></auto-complete>
+        </tags-input>
+      </label>
+
       <label class="item item-input">
         <textarea
           placeholder="Description"
@@ -60,7 +67,7 @@
         <button
           class="button button-block button-balanced activated"
           ng-disabled="!( new_recipe_name && new_recipe_desc && recipe_contents.length !== 0 )"
-          ng-click="create_recipe(new_recipe_name,
+          ng-click="create_recipe(new_recipe_name, new_recipe_tags,
           new_recipe_desc)"
         >Create Recipe
         </button>
