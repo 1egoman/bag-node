@@ -7723,12 +7723,17 @@ a.button {
 
 .bar.bar-bag {
   border-color: #b2b2b2;
-  background-color: #387ef5;
+  background-color: #5090f0;
   height: 48px; }
   .bar.bar-bag, .bar.bar-bag button {
     color: #fff; }
   .bar.bar-bag .title {
     margin-top: 2px; }
+
+.bar.bar-new-item {
+  background-color: #ffc000; }
+  .bar.bar-new-item, .bar.bar-new-item button {
+    color: #fff; }
 
 .tabs.tab-nav {
   background-color: #222;
@@ -7920,11 +7925,11 @@ tags-input .autocomplete .suggestion-item em {
   background-color: #fff; }
 
 
-.item-bag {
+.item-bag .scroll {
   position: relative; }
-  .item-bag .item-img {
+  .item-bag .scroll .item-img {
     width: 100%; }
-  .item-bag .item-overlap {
+  .item-bag .scroll .item-overlap {
     position: absolute;
     top: 256px;
     left: 0px;

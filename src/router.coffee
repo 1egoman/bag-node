@@ -32,6 +32,10 @@ exports.websocket = (app) ->
     for user in users.data
       io.of(user._id).on "connection", (socket) ->
 
+        # return some sample tags for testing
+        socket.on "tags:index", ->
+          socket.emit "tags:index:callback", data: ["gluten-free", "vegetarian", "vegan", "milk-free"]
+
         # websocket events for each of the actions
         ["index", "show", "create", "update", "destroy"].forEach (method) ->
           
