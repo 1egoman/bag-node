@@ -96,6 +96,36 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   $scope.go_back_to_bag = function() {
     $state.go("tab.bag")
   }
+
+
+  // get all contents, both sub-recipes and foodstuffs
+  $scope.get_all_content = function(bag) {
+    if (bag && bag.contents) {
+      return bag.contents.concat(bag.contentsLists || []);
+    } else return []
+  };
+
+
+
+  // calculate total price for a whole recipe
+  // this takes into account any sub-recipes
+  // through recursion. Anything checked off won't be taken into account.
+  $scope.calculate_total = function(bag) {
+    var total = 0;
+    $scope.get_all_content(bag).forEach(function(item) {
+      if (item.checked === true) {
+        return
+      } else if (item.contents) {
+        // this recipe has items of its own
+        total += $scope.calculate_total(item);
+      } else {
+        // do total
+        total += parseFloat(item.price)
+      }
+    });
+    return total;
+  };
+
 })
 
 

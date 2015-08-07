@@ -7925,12 +7925,15 @@ tags-input .autocomplete .suggestion-item em {
   background-color: #fff; }
 
 
-.item-bag .scroll {
+.item-bag .root {
   position: relative; }
-  .item-bag .scroll .item-img {
+  .item-bag .root .item-img {
     width: 100%; }
-  .item-bag .scroll .item-overlap {
+  .item-bag .root .item-overlap {
     position: absolute;
     top: 256px;
     left: 0px;
-    right: 0px; }
+    right: 0px;
+    margin-bottom: 32px;
+    min-height: 200px;
+    background: #fff; }
