@@ -98,7 +98,20 @@ angular.module('starter.controllers')
 
   // add a new item to the bag
   $scope.add_item_to_bag = function(item) {
-    if (item.contents) {
+
+    // set quantity to one, for an initial new item
+    item.quantity = 1
+
+    // is the item currently in the bag?
+    item_in_bag = _($scope.get_all_content($scope.bag))
+    .find(function(i) { return i._id === item._id; })
+
+    // if so, just increment the quantity
+    if ( item_in_bag && item_in_bag.length !== 0 ) {
+      item_in_bag.quantity = (item_in_bag.quantity || 0) + 1
+
+    // otherwise, just add it
+    } else if (item.contents) {
       // make sure everything inside is unchecked
       // if this isn't done sometimes items will "gitch" into
       // the complete section
@@ -108,6 +121,8 @@ angular.module('starter.controllers')
     } else {
       $scope.bag.contents.push(item)
     }
+
+    // update everything!
     $scope.update_bag()
     $scope.close_add_modal()
   }
