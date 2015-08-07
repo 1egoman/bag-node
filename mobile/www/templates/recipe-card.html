@@ -18,9 +18,10 @@
     <div class="list" style="margin-left: -16px;">
 
       <!-- all items within this recipe -->
-      <li href="#" class="item item-checkbox" ng-repeat="item in get_all_content(recipe)">
+      <li href="#" class="item" ng-class="{'item-checkbox':
+        sortOpts.checks}" ng-repeat="item in get_all_content(recipe)">
         <!-- Check off the item -->
-        <label class="checkbox">
+        <label class="checkbox" ng-show="sortOpts.checks">
           <input type="checkbox" ng-model="item.checked"
           ng-change="change(recipe, item)">
         </label>

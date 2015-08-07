@@ -18,9 +18,17 @@
       <label class="item item-input">
         <input type="text" placeholder="Name" ng-model="new_foodstuff_name"/>
       </label>
+
       <label class="item item-input">
         <input type="number" placeholder="Price" ng-model="new_foodstuff_price"/>
       </label>
+
+      <label class="item item-input">
+        <tags-input ng-model="new_foodstuff_tags" placeholder="Tags">
+          <auto-complete source="predefined_tags($query)"></auto-complete>
+        </tags-input>
+      </label>
+
       <label class="item item-input">
         <textarea
           placeholder="Description"
@@ -35,7 +43,7 @@
           ng-disabled="!( new_foodstuff_name && new_foodstuff_desc &&
           new_foodstuff_price.toString().length > 0 )"
           ng-click="create_foodstuff(new_foodstuff_name, new_foodstuff_price,
-          new_foodstuff_desc)"
+          new_foodstuff_tags, new_foodstuff_desc)"
         >Create Foodstuff request
         </button>
       </div>

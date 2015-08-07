@@ -64,7 +64,12 @@
             {'Matching Results': filtered_items} :
             sorted_bag
           )">
-            <div class="item item-divider">{{section || 'Default'}}</div>
+            <div class="item item-divider">
+              {{section || 'Default'}}
+              <span class="section-total pull-right">
+                {{calculate_total_section(items) | currency}}
+              </span>
+            </div>
             <div ng-repeat="item in items">
 
               <!-- if a recipe -->
@@ -74,6 +79,7 @@
                 change="update_bag"
                 delete-item="delete_item(item)"
                 more-info="more_info(item)"
+                sort-opts="sort_opts"
               ></recipe-card>
 
               <!-- if a foodstuff -->
@@ -83,6 +89,7 @@
                 ng-hide="item.contents || item.contentsLists"
                 delete-item="delete_item(item)"
                 more-info="more_info(item)"
+                sort-opts="sort_opts"
               ></checkable-item>
             </div>
           </div>

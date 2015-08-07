@@ -1,4 +1,4 @@
-<ion-view view-title="{{item.name || 'Item Details'}}">
+<ion-view view-title="Item Details">
 
   <!-- nav bar -->
   <ion-nav-buttons side="right">
@@ -9,35 +9,62 @@
     <!-- </button> -->
   </ion-nav-buttons>
 
-  <ion-content>
-    <div class="list">
-      <div class="item">
-        <p ng-repeat="(k, v) in item" ng-show="k.indexOf('contents') === -1">
-          <strong>{{k}}:</strong>
-          <span ng-hide="v.push">{{v}}</span>
-          <span ng-show="v.push">{{v.join(', ')}}</span>
-        </p>
-        <!-- <p><strong>Description:</strong> {{item.desc}}</p> -->
-        <!-- <p><strong>Tags:</strong> {{item.tags.join(', ')}}</p> -->
+  <ion-content class="item-bag">
+    <div class="root">
+      <img
+        src="http://lorempixum.com/500/500"
+        class="item-img"
+      />
+
+      <div class="list item-overlap">
+
+        <div class="item">
+          <!-- item name and price -->
+          <span>
+            <h1>{{item.name | titlecase}}</h1>
+            <span class="pull-right">
+              {{item.price ? item.price : calculate_total(item) | currency}}
+            </span>
+          </span>
+
+          <!-- item description -->
+          <p>{{item.desc}}</p>
+
+        </div>
+
+        <div class="item item-divider" ng-show="item.contents.length">Foodstuffs</div>
+        <a
+        class="item item-icon-right"
+        href="#/tab/iteminfo/{{i._id}}"
+        ng-repeat="i in item.contents">
+          {{i.name}}
+          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
+        </a>
+
+
+        <div class="item item-divider" ng-show="item.contentsLists.length">Recipes</div>
+        <a
+        class="item item-icon-right"
+        href="#/tab/iteminfo/{{i._id}}"
+        ng-repeat="i in item.contentsLists">
+          {{i.name}}
+          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
+        </a>
+
+
+
+
+          <!-- manual database stuff -->
+        <div class="item">
+          <p ng-repeat="(k, v) in item" ng-show="k.indexOf('contents') === -1">
+            <strong>{{k}}:</strong>
+            <span ng-hide="v.push">{{v}}</span>
+            <span ng-show="v.push">{{v.join(', ')}}</span>
+          </p>
+        </div>
+
+
       </div>
-
-      <div class="item item-divider" ng-show="item.contents.length">Foodstuffs</div>
-      <a
-      class="item item-icon-right"
-      href="#/tab/iteminfo/{{i._id}}"
-      ng-repeat="i in item.contents">
-        {{i.name}}
-        <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
-      </a>
-
-
-      <div class="item item-divider" ng-show="item.contentsLists.length">Recipes</div>
-      <a
-      class="item item-icon-right"
-      href="#/tab/iteminfo/{{i._id}}"
-      ng-repeat="i in item.contentsLists">
-        {{i.name}}
-        <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
-      </a>
+    </div>
   </ion-content>
 </ion-view>

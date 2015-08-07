@@ -63,7 +63,8 @@ angular.module('starter.services', [])
 
 .factory("persistant", function() {
   return {
-    sort: null
+    sort: null,
+    sort_opts: {}
   }
 })
 

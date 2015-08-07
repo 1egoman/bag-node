@@ -6,10 +6,10 @@
       ng-click="moreInfo(item)"
       style="padding-left: 16px;"
     ></i>
-    <div class="item-checkbox">
+    <div ng-class="{'item-checkbox': sortOpts.checks}">
 
       <!-- Check off the item -->
-      <label class="checkbox" style="right: 64px;">
+      <label class="checkbox" style="right: 64px;" ng-show="sortOpts.checks">
         <input type="checkbox" ng-model="item.checked" ng-change="change(item)">
       </label>
 

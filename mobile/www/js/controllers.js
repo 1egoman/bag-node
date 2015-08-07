@@ -96,6 +96,36 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   $scope.go_back_to_bag = function() {
     $state.go("tab.bag")
   }
+
+
+  // get all contents, both sub-recipes and foodstuffs
+  $scope.get_all_content = function(bag) {
+    if (bag && bag.contents) {
+      return bag.contents.concat(bag.contentsLists || []);
+    } else return []
+  };
+
+
+
+  // calculate total price for a whole recipe
+  // this takes into account any sub-recipes
+  // through recursion. Anything checked off won't be taken into account.
+  $scope.calculate_total = function(bag) {
+    var total = 0;
+    $scope.get_all_content(bag).forEach(function(item) {
+      if (item.checked === true) {
+        return
+      } else if (item.contents) {
+        // this recipe has items of its own
+        total += $scope.calculate_total(item);
+      } else {
+        // do total
+        total += parseFloat(item.price)
+      }
+    });
+    return total;
+  };
+
 })
 
 
@@ -229,15 +259,25 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 // controller for managing the creation of new foodstuffs
-.controller('NewFoodstuffCtrl', function($scope, socket) {
+.controller('NewFoodstuffCtrl', function($scope, socket, $q) {
+
+  // tags to search through
+  $scope.predefined_tags = function(query) {
+    defer = $q.defer()
+    socket.emit("tags:index")
+    socket.once("tags:index:callback", function(evt) {
+      defer.resolve(evt.data)
+    })
+    return defer.promise
+  };
 
   // create a new foodstuff
-  $scope.create_foodstuff = function(name, price, desc) {
+  $scope.create_foodstuff = function(name, price, tags, desc) {
     foodstuff = {
       name: name,
       price: price,
       desc: desc,
-      tags: []
+      tags: (tags || []).map(function(i) { return i.text })
     }
     socket.emit("foodstuff:create", {foodstuff: foodstuff})
   }
@@ -262,7 +302,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 // controller for managing the creation of new foodstuffs
-.controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem) {
+.controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q) {
 
 
   // new item modal of adding items to the recipe
@@ -273,8 +313,19 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
     $scope.item_modal = modal;
   });
 
+
+  // tags to search through
+  $scope.predefined_tags = function(query) {
+    defer = $q.defer()
+    socket.emit("tags:index")
+    socket.once("tags:index:callback", function(evt) {
+      defer.resolve(evt.data)
+    })
+    return defer.promise
+  };
+
   // create a new foodstuff
-  $scope.create_recipe = function(name, desc) {
+  $scope.create_recipe = function(name, tags, desc) {
 
     // filter recipe_contents into contents and contentsLists
     r_contents = []
@@ -292,7 +343,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
     recipe = {
       name: name,
       desc: desc,
-      tags: [],
+      tags: (tags || []).map(function(i) { return i.text }),
       contents: strip_$$(r_contents),
       contentsLists: strip_$$(r_contentsLists)
     }
@@ -303,7 +354,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
   // we got a callback!
   socket.on("list:create:callback", function(evt) {
-    console.log(evt.data)
+    // console.log(evt.data)
     $scope.confirmed = evt.data
   })
 
