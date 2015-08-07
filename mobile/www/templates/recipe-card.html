@@ -2,14 +2,31 @@
   <ion-item ng-controller="RecipeCtrl" class="item-icon-right">
 
     <!-- recipe header -->
-    <div class="item-avatar" style="padding-left: 4px;" ng-click="moreInfo(recipe)">
-      <h2>
+    <div class="item-avatar" style="padding-left: 4px;">
+      <h2 ng-click="moreInfo(recipe)">
         {{recipe.name}}
         <i class="pull-right icon ion-chevron-right icon-accessory"></i>
       </h2>
       <p>
         {{recipe.tags.join(', ')}}
-        <span class="pull-right" style="margin-top: 24px;">{{calculate_total(recipe) | currency}}</span>
+
+
+        <!-- price for the entire recipe -->
+        <span class="pull-right">
+          <input
+            type="number"
+            placeholder="Qty"
+            style="width: 2em; display: inline; margin-top: -4px; direction: rtl;"
+
+            min="1"
+            max="99"
+            oninput="this.value=this.value.slice(0, 2)"
+
+            ng-model="recipe.quantity"
+            ng-change="change(recipe)"
+          />
+          @&nbsp;{{calculate_total(recipe) | currency}}
+        </span>
       </p>
     </div>
 

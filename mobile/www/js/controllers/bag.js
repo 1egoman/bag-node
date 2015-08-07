@@ -38,15 +38,15 @@ angular.module('starter.controllers')
   // through recursion.
   $scope.calculate_total = function(bag) {
     var total = 0;
-    $scope.get_all_content(bag).forEach(function(item) {
+    $scope.get_all_content(bag, true).forEach(function(item) {
       if (item.checked === true) {
         return
       } else if (item.contents) {
         // this recipe has items of its own
-        total += $scope.calculate_total(item);
+        total += $scope.calculate_total(item) * (parseFloat(item.quantity) || 1)
       } else {
         // do total
-        total += parseFloat(item.price)
+        total += parseFloat(item.price) * (parseFloat(item.quantity) || 1)
       }
     });
     return total;
@@ -55,7 +55,7 @@ angular.module('starter.controllers')
   // for an entire section, calculate the total
   $scope.calculate_total_section = function(items) {
     return _(items).map(function(i) {
-      return $scope.calculate_total(i)
+      return $scope.calculate_total(i) * i.quantity
     }).reduce(function(m,x) { return m + x }, 0)
   }
 
@@ -178,10 +178,10 @@ angular.module('starter.controllers')
 
   // get all contents, both sub-lists and foodstuffs
   // this lets us recurively wander
-  $scope.get_all_content = function(bag) {
+  $scope.get_all_content = function(bag, return_self) {
     if (bag && bag.contents) {
       return bag.contents.concat(bag.contentsLists || []);
-    } else return []
+    } else return return_self ? [bag] : []
   };
 
   // get all checkmarked items
