@@ -82,14 +82,17 @@ angular.module('starter.controllers')
 
   // filter with ionic filter bar
   $scope.open_search = function() {
-    searchItem($scope.add_items, function(filtered_items) {
+    search = searchItem($scope.add_items, function(filtered_items) {
       $scope.add_items = filtered_items
-    }).open()
+    })
+    search.open()
+    $scope.hide_search = search.hide
   }
 
   // close the add modal
   $scope.close_add_modal = function() {
     $scope.modal.hide();
+    $scope.hide_search && $scope.hide_search();
   };
   // cleanup the modal when we're done with it
   $scope.$on('$destroy', function() {
