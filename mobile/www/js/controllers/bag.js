@@ -38,15 +38,15 @@ angular.module('starter.controllers')
   // through recursion.
   $scope.calculate_total = function(bag) {
     var total = 0;
-    $scope.get_all_content(bag).forEach(function(item) {
+    $scope.get_all_content(bag, true).forEach(function(item) {
       if (item.checked === true) {
         return
       } else if (item.contents) {
         // this recipe has items of its own
-        total += $scope.calculate_total(item);
+        total += $scope.calculate_total(item) * (parseFloat(item.quantity) || 1)
       } else {
         // do total
-        total += parseFloat(item.price)
+        total += parseFloat(item.price) * (parseFloat(item.quantity) || 1)
       }
     });
     return total;
@@ -55,7 +55,7 @@ angular.module('starter.controllers')
   // for an entire section, calculate the total
   $scope.calculate_total_section = function(items) {
     return _(items).map(function(i) {
-      return $scope.calculate_total(i)
+      return $scope.calculate_total(i) * i.quantity
     }).reduce(function(m,x) { return m + x }, 0)
   }
 
@@ -82,14 +82,17 @@ angular.module('starter.controllers')
 
   // filter with ionic filter bar
   $scope.open_search = function() {
-    searchItem($scope.add_items, function(filtered_items) {
+    search = searchItem($scope.add_items, function(filtered_items) {
       $scope.add_items = filtered_items
-    }).open()
+    })
+    search.open()
+    $scope.hide_search = search.hide
   }
 
   // close the add modal
   $scope.close_add_modal = function() {
     $scope.modal.hide();
+    $scope.hide_search && $scope.hide_search();
   };
   // cleanup the modal when we're done with it
   $scope.$on('$destroy', function() {
@@ -98,7 +101,20 @@ angular.module('starter.controllers')
 
   // add a new item to the bag
   $scope.add_item_to_bag = function(item) {
-    if (item.contents) {
+
+    // set quantity to one, for an initial new item
+    item.quantity = 1
+
+    // is the item currently in the bag?
+    item_in_bag = _($scope.get_all_content($scope.bag))
+    .find(function(i) { return i._id === item._id; })
+
+    // if so, just increment the quantity
+    if ( item_in_bag && item_in_bag.length !== 0 ) {
+      item_in_bag.quantity = (item_in_bag.quantity || 0) + 1
+
+    // otherwise, just add it
+    } else if (item.contents) {
       // make sure everything inside is unchecked
       // if this isn't done sometimes items will "gitch" into
       // the complete section
@@ -108,6 +124,8 @@ angular.module('starter.controllers')
     } else {
       $scope.bag.contents.push(item)
     }
+
+    // update everything!
     $scope.update_bag()
     $scope.close_add_modal()
   }
@@ -160,10 +178,10 @@ angular.module('starter.controllers')
 
   // get all contents, both sub-lists and foodstuffs
   // this lets us recurively wander
-  $scope.get_all_content = function(bag) {
+  $scope.get_all_content = function(bag, return_self) {
     if (bag && bag.contents) {
       return bag.contents.concat(bag.contentsLists || []);
-    } else return []
+    } else return return_self ? [bag] : []
   };
 
   // get all checkmarked items

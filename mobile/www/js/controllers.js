@@ -31,10 +31,10 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
         return
       } else if (item.contents) {
         // this recipe has items of its own
-        total += $scope.calculate_total(item);
+        total += $scope.calculate_total(item) * (parseFloat(item.quantity) || 1)
       } else {
         // do total
-        total += parseFloat(item.price)
+        total += parseFloat(item.price) * (parseFloat(item.quantity) || 1)
       }
     });
     return total;
@@ -117,10 +117,10 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
         return
       } else if (item.contents) {
         // this recipe has items of its own
-        total += $scope.calculate_total(item);
+        total += $scope.calculate_total(item) * (parseFloat(item.quantity) || 1)
       } else {
         // do total
-        total += parseFloat(item.price)
+        total += parseFloat(item.price) * (parseFloat(item.quantity) || 1)
       }
     });
     return total;
