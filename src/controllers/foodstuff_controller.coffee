@@ -11,8 +11,13 @@ Foodstuff = require "../models/foodstuff_model"
 # get a foodstuff of all lists
 # GET /foodstuff
 exports.index = (req, res) ->
+  query = Foodstuff.find({}).sort date: -1
 
-  Foodstuff.find({}).limit(req?.body?.limit || Infinity).exec (err, data) ->
+  # limit quantity and a start index
+  query = query.skip parseInt req.body.start if req.body?.start
+  query = query.limit parseInt req.body.limit if req.body?.limit
+  
+  query.exec (err, data) ->
     if err
       res.send
         status: "bag.error.foodstuff.index"

@@ -11,7 +11,13 @@ List = require "../models/list_model"
 # get a list of all lists
 # GET /list
 exports.index = (req, res) ->
-  List.find {}, (err, data) ->
+  query = List.find({}).sort date: -1
+
+  # limit quantity and a start index
+  query = query.skip parseInt req.body.start if req.body?.start
+  query = query.limit parseInt req.body.limit if req.body?.limit
+  
+  query.exec (err, data) ->
     if err
       res.send
         status: "bag.error.list.index"

@@ -75,10 +75,23 @@ angular.module('starter.controllers')
     $scope.modal.show();
 
     // get all items and display in the search
-    AllItems.all($scope, function(content) {
-      $scope.add_items = content
-    })
+    // $scope.on_load_more_items()
   };
+
+  // infinte scroll handler to add more items to the list
+  $scope.on_load_more_items = function(page_size) {
+    if ($scope.add_items_done) return // make sure we don't overstep bounds
+
+    AllItems.all($scope, function(items) {
+      $scope.add_items = $scope.add_items.concat(items)
+      $scope.start_index += (page_size || 25)
+
+      // update view
+      if (items.length < 25) $scope.add_items_done = true
+      $scope.$broadcast('scroll.infiniteScrollComplete')
+    })
+    
+  }
 
   // filter with ionic filter bar
   $scope.open_search = function() {
@@ -334,6 +347,10 @@ angular.module('starter.controllers')
 
   $scope.view_title = "My Bag"
   $scope.sort_opts = persistant.sort_opts || {}
+
+  $scope.add_items = []
+  $scope.start_index = 0
+  $scope.add_items_done = false
 
 })
 
