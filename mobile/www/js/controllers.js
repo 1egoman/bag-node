@@ -246,9 +246,22 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   ////
   // Manage recipes that are already created by user
   ////
+
+
+  // send user to more infoabout the specified item
   $scope.more_info = function(item) {
     $state.go('tab.recipeinfo', {id: item._id})
   }
+
+  // "like" an item
+  $state.favorite = function(item) {
+    if (item.contents) {
+      socket.emit("list:favorite", {list: item._id})
+    } else {
+      socket.emit("foodstuff:favorite", {foodstuff: item._id})
+    }
+  }
+
   socket.on("list:index:callback", function(evt) {
     $scope.my_recipes = evt.data
   })
@@ -257,7 +270,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   ////
   // Initialization
   ////
-  $scope.sort_opts = {checks: false, no_quantity: true}
+  $scope.sort_opts = {checks: false, no_quantity: true, no_delete: true}
   $scope.my_recipes = []
   socket.emit("list:index", {user: "me"})
 

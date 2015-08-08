@@ -3,10 +3,16 @@
   <!-- nav bar -->
   <ion-nav-buttons side="right">
 
-    <!-- plus for adding an item or recipe to the bag -->
-    <!-- <button class="button button&#45;icon icon ion&#45;ios&#45;close&#45;empty" -->
-    <!--   ng&#45;click="go_back_to_bag()"> -->
-    <!-- </button> -->
+    <!-- add to favorites -->
+    <button class="button button-icon icon ion-happy-outline"
+      ng-click="favorite(item)"
+      ng-if="!item.favorite">
+    </button>
+    <button class="button button-icon icon ion-happy"
+      ng-click="favorite(item)"
+      ng-if="item.favorite">
+    </button>
+
   </ion-nav-buttons>
 
   <ion-content class="item-bag">

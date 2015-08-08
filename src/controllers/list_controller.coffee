@@ -110,3 +110,8 @@ exports.destroy = (req, res) ->
     else
       res.send
         status: "bag.success.list.delete"
+
+
+# favorite an item
+exports.fav = (req, res) ->
+# how to do this????
