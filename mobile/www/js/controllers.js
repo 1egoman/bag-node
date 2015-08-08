@@ -88,13 +88,19 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 // Item Info Controller
 // Fetch all info about an item so it can be displayed on the
 // more info screen for that item
-.controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems) {
+.controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory) {
   AllItems.by_id($scope, $stateParams.id, function(val){
     $scope.item = val
   })
 
   $scope.go_back_to_bag = function() {
     $state.go("tab.bag")
+  }
+
+  $scope.get_item_or_recipe = function() {
+    return $ionicHistory.currentView().stateName.indexOf("recipe") === -1 ?
+      "iteminfo" :
+      "recipeinfo"
   }
 
 
@@ -159,7 +165,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 
-.controller('RecipesCtrl', function($scope, Chats, $ionicModal) {
+.controller('RecipesCtrl', function($scope, Chats, $ionicModal, persistant, $state) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -238,10 +244,26 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
   ////
+  // Manage recipes that are already created by user
+  ////
+  $scope.more_info = function(item) {
+    $state.go('tab.recipeinfo', {id: item._id})
+  }
+  socket.on("list:index:callback", function(evt) {
+    $scope.my_recipes = evt.data
+  })
+
+
+  ////
   // Initialization
   ////
-  //
-  //
+  $scope.sort_opts = {checks: false, no_quantity: true}
+  $scope.my_recipes = []
+  socket.emit("list:index", {user: "me"})
+
+
+
+
 
   $scope.$on('$destroy', function() {
     $scope.foodstuff_or_recipe_modal.remove();

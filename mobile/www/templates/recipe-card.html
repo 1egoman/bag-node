@@ -13,20 +13,27 @@
 
         <!-- price for the entire recipe -->
         <span class="pull-right">
-          <input
-            type="number"
-            placeholder="Qty"
-            style="width: 2em; display: inline; margin-top: -4px; direction: rtl;"
 
-            min="1"
-            max="99"
-            oninput="this.value=this.value.slice(0, 2)"
+          <!-- quantity box -->
+          <span ng-hide="sortOpts.no_quantity">
+            <input
+              type="number"
+              placeholder="Qty"
+              style="width: 2em; display: inline; margin-top: -4px; direction: rtl;"
 
-            ng-model="recipe.quantity"
-            ng-change="change(recipe)"
-          />
-          @&nbsp;{{calculate_total(recipe) | currency}}
+              min="1"
+              max="99"
+              oninput="this.value=this.value.slice(0, 2)"
+
+              ng-model="recipe.quantity"
+              ng-change="change(recipe)"
+              ng-disabled="!change"
+            />
+            @&nbsp;
+          </span>
+          <span>{{calculate_total(recipe) | currency}}</span>
         </span>
+
       </p>
     </div>
 
@@ -37,8 +44,9 @@
       <!-- all items within this recipe -->
       <li href="#" class="item" ng-class="{'item-checkbox':
         sortOpts.checks}" ng-repeat="item in get_all_content(recipe)">
+
         <!-- Check off the item -->
-        <label class="checkbox" ng-show="sortOpts.checks">
+        <label class="checkbox" ng-if="sortOpts.checks && change">
           <input type="checkbox" ng-model="item.checked"
           ng-change="change(recipe, item)">
         </label>

@@ -93,15 +93,15 @@ angular.module('starter', [
     }
   })
 
-  .state('tab.picks', {
-    url: '/picks',
-    views: {
-      'tab-picks': {
-        templateUrl: 'templates/tab-picks.html',
-        controller: 'PicksCtrl'
-      }
-    }
-  })
+  // .state('tab.picks', {
+  //   url: '/picks',
+  //   views: {
+  //     'tab-picks': {
+  //       templateUrl: 'templates/tab-picks.html',
+  //       controller: 'PicksCtrl'
+  //     }
+  //   }
+  // })
 
 
   .state('tab.recipes', {
@@ -113,6 +113,20 @@ angular.module('starter', [
       }
     }
   })
+
+
+  // recipe info
+  // this will open in the recipe stack and not the bag one
+  .state('tab.recipeinfo', {
+    url: '/recipeinfo/:id',
+    views: {
+      'tab-recipes': {
+        templateUrl: 'templates/item-info.html',
+        controller: 'ItemInfoCtrl'
+      }
+    }
+  })
+
 
   .state('tab.account', {
     url: '/account',
