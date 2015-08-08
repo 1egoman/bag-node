@@ -84,10 +84,10 @@ angular.module('starter.controllers')
 
     AllItems.all($scope, function(items) {
       $scope.add_items = $scope.add_items.concat(items)
-      $scope.start_index += (page_size || 25)
+      $scope.start_index += (page_size || $scope.amount_in_page)
 
       // update view
-      if (items.length < 25) $scope.add_items_done = true
+      if (items.length < $scope.amount_in_page) $scope.add_items_done = true
       $scope.$broadcast('scroll.infiniteScrollComplete')
     })
     
@@ -351,6 +351,7 @@ angular.module('starter.controllers')
   $scope.add_items = []
   $scope.start_index = 0
   $scope.add_items_done = false
+  $scope.amount_in_page = 25
 
 })
 

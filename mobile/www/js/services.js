@@ -36,13 +36,9 @@ angular.module('starter.services', [])
   // both foodstuffs and recipes
   // sc.start_index is the place to start searching, which defautls to zero
   root.all = function(sc, cb) {
-    AMOUNT_IN_PAGE = 25
-    console.log({limit: AMOUNT_IN_PAGE, start: sc.start_index || 0})
-
-
     root.all_resp = []
-    socket.emit('foodstuff:index', {limit: AMOUNT_IN_PAGE, start: sc.start_index || 0})
-    socket.emit('list:index', {limit: AMOUNT_IN_PAGE, start: sc.start_index || 0})
+    socket.emit('foodstuff:index', {limit: sc.amount_in_page, start: sc.start_index || 0})
+    socket.emit('list:index', {limit: sc.amount_in_page, start: sc.start_index || 0})
     sc.all_calls = 0
 
     responseFoodstuff = function(evt) {
