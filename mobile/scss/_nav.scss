@@ -31,6 +31,22 @@
     .icon {
       font-size: 36px;
       margin-bottom: 4px;
+
+      &.icon-plate {
+        background: url(/img/recipe_line.svg);
+        height: 32px;
+        background-position: center;
+        background-size: 32px;
+        background-repeat: no-repeat;
+      }
+
+      &.icon-plate-selected {
+        background: url(/img/recipe_line_selected.svg);
+        height: 32px;
+        background-position: center;
+        background-size: 32px;
+        background-repeat: no-repeat;
+      }
     }
   }
 }
