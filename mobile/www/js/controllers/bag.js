@@ -73,13 +73,11 @@ angular.module('starter.controllers')
   // user wantes to add a new item
   $scope.open_add_modal = function() {
     $scope.modal.show();
-
-    // get all items and display in the search
-    // $scope.on_load_more_items()
   };
 
   // infinte scroll handler to add more items to the list
-  $scope.on_load_more_items = function(page_size) {
+  // this is also called right away and preloads the list at first
+  $scope.on_load_more_add_items = function(page_size) {
     if ($scope.add_items_done) return // make sure we don't overstep bounds
 
     AllItems.all($scope, function(items) {
