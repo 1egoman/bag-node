@@ -165,7 +165,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 
 
 
-.controller('RecipesCtrl', function($scope, Chats, $ionicModal, persistant, $state) {
+.controller('RecipesCtrl', function($scope, Chats, $ionicModal, persistant, $state, $ionicPopup) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -254,7 +254,18 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   }
 
   // "like" an item
-  $state.favorite = function(item) {
+  // this isn't being called???????
+  // wat????
+  $scope.fav_item = function(item) {
+
+    // let the user know we aren't ready
+    myPopup = $ionicPopup.alert({
+      template: 'Hey, this will like/favorite/whatever an item. Just not yet...',
+      title: 'TBD'
+    });
+
+
+
     if (item.contents) {
       socket.emit("list:favorite", {list: item._id})
     } else {
