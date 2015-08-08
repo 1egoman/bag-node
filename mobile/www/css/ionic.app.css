@@ -7927,8 +7927,11 @@ tags-input .autocomplete .suggestion-item em {
 
 .item-bag .root {
   position: relative; }
-  .item-bag .root .item-img {
-    width: 100%; }
+  .item-bag .root .img-wrapper {
+    height: 260px;
+    overflow: hidden; }
+    .item-bag .root .img-wrapper .item-img {
+      width: 100%; }
   .item-bag .root .item-overlap {
     position: absolute;
     top: 256px;

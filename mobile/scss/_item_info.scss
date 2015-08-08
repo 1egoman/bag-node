@@ -1,8 +1,12 @@
 .item-bag .root {
   position: relative;
 
-  .item-img {
-    width: 100%;
+  .img-wrapper {
+    height: 260px; // also, update image height here
+    overflow: hidden;
+    .item-img {
+      width: 100%;
+    }
   }
 
   .item-overlap {
