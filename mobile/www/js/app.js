@@ -94,23 +94,25 @@ angular.module('starter', [
   })
 
   .state('tab.picks', {
-      url: '/picks',
-      views: {
-        'tab-picks': {
-          templateUrl: 'templates/tab-picks.html',
-          controller: 'PicksCtrl'
-        }
+    url: '/picks',
+    views: {
+      'tab-picks': {
+        templateUrl: 'templates/tab-picks.html',
+        controller: 'PicksCtrl'
       }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
+    }
+  })
+
+
+  .state('tab.recipes', {
+    url: '/recipes',
+    views: {
+      'tab-recipes': {
+        templateUrl: 'templates/tab-recipes.html',
+        controller: 'RecipesCtrl'
       }
-    })
+    }
+  })
 
   .state('tab.account', {
     url: '/account',

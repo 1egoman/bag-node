@@ -58,8 +58,8 @@
         <div class="item">
           <p ng-repeat="(k, v) in item" ng-show="k.indexOf('contents') === -1">
             <strong>{{k}}:</strong>
-            <span ng-hide="v.push">{{v}}</span>
-            <span ng-show="v.push">{{v.join(', ')}}</span>
+            <span ng-if="!v.push">{{v}}</span>
+            <span ng-if="v.push">{{v.join(', ')}}</span>
           </p>
         </div>
 

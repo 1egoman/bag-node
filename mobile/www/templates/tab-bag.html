@@ -55,7 +55,7 @@
         <ion-list >
 
           <!-- Nothing in bag? -->
-          <div class="grayed item" ng-show="get_all_content(bag).length === 0">
+          <div class="grayed item" ng-if="get_all_content(bag).length === 0">
             <h2>Your bag is empty</h2>
             <h4>And Lonely. You should add something.</h4>
           </div>
@@ -76,7 +76,7 @@
               <!-- if a recipe -->
               <recipe-card
                 recipe="item"
-                ng-show="item.contents"
+                ng-if="item.contents"
                 change="update_bag"
                 delete-item="delete_item(item)"
                 more-info="more_info(item)"
@@ -87,7 +87,7 @@
               <checkable-item
                 item="item" 
                 change="update_bag"
-                ng-hide="item.contents || item.contentsLists"
+                ng-if="!(item.contents || item.contentsLists)"
                 delete-item="delete_item(item)"
                 more-info="more_info(item)"
                 sort-opts="sort_opts"

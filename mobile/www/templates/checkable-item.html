@@ -9,7 +9,7 @@
     <div ng-class="{'item-checkbox': sortOpts.checks}">
 
       <!-- Check off the item -->
-      <label class="checkbox" style="right: 64px;" ng-show="sortOpts.checks">
+      <label class="checkbox" style="right: 64px;" ng-if="sortOpts.checks">
         <input type="checkbox" ng-model="item.checked" ng-change="change(item)">
       </label>
 
@@ -35,7 +35,7 @@
             ng-change="change(item)"
           />
           <span>@</span>
-          <span ng-show="item.price">{{item.price | currency}}</span>
+          <span>{{item.price | currency}}</span>
         </span>
       </span>
 
