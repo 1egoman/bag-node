@@ -10,7 +10,40 @@ bag_ctrl = require "./controllers/bag_controller"
 list_ctrl = require "./controllers/list_controller"
 foodstuff_ctrl = require "./controllers/foodstuff_controller"
 user_ctrl = require "./controllers/user_controller"
+tags_ctrl = require "./controllers/tags_controller"
 chalk = require "chalk"
+
+
+# this object maps all routes to their respective methods
+# for example:
+# a record of name: 
+#               routes: ['a', 'b']
+#               controller: name_ctrl
+# would map to something like:
+# socket.on "name:a", (data) ->
+#   name_ctrl.a *request stuff*, (data) ->
+#     socket.emit "name:a:callback", data
+exports.routes = routes =
+  tags:
+    controller: tags_ctrl
+    routes: ["index"]
+
+  user:
+    controller: user_ctrl
+    routes: ["fav", "un_fav", "show"]
+
+
+  bag:
+    controller: bag_ctrl
+    routes: ["index", "show", "create", "update", "delete"]
+
+  list:
+    controller: list_ctrl
+    routes: ["index", "show", "create", "update", "delete"]
+
+  foodstuff:
+    controller: foodstuff_ctrl
+    routes: ["index", "show", "create", "update", "delete"]
 
 exports.websocket = (app) ->
 
@@ -26,189 +59,49 @@ exports.websocket = (app) ->
         next new Error "not authorized"
 
 
-
   # iterate for each user
   user_ctrl.index {}, send: (users) ->
     for user in users.data
       io.of(user._id).on "connection", (socket) ->
 
-        # return some sample tags for testing
-        socket.on "tags:index", ->
-          socket.emit "tags:index:callback", data: ["gluten-free", "vegetarian", "vegan", "milk-free"]
 
-        # user management
+        # iterate through routes
+        for k, v of exports.routes
+          for method in v.routes
 
-        # favorite an item
-        socket.on "user:fav", (data) ->
-          user_ctrl.fav
-            body: data
-            type: 'ws'
-            params:
-              list: data?.list
-            user: user
-          ,
-            send: (data) ->
-              # log the event response
-              console.log \
-                chalk.green("<-- ws"), \
-                "user:fav:callback", \
-                JSON.stringify data, null, 2
+            # wrap in closure so loop doesn't "outpace" the current scope
+            do (k, v, method) ->
+              socket.on "#{k}:#{method}", (data) ->
+                data or= {}
 
-              # let everyone know
-              socket.broadcast.emit "list:fav:callback", data
-              socket.emit "list:fav:callback", data
+                # log the request happening
+                console.log chalk.green("--> ws"), "#{k}:#{method}", data
 
+                # extract params
+                params = {}
+                params[k] = data[k]
 
-        socket.on "user:un_fav", (data) ->
-          user_ctrl.un_fav
-            body: data
-            type: 'ws'
-            params:
-              list: data?.list
-            user: user
-          ,
-            send: (data) ->
-              # log the event response
-              console.log \
-                chalk.green("<-- ws"), \
-                "user:fav:callback", \
-                JSON.stringify data, null, 2
+                v.controller[method]
+                  body: data
+                  type: 'ws'
+                  params: params
+                  user: user
+                ,
+                  send: (data) ->
+                    # log the event response
+                    console.log \
+                      chalk.green("<-- ws"), \
+                      "#{k}:#{method}:callback", \
+                      JSON.stringify data, null, 2
 
-              # let everyone know
-              socket.broadcast.emit "list:fav:callback", data
-              socket.emit "list:fav:callback", data
-
-
-
-
-
-
-
-
-
-        # websocket events for each of the actions
-        ["index", "show", "create", "update", "destroy"].forEach (method) ->
-          
-
-          # bag methods
-          socket.on "bag:#{method}", (data) ->
-
-            # log the request happening
-            console.log chalk.green("--> ws"), "bag:#{method}", data
-
-            bag_ctrl[method]
-              body: data
-              type: 'ws'
-              params:
-                bag: data?.bag
-              user: user
-            ,
-              send: (data) ->
-                # log the event response
-                console.log \
-                  chalk.green("<-- ws"), \
-                  "bag:#{method}:callback", \
-                  JSON.stringify data, null, 2
-                if method in ["create", "update", "destroy"]
-                  # if we used an action of create, opdate, or destroy, let everyone know
-                  socket.broadcast.emit "bag:#{method}:callback", data
-                # emit it to that person
-                socket.emit "bag:#{method}:callback", data
-
-
-
-
-          # user methods
-          socket.on "user:#{method}", (data) ->
-
-            # log the request happening
-            console.log chalk.green("--> ws"), "user:#{method}", data
-
-            user_ctrl[method]
-              body: data
-              type: 'ws'
-              params:
-                user: data?.user
-              user: user
-            ,
-              send: (data) ->
-                # log the event response
-                console.log \
-                  chalk.green("<-- ws"), \
-                  "user:#{method}:callback", \
-                  JSON.stringify data, null, 2
-                if method in ["create", "update", "destroy"]
-                  # if we used an action of create, opdate, or destroy, let everyone know
-                  socket.broadcast.emit "user:#{method}:callback", data
-                # emit it to that person
-                socket.emit "user:#{method}:callback", data
-
-
-
-
-
-          # list methods
-          socket.on "list:#{method}", (data) ->
-
-            # log the request happening
-            console.log chalk.green("--> ws"), "list:#{method}", data
-
-            list_ctrl[method]
-              body: data
-              type: 'ws'
-              params:
-                list: data?.list
-              user: user
-            ,
-              send: (data) ->
-                # log the event response
-                console.log \
-                  chalk.green("<-- ws"), \
-                  "list:#{method}:callback", \
-                  JSON.stringify data, null, 2
-                if method in ["create", "update", "destroy"]
-                  # if we used an action of create, opdate, or destroy, let everyone know
-                  socket.broadcast.emit "list:#{method}:callback", data
-                # else
-                # emit it to that person
-                socket.emit "list:#{method}:callback", data
-
-
-
-
-
-
-          # foodstuff methods
-          socket.on "foodstuff:#{method}", (data) ->
-
-            # log the request happening
-            console.log chalk.green("--> ws"), "list:#{method}", data
-
-            foodstuff_ctrl[method]
-              body: data
-              type: 'ws'
-              params:
-                foodstuff: data?.foodstuff
-              user: user
-            ,
-              send: (data) ->
-                # log the event response
-                console.log \
-                  chalk.green("<-- ws"), \
-                  "foodstuff:#{method}:callback", \
-                  JSON.stringify data, null, 2
-
-                if method in ["create", "update", "destroy"]
-                  # if we used an action of create, opdate, or destroy, let everyone know
-                  socket.broadcast.emit "foodstuff:#{method}:callback", data
-                # else
-                # emit it to that person
-                socket.emit "foodstuff:#{method}:callback", data
-
-
+                    # let everyone know
+                    if method in ["create", "update", "destroy"]
+                      socket.broadcast.emit "#{k}:#{method}:callback", data
+                    socket.emit "#{k}:#{method}:callback", data
 
   server
 
+# TODO un half-ass this....
 exports.http = (app) ->
   app.resource "lists", list_ctrl
   app.resource "foodstuffs", foodstuff_ctrl
