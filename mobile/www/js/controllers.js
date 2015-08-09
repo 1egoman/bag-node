@@ -1,5 +1,6 @@
 // set up the socket.io conenction
-socket = io('http://192.168.1.13:8000/55a84d00e4b06e29cb4eb960', {query: "token=my_token"});
+userId = "55a84d00e4b06e29cb4eb960" // the logged in user id
+socket = io('http://192.168.1.13:8000/'+userId, {query: "token=my_token"});
 // # socket.emit 'foodstuff:index', list: "55a84255eb8799c52c643830"
 
 // get rid of some of the angular crud
@@ -15,7 +16,10 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   return socketFactory({ioSocket: socket});
 })
 
-
+// logged in user properties
+.factory("user", function(userFactory) {
+  return userFactory(userId);
+})
 
 // Recipe Card Controller
 // This manages each recipe card so that it will always stay up to date.
@@ -88,7 +92,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
 // Item Info Controller
 // Fetch all info about an item so it can be displayed on the
 // more info screen for that item
-.controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory) {
+.controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading) {
   AllItems.by_id($scope, $stateParams.id, function(val){
     $scope.item = val
   })
@@ -132,6 +136,38 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
     return total;
   };
 
+
+  // "like" an item
+  $scope.fav_item = function(item) {
+    socket.emit("user:fav", {item: item._id})
+    $scope.favs.push(item._id)
+
+    // give the user a little "notification" about it
+    $ionicLoading.show({ template: 'Favorited "'+item.name+'"!', noBackdrop: true, duration: 2000 })
+  }
+
+  // un-"like" an item
+  $scope.un_fav_item = function(item) {
+    socket.emit("user:un_fav", {item: item._id})
+    $scope.favs = _.without($scope.favs, item._id)
+
+    // give the user a little "notification" about it
+    $ionicLoading.show({ template: 'Un-Favorited "'+item.name+'"!', noBackdrop: true, duration: 2000 })
+  }
+
+  // is this a favorite item?
+  $scope.is_fav = function() {
+    if ($scope.favs && $scope.item) {
+      return $scope.favs.indexOf($scope.item._id) !== -1
+    } else return false
+  }
+
+
+  // are we a favorite?
+  user.then(function(data) {
+    $scope.favs = data.favs
+  });
+
 })
 
 
@@ -173,7 +209,8 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-  //
+  // 
+
   
   ////
   // Choose to add a new foodstuff or a recipe
@@ -251,26 +288,6 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize'])
   // send user to more infoabout the specified item
   $scope.more_info = function(item) {
     $state.go('tab.recipeinfo', {id: item._id})
-  }
-
-  // "like" an item
-  // this isn't being called???????
-  // wat????
-  $scope.fav_item = function(item) {
-
-    // let the user know we aren't ready
-    myPopup = $ionicPopup.alert({
-      template: 'Hey, this will like/favorite/whatever an item. Just not yet...',
-      title: 'TBD'
-    });
-
-
-
-    if (item.contents) {
-      socket.emit("list:favorite", {list: item._id})
-    } else {
-      socket.emit("foodstuff:favorite", {foodstuff: item._id})
-    }
   }
 
   socket.on("list:index:callback", function(evt) {

@@ -71,6 +71,18 @@ angular.module('starter.services', [])
   }
 })
 
+// get the logged in user info
+.factory("userFactory", function($q, socket) {
+  return function(user_id) {
+    defer = $q.defer()
+    socket.emit("user:show", {user: user_id})
+    socket.on("user:show:callback", function(evt) {
+      defer.resolve(evt.data)
+    })
+    return defer.promise
+  }
+})
+
 // search box for searching through items
 .factory("searchItem", function($ionicFilterBar) {
   return function(all_items, update_cb) {

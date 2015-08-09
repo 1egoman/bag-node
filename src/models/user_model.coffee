@@ -12,5 +12,6 @@ user = mongoose.Schema
   name: String
   email: String
   token: String
+  favs: Array
 
 module.exports = mongoose.model 'user', user

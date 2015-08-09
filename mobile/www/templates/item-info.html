@@ -6,11 +6,11 @@
     <!-- add to favorites -->
     <button class="button button-icon icon ion-happy-outline"
       ng-click="fav_item(item)"
-      ng-if="!item.favorite">
+      ng-if="!is_fav()">
     </button>
     <button class="button button-icon icon ion-happy"
-      ng-click="fav_item(item)"
-      ng-if="item.favorite">
+      ng-click="un_fav_item(item)"
+      ng-if="is_fav()">
     </button>
 
   </ion-nav-buttons>

@@ -6,6 +6,7 @@
  * Licensed under the MIT license.
 ###
 uuid = require "uuid"
+_ = require "underscore"
 User = require "../models/user_model"
 
 # get a user of all lists
@@ -104,3 +105,54 @@ exports.is_token_valid = (token, cb) ->
       cb err
     else
       cb false
+
+
+# favorite an item
+# this will add the item to the favorites list inside the user model
+exports.fav = (req, res) ->
+  item = req.body.item
+
+  # get a reference to the user
+  query = User.findOne _id: req.user._id
+  query.exec (err, data) ->
+
+    # add item to favs list
+    data.favs or= []
+    data.favs.push item if item not in data.favs
+
+    # save it
+    data.save (err) ->
+      if err
+        res.send
+          status: "bag.error.user.favorite"
+          error: err
+      else
+        res.send
+          status: "bag.success.user.favorite"
+
+
+
+
+# un-favorite an item
+# this will remove the item to the favorites list inside the user model
+exports.un_fav = (req, res) ->
+  item = req.body.item
+
+  # get a reference to the user
+  query = User.findOne _id: req.user._id
+  query.exec (err, data) ->
+
+    # add item to favs list
+    data.favs or= []
+    data.favs = _.without data.favs, item
+
+    # save it
+    data.save (err) ->
+      console.log "ERR", err
+      if err
+        res.send
+          status: "bag.error.user.unfavorite"
+          error: err
+      else
+        res.send
+          status: "bag.success.user.unfavorite"

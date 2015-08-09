@@ -36,6 +36,56 @@ exports.websocket = (app) ->
         socket.on "tags:index", ->
           socket.emit "tags:index:callback", data: ["gluten-free", "vegetarian", "vegan", "milk-free"]
 
+        # user management
+
+        # favorite an item
+        socket.on "user:fav", (data) ->
+          user_ctrl.fav
+            body: data
+            type: 'ws'
+            params:
+              list: data?.list
+            user: user
+          ,
+            send: (data) ->
+              # log the event response
+              console.log \
+                chalk.green("<-- ws"), \
+                "user:fav:callback", \
+                JSON.stringify data, null, 2
+
+              # let everyone know
+              socket.broadcast.emit "list:fav:callback", data
+              socket.emit "list:fav:callback", data
+
+
+        socket.on "user:un_fav", (data) ->
+          user_ctrl.un_fav
+            body: data
+            type: 'ws'
+            params:
+              list: data?.list
+            user: user
+          ,
+            send: (data) ->
+              # log the event response
+              console.log \
+                chalk.green("<-- ws"), \
+                "user:fav:callback", \
+                JSON.stringify data, null, 2
+
+              # let everyone know
+              socket.broadcast.emit "list:fav:callback", data
+              socket.emit "list:fav:callback", data
+
+
+
+
+
+
+
+
+
         # websocket events for each of the actions
         ["index", "show", "create", "update", "destroy"].forEach (method) ->
           
@@ -64,6 +114,34 @@ exports.websocket = (app) ->
                   socket.broadcast.emit "bag:#{method}:callback", data
                 # emit it to that person
                 socket.emit "bag:#{method}:callback", data
+
+
+
+
+          # user methods
+          socket.on "user:#{method}", (data) ->
+
+            # log the request happening
+            console.log chalk.green("--> ws"), "user:#{method}", data
+
+            user_ctrl[method]
+              body: data
+              type: 'ws'
+              params:
+                user: data?.user
+              user: user
+            ,
+              send: (data) ->
+                # log the event response
+                console.log \
+                  chalk.green("<-- ws"), \
+                  "user:#{method}:callback", \
+                  JSON.stringify data, null, 2
+                if method in ["create", "update", "destroy"]
+                  # if we used an action of create, opdate, or destroy, let everyone know
+                  socket.broadcast.emit "user:#{method}:callback", data
+                # emit it to that person
+                socket.emit "user:#{method}:callback", data
 
 
 
