@@ -1,5 +1,5 @@
 
-angular.module('starter.controllers')
+angular.module('starter.controllers.tab_bag', [])
 
 // Bags Controller
 // This manages the bag, which can contain recipes or foodstuffs
