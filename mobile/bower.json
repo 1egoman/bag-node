@@ -7,7 +7,7 @@
   "dependencies": {
     "angular-socket-io": "~0.7.0",
     "ngCordova": "~0.1.17-alpha",
-    "ionic-filter-bar": "~1.0.3",
+    "ionic-filter-bar": "~1.0.4",
     "angular-sanitize": "~1.4.3",
     "ng-tags-input": "3.0.0"
   },
