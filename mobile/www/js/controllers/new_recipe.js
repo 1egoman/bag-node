@@ -43,7 +43,7 @@ angular.module('starter.controllers.new_recipe', [])
       name: name,
       desc: desc,
       tags: (tags || []).map(function(i) { return i.text }),
-      contents: strip_$$(r_contents),
+      contents: window.strip_$$(r_contents),
       contentsLists: strip_$$(r_contentsLists)
     }
 

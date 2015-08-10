@@ -5,7 +5,7 @@ socket = io('http://192.168.1.13:8000/'+userId, {query: "token=my_token"});
 
 // get rid of some of the angular crud
 // this is needed when doing client <-> server stuff
-strip_$$ = function(a) {
+window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
@@ -57,3 +57,5 @@ angular.module('starter.controllers', [
     $ionicSlideBoxDelegate.update()
   });
 })
+
+.controller('AccountCtrl', function(){})

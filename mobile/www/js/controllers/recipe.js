@@ -4,7 +4,6 @@ angular.module('starter.controllers.tab_recipe', [])
 
 .controller('RecipesCtrl', function(
   $scope, 
-  Chats, 
   $ionicModal, 
   persistant, 
   $state, 
@@ -118,12 +117,6 @@ angular.module('starter.controllers.tab_recipe', [])
     $scope.foodstuff_or_recipe_modal.remove();
     $scope.foodstuff_modal.remove();
   });
-
-  // TODO old stuff
-  $scope.picks = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
 })
 
 

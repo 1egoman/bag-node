@@ -33,7 +33,7 @@ angular.module('starter.controllers.recipe_card', [])
   // because the user is presumed to have bought it already.
   $scope.check_item_on_recipe = function(recipe, item) {
     socket.emit('list:update', {
-      list: strip_$$(recipe)
+      list: window.strip_$$(recipe)
     });
   };
   socket.on('list:update:callback', function(evt) {

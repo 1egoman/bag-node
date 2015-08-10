@@ -238,7 +238,7 @@ angular.module('starter.controllers.tab_bag', [])
   // because the user is presumed to have bought it already.
   $scope.update_bag = function() {
     socket.emit('bag:update', {
-      bag: strip_$$($scope.bag)
+      bag: window.strip_$$($scope.bag)
     });
   };
   socket.on("bag:update:callback", function(evt) {
