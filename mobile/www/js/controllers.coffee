@@ -1,8 +1,49 @@
-# set up the socket.io conenction
-userId = '55a84d00e4b06e29cb4eb960'
+# set up the socket.io connection
+# user_id = '55a84d00e4b06e29cb4eb960'
+# user_token='my_token'
+window.host = "http://192.168.1.13:8000"
 
-# the logged in user id
-socket = io('http://192.168.1.13:8000/' + userId, query: 'token=my_token')
+auth_module = angular.module 'starter.authorization', []
+if sessionStorage.user
+  user_id = '55a84d00e4b06e29cb4eb960'
+  user_token='my_token'
+
+  # get a reference to the logged-in user
+  socket = io "#{window.host}/#{user_id}", query: "token=#{user_token}"
+
+  # inject these details into the controller
+  do (auth_module) ->
+    auth_module
+
+    # give ourselves a status inndicaton
+    auth_module.provider 'auth', ->
+      getSuccess: -> true
+      $get: ->
+        success: true
+        user_id: sessionStorage.user.id
+        user_token: sessionStorage.user.token
+
+    # inject socket.io into angular
+    .factory 'socket', (socketFactory) -> socketFactory ioSocket: socket
+
+    # logged in user properties
+    # note: returns a promise
+    .factory 'user', (userFactory) -> userFactory user_id
+
+
+else
+  # we aren't authorized...
+  # lets make sure we shout this as loud as possible
+  auth_module.provider 'auth', ->
+    getSuccess: -> false
+    $get: -> success: false
+
+  # empty factories
+  .factory 'socket', ->
+    emit: ->
+    on: ->
+  .factory 'user', -> {}
+
 
 # get rid of some of the angular crud
 # this is needed when doing client <-> server stuff
@@ -13,6 +54,9 @@ window.strip_$$ = (a) -> angular.fromJson angular.toJson(a)
 angular.module 'starter.controllers', [
   'btford.socket-io'
   'ngSanitize'
+
+  # authorization stuff
+  'starter.authorization'
 
   # local controllers in different files
   'starter.controllers.tab_bag'
@@ -27,15 +71,11 @@ angular.module 'starter.controllers', [
 
   # recipe card controller for recipe-card directive
   'starter.controllers.recipe_card'
+
+  # login controller
+  'starter.controllers.login'
 ]
 
-
-# inject socket.io into angular
-.factory 'socket', (socketFactory) -> socketFactory ioSocket: socket
-
-# logged in user properties
-# note: returns a promise
-.factory 'user', (userFactory) -> userFactory userId
 
 
 

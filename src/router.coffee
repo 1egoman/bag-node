@@ -11,6 +11,7 @@ list_ctrl = require "./controllers/list_controller"
 foodstuff_ctrl = require "./controllers/foodstuff_controller"
 user_ctrl = require "./controllers/user_controller"
 tags_ctrl = require "./controllers/tags_controller"
+auth_ctrl = require "./controllers/auth_controller"
 chalk = require "chalk"
 
 
@@ -50,19 +51,40 @@ exports.websocket = (app) ->
   server = require('http').createServer app
   io = require('socket.io') server
 
+
+  # handshake socket
+  io.of("handshake").on "connection", (socket) ->
+    console.log 1
+    socket.on "login", (data) ->
+      auth_ctrl.handshake
+        body: data
+      , send: (payload) ->
+        socket.emit "login:callback", payload
+
+
   io.use (socket, next) ->
     token = socket.request?._query?.token
-    user_ctrl.is_token_valid token, (valid) ->
-      if valid is true
-        next()
-      else
-        next new Error "not authorized"
-
+    if token
+      user_ctrl.is_token_valid token, (valid) ->
+        if valid is true
+          socket.has_perms = true
+          next()
+        else
+          next new Error "not authorized"
+    else
+      # user isn't authorized, which in some cases is ok
+      # let's just remember this, though
+      socket.has_perms = false
+      next()
 
   # iterate for each user
   user_ctrl.index {}, send: (users) ->
     for user in users.data
       io.of(user._id).on "connection", (socket) ->
+
+        # we need to be authorized!!!
+        if socket.has_perms is false
+          return socket.emit "permissiondenied"
 
 
         # iterate through routes

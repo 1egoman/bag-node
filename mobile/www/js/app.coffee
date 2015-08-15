@@ -40,15 +40,22 @@ angular.module 'starter', [
   $ionicConfig.tabs.style 'standard'
   # Makes them all look the same across all OS
 
-.config ($stateProvider, $urlRouterProvider) ->
+.config ($stateProvider, $urlRouterProvider, authProvider) ->
   $stateProvider
   
-  # each tab has ist own nav history stack
+  # each tab has its own nav history stack
   .state 'tab',
     url: '/tab'
     abstract: true
     templateUrl: 'templates/tabs.html'
 
+  # login tab
+  .state 'tab.login',
+    url: '/login'
+    views:
+      'view-auth':
+        templateUrl: 'templates/login.html'
+        controller: 'authCtrl'
 
 
   # bag tab
@@ -105,7 +112,10 @@ angular.module 'starter', [
         controller: 'AccountCtrl'
 
   # if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise '/tab/bag'
+  if authProvider.getSuccess() # pick depending on whether auth was successful
+    $urlRouterProvider.otherwise '/tab/bag'
+  else
+    $urlRouterProvider.otherwise '/tab/login'
 
 # convert to titlecase
 # like 'hello world' -> 'Hello World'

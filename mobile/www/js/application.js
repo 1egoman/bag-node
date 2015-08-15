@@ -10,11 +10,19 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
   });
   $ionicConfig.tabs.position('bottom');
   return $ionicConfig.tabs.style('standard');
-}).config(function($stateProvider, $urlRouterProvider) {
+}).config(function($stateProvider, $urlRouterProvider, authProvider) {
   $stateProvider.state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
+  }).state('tab.login', {
+    url: '/login',
+    views: {
+      'view-auth': {
+        templateUrl: 'templates/login.html',
+        controller: 'authCtrl'
+      }
+    }
   }).state('tab.bag', {
     url: '/bag',
     views: {
@@ -64,7 +72,11 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
       }
     }
   });
-  return $urlRouterProvider.otherwise('/tab/bag');
+  if (authProvider.getSuccess()) {
+    return $urlRouterProvider.otherwise('/tab/bag');
+  } else {
+    return $urlRouterProvider.otherwise('/tab/login');
+  }
 }).filter('titlecase', function() {
   return function(input) {
     var smallWords;
@@ -82,25 +94,68 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
   };
 });
 
-var socket, userId;
+var auth_module, socket, user_id, user_token;
 
-userId = '55a84d00e4b06e29cb4eb960';
+window.host = "http://192.168.1.13:8000";
 
-socket = io('http://192.168.1.13:8000/' + userId, {
-  query: 'token=my_token'
-});
+auth_module = angular.module('starter.authorization', []);
+
+if (sessionStorage.user) {
+  user_id = '55a84d00e4b06e29cb4eb960';
+  user_token = 'my_token';
+  socket = io(window.host + "/" + user_id, {
+    query: "token=" + user_token
+  });
+  (function(auth_module) {
+    auth_module;
+    return auth_module.provider('auth', function() {
+      return {
+        getSuccess: function() {
+          return true;
+        },
+        $get: function() {
+          return {
+            success: true,
+            user_id: sessionStorage.user.id,
+            user_token: sessionStorage.user.token
+          };
+        }
+      };
+    }).factory('socket', function(socketFactory) {
+      return socketFactory({
+        ioSocket: socket
+      });
+    }).factory('user', function(userFactory) {
+      return userFactory(user_id);
+    });
+  })(auth_module);
+} else {
+  auth_module.provider('auth', function() {
+    return {
+      getSuccess: function() {
+        return false;
+      },
+      $get: function() {
+        return {
+          success: false
+        };
+      }
+    };
+  }).factory('socket', function() {
+    return {
+      emit: function() {},
+      on: function() {}
+    };
+  }).factory('user', function() {
+    return {};
+  });
+}
 
 window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card']).factory('socket', function(socketFactory) {
-  return socketFactory({
-    ioSocket: socket
-  });
-}).factory('user', function(userFactory) {
-  return userFactory(userId);
-}).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -229,6 +284,34 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       });
     };
     return $scope;
+  };
+});
+
+angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state) {
+  return $scope.login = function(user, pass) {
+    var socket;
+    if (user == null) {
+      user = "rgausnet";
+    }
+    if (pass == null) {
+      pass = "my_token";
+    }
+    console.log(234);
+    socket = io(window.host + "/handshake");
+    socket.emit("login", {
+      username: user,
+      password: pass
+    });
+    return socket.on("login:callback", function(data) {
+      sessionStorage.user = {
+        id: data._id,
+        token: data.token
+      };
+      $state.go("tab.bag");
+      return setTimeout(function() {
+        return location.reload();
+      }, 2000);
+    });
   };
 });
 
