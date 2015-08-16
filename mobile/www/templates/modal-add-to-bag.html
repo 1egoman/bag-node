@@ -1,0 +1,45 @@
+<!-- add new bag -->
+<ion-modal-view>
+
+  <ion-header-bar class="bar-new-item">
+    <div class="title title-center header-item">Add New</div>
+    <div class="buttons buttons-right">
+      <span class="right-buttons">
+        <button ng-click="open_search()" class="button button-icon icon
+          ion-search activated"></button>
+        <button ng-click="close_add_modal()" class="button button-icon icon
+          ion-close-round activated"></button>
+      </span>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+    <!-- waiting message -->
+    <div class="item" ng-if="!add_items.length">
+      <h2>Give us a sec</h2>
+      <h4>We're loading all of your favorites...</h4>
+    </div>
+
+    <div class="list">
+
+      <!-- show the matches -->
+      <a class="item item-icon-left" ng-repeat="item in add_items track by $index"
+        ng-click="add_item_to_bag(item)">
+        <i class="icon ion-ios-plus-outline"></i>
+        <p>
+          {{item.name}}
+          <span class="pull-right">{{item.price | currency}}</span>
+        </p>
+      </a>
+
+      <ion-infinite-scroll
+        ng-if="!add_items_done"
+        on-infinite="on_load_more_add_items()"
+        distance="10%">
+      </ion-infinite-scroll>
+
+
+    </div>
+  </ion-content>
+
+</ion-modal-view>

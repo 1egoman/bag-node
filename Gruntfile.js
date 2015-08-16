@@ -41,6 +41,15 @@ module.exports = function (grunt) {
           ext: '.js'
         }]
       },
+      frontend: {
+        files: [{
+          expand: true,
+          cwd: 'public',
+          src: '*.coffee',
+          dest: 'public/dist',
+          ext: '.js'
+        }]
+      },
       test: {
         files: [{
           expand: true,
@@ -71,6 +80,10 @@ module.exports = function (grunt) {
       test: {
         files: '<%= config.srcTest %>/specs/*',
         tasks: ['coffee:test', 'simplemocha:backend']
+      },
+      frontend: {
+        files: "public/*.coffee",
+        tasks: ['coffee:frontend']
       }
     },
     simplemocha: {

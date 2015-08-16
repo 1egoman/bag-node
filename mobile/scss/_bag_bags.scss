@@ -1,0 +1,51 @@
+
+    // <div class="list card" ng-repeat="bag in bags">
+    //   <div class="item item-divider">{{bag.name}}</div>
+    //   <div class="item item-body">
+    //     <div>
+    //       There is a fire in <b>sector 3</b>
+    //     </div>
+    //   </div>
+    // </div>
+
+.list.recipe, .card {
+
+  &, &:last-child {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .item.item-avatar {
+    padding-left: 16px;
+  }
+
+  .title {
+    position: relative;
+
+    &.strike .line {
+      position: absolute;
+      top: 9px;
+      left: 0px;
+      right: -54px;
+      height: 1px;
+      background: #444;
+      margin: 0px 50px 0px -4px;
+    }
+    // background-color: transparent;
+  }
+}
+
+.disabled.card .title {
+  color: #CCC;
+}
+
+.card.bag-list {
+  min-height: 250px;
+  .button {
+    margin: 100px auto 0px auto;
+    display: block;
+    &:before {
+      font-size: 72px;
+    }
+  }
+}

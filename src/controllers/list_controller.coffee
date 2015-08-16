@@ -11,7 +11,20 @@ List = require "../models/list_model"
 # get a list of all lists
 # GET /list
 exports.index = (req, res) ->
-  List.find {}, (err, data) ->
+  query = List.find({}).sort date: -1
+
+  # limit quantity and a start index
+  query = query.skip parseInt req.body.start if req.body?.start
+  query = query.limit parseInt req.body.limit if req.body?.limit
+
+  # limit by user
+  if req.body?.user
+    if req.body.user is "me"
+      query = query.find user: req.user._id
+    else
+      query = query.find user: req.body.user
+  
+  query.exec (err, data) ->
     if err
       res.send
         status: "bag.error.list.index"
@@ -28,21 +41,21 @@ exports.new = (req, res) -> res.send "Not supported."
 exports.create = (req, res) ->
   list_params = req.body?.list
   if list_params and \
-    list_params.name? and \
-    list_params.desc? and \
-    list_params.price? and \
-    list_params.store? and \
-    list_params.tags?
-      list = new List list_params
-      list.save (err) ->
-        if err
-          res.send
-            status: "bag.error.list.create"
-            error: err
-        else
-          res.send
-            status: "bag.success.list.create"
-            data: list
+  list_params.name? and \
+  list_params.desc? and \
+  list_params.contents? and \
+  list_params.tags?
+    list_params.user = req.user._id if req.user?._id
+    list = new List list_params
+    list.save (err) ->
+      if err
+        res.send
+          status: "bag.error.list.create"
+          error: err
+      else
+        res.send
+          status: "bag.success.list.create"
+          data: list
   else
     res.send
       status: "bag.error.list.create"
@@ -66,7 +79,7 @@ exports.edit = (req, res) -> res.send "Not supported."
 # update a list
 # PUT /list/:list
 exports.update = (req, res) ->
-  List.findOne _id: req.params.list, (err, data) ->
+  List.findOne _id: req.params.list or req.body._id, (err, data) ->
     if err
       res.send
         status: "bag.error.list.update"
@@ -78,10 +91,13 @@ exports.update = (req, res) ->
           res.send
             status: "bag.error.list.update"
             data: err
+            all: req.body?.list
         else
+        # List.find {}, (err, all) ->
           res.send
             status: "bag.success.list.update"
             data: data
+            # all: all
 
 # delete a list
 # DELETE /list/:list
@@ -94,3 +110,4 @@ exports.destroy = (req, res) ->
     else
       res.send
         status: "bag.success.list.delete"
+

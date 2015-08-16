@@ -1,0 +1,79 @@
+<ion-view view-title="Item Details">
+
+  <!-- nav bar -->
+  <ion-nav-buttons side="right">
+
+    <!-- add to favorites -->
+    <button class="button button-icon icon ion-happy-outline"
+      ng-click="fav_item(item)"
+      ng-if="!is_fav()">
+    </button>
+    <button class="button button-icon icon ion-happy"
+      ng-click="un_fav_item(item)"
+      ng-if="is_fav()">
+    </button>
+
+  </ion-nav-buttons>
+
+  <ion-content class="item-bag">
+    <div class="root">
+
+      <div class="img-wrapper">
+        <img
+          src="http://lorempixum.com/500/500"
+          class="item-img"
+        />
+      </div>
+
+      <div class="list item-overlap">
+ 
+        <div class="item">
+          <!-- item name and price -->
+          <span>
+            <h1>{{item.name | titlecase}}</h1>
+            <span class="pull-right">
+              {{item.price ? item.price : calculate_total(item) | currency}}
+            </span>
+          </span>
+
+          <!-- item description -->
+          <p>{{item.desc}}</p>
+
+        </div>
+
+        <div class="item item-divider" ng-show="item.contents.length">Foodstuffs</div>
+        <a
+        class="item item-icon-right"
+        href="#/tab/{{get_item_or_recipe()}}/{{i._id}}"
+        ng-repeat="i in item.contents">
+          {{i.name}}
+          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
+        </a>
+
+
+        <div class="item item-divider" ng-show="item.contentsLists.length">Recipes</div>
+        <a
+        class="item item-icon-right"
+        href="#/tab/{{get_item_or_recipe()}}/{{i._id}}"
+        ng-repeat="i in item.contentsLists">
+          {{i.name}}
+          <i class="icon ion-ios-arrow-right" ng-show="i._id"></i>
+        </a>
+
+
+
+
+          <!-- manual database stuff -->
+        <div class="item">
+          <p ng-repeat="(k, v) in item" ng-show="k.indexOf('contents') === -1">
+            <strong>{{k}}:</strong>
+            <span ng-if="!v.push">{{v}}</span>
+            <span ng-if="v.push">{{v.join(', ')}}</span>
+          </p>
+        </div>
+
+
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

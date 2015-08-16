@@ -11,8 +11,14 @@ mongoose = require 'mongoose'
 list = mongoose.Schema
   name: String
   desc: String
+  tags: Array
+  checked: Boolean
+  user: String
 
   contents: Array
+  contentsLists: Array
+
+list.set 'versionKey', false
 
 module.exports = mongoose.model 'List', list
 

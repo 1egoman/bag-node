@@ -1,0 +1,29 @@
+<ion-view view-title="My Recipes">
+
+  <ion-nav-buttons side="right">
+    <!-- plus for adding a new foodstuff -->
+    <button 
+      ng-click="open_foodstuff_or_recipe_modal()" 
+      class="button button-icon icon ion-plus-round"
+    ></button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-list>
+
+
+      <!-- show all recipes -->
+      <div ng-repeat="item in my_recipes">
+        <recipe-card
+          recipe="item"
+          delete-item="delete_item(item)"
+          more-info="more_info(item)"
+          sort-opts="sort_opts"
+        ></recipe-card>
+      </div>
+
+
+
+    </ion-list>
+  </ion-content>
+</ion-view>

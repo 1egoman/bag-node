@@ -1,0 +1,9 @@
+{
+  "name": "bag",
+  "app_id": "",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "defaultBrowser": "chrome"
+}
