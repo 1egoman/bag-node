@@ -13,7 +13,7 @@ angular.module 'starter', [
   'starter.directives'
 ]
   
-.run ($ionicPlatform, $ionicConfig) ->
+.run ($ionicPlatform, $ionicConfig, $rootScope, auth) ->
 
   # ionic stuff
   $ionicPlatform.ready ->
@@ -40,7 +40,13 @@ angular.module 'starter', [
   $ionicConfig.tabs.style 'standard'
   # Makes them all look the same across all OS
 
+
+  # lastly, should we hide or show bottom tab bar?
+  # hide only if we aren't authorized
+  $rootScope.hideTabs = not auth.success
+
 .config ($stateProvider, $urlRouterProvider, authProvider) ->
+
   $stateProvider
   
   # each tab has its own nav history stack
@@ -49,72 +55,77 @@ angular.module 'starter', [
     abstract: true
     templateUrl: 'templates/tabs.html'
 
-  # login tab
-  .state 'tab.login',
-    url: '/login'
-    views:
-      'view-auth':
-        templateUrl: 'templates/login.html'
-        controller: 'authCtrl'
+  # if auth was successful, then register the whole gambit of routes
+  if authProvider.getSuccess()
 
+    $stateProvider
+    
+    # bag tab
+    .state 'tab.bag',
+      url: '/bag'
+      views:
+        'tab-bag':
+          templateUrl: 'templates/tab-bag.html'
+          controller: 'BagsCtrl'
 
-  # bag tab
-  .state 'tab.bag',
-    url: '/bag'
-    views:
-      'tab-bag':
-        templateUrl: 'templates/tab-bag.html'
-        controller: 'BagsCtrl'
+    .state 'tab.select',
+      url: '/select_sort_method'
+      views:
+        'tab-bag':
+          templateUrl: 'templates/tab-select.html'
+          controller: 'BagsCtrl'
 
-  .state 'tab.select',
-    url: '/select_sort_method'
-    views:
-      'tab-bag':
-        templateUrl: 'templates/tab-select.html'
-        controller: 'BagsCtrl'
-
-  # more info about an item, such as a recipe or a foodstuff
-  .state 'tab.iteminfo',
-    url: '/iteminfo/:id'
-    views:
-      'tab-bag':
-        templateUrl: 'templates/item-info.html'
-        controller: 'ItemInfoCtrl'
+    # more info about an item, such as a recipe or a foodstuff
+    .state 'tab.iteminfo',
+      url: '/iteminfo/:id'
+      views:
+        'tab-bag':
+          templateUrl: 'templates/item-info.html'
+          controller: 'ItemInfoCtrl'
 
 
 
-  # recipes tab
-  .state 'tab.recipes',
-    url: '/recipes'
-    views:
-      'tab-recipes':
-        templateUrl: 'templates/tab-recipes.html'
-        controller: 'RecipesCtrl'
+    # recipes tab
+    .state 'tab.recipes',
+      url: '/recipes'
+      views:
+        'tab-recipes':
+          templateUrl: 'templates/tab-recipes.html'
+          controller: 'RecipesCtrl'
 
 
-  # recipe info
-  # this will open in the recipe stack and not the bag one
-  .state 'tab.recipeinfo',
-    url: '/recipeinfo/:id'
-    views:
-      'tab-recipes':
-        templateUrl: 'templates/item-info.html'
-        controller: 'ItemInfoCtrl'
+    # recipe info
+    # this will open in the recipe stack and not the bag one
+    .state 'tab.recipeinfo',
+      url: '/recipeinfo/:id'
+      views:
+        'tab-recipes':
+          templateUrl: 'templates/item-info.html'
+          controller: 'ItemInfoCtrl'
 
 
 
-  # settings page - still mostly stock
-  .state 'tab.account',
-    url: '/account'
-    views:
-      'tab-account':
-        templateUrl: 'templates/tab-account.html'
-        controller: 'AccountCtrl'
+    # settings page - still mostly stock
+    .state 'tab.account',
+      url: '/account'
+      views:
+        'tab-account':
+          templateUrl: 'templates/tab-account.html'
+          controller: 'AccountCtrl'
 
-  # if none of the above states are matched, use this as the fallback
-  if authProvider.getSuccess() # pick depending on whether auth was successful
+    # if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise '/tab/bag'
+
+  # If the user isn't logged in / hasn't created an account with us yet....
   else
+    # login tab
+    $stateProvider.state 'tab.login',
+      url: '/login'
+      views:
+        'view-auth':
+          templateUrl: 'templates/login.html'
+          controller: 'authCtrl'
+
     $urlRouterProvider.otherwise '/tab/login'
 
 # convert to titlecase

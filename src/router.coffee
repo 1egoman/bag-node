@@ -54,12 +54,13 @@ exports.websocket = (app) ->
 
   # handshake socket
   io.of("handshake").on "connection", (socket) ->
-    console.log 1
     socket.on "login", (data) ->
+      console.log chalk.yellow("--> hnd"), data
       auth_ctrl.handshake
         body: data
       , send: (payload) ->
         socket.emit "login:callback", payload
+        console.log chalk.yellow("<-- hnd"), payload
 
 
   io.use (socket, next) ->

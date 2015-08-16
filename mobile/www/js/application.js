@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig) {
+angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -9,72 +9,75 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     }
   });
   $ionicConfig.tabs.position('bottom');
-  return $ionicConfig.tabs.style('standard');
+  $ionicConfig.tabs.style('standard');
+  return $rootScope.hideTabs = !auth.success;
 }).config(function($stateProvider, $urlRouterProvider, authProvider) {
   $stateProvider.state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
-  }).state('tab.login', {
-    url: '/login',
-    views: {
-      'view-auth': {
-        templateUrl: 'templates/login.html',
-        controller: 'authCtrl'
-      }
-    }
-  }).state('tab.bag', {
-    url: '/bag',
-    views: {
-      'tab-bag': {
-        templateUrl: 'templates/tab-bag.html',
-        controller: 'BagsCtrl'
-      }
-    }
-  }).state('tab.select', {
-    url: '/select_sort_method',
-    views: {
-      'tab-bag': {
-        templateUrl: 'templates/tab-select.html',
-        controller: 'BagsCtrl'
-      }
-    }
-  }).state('tab.iteminfo', {
-    url: '/iteminfo/:id',
-    views: {
-      'tab-bag': {
-        templateUrl: 'templates/item-info.html',
-        controller: 'ItemInfoCtrl'
-      }
-    }
-  }).state('tab.recipes', {
-    url: '/recipes',
-    views: {
-      'tab-recipes': {
-        templateUrl: 'templates/tab-recipes.html',
-        controller: 'RecipesCtrl'
-      }
-    }
-  }).state('tab.recipeinfo', {
-    url: '/recipeinfo/:id',
-    views: {
-      'tab-recipes': {
-        templateUrl: 'templates/item-info.html',
-        controller: 'ItemInfoCtrl'
-      }
-    }
-  }).state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
   });
   if (authProvider.getSuccess()) {
+    $stateProvider.state('tab.bag', {
+      url: '/bag',
+      views: {
+        'tab-bag': {
+          templateUrl: 'templates/tab-bag.html',
+          controller: 'BagsCtrl'
+        }
+      }
+    }).state('tab.select', {
+      url: '/select_sort_method',
+      views: {
+        'tab-bag': {
+          templateUrl: 'templates/tab-select.html',
+          controller: 'BagsCtrl'
+        }
+      }
+    }).state('tab.iteminfo', {
+      url: '/iteminfo/:id',
+      views: {
+        'tab-bag': {
+          templateUrl: 'templates/item-info.html',
+          controller: 'ItemInfoCtrl'
+        }
+      }
+    }).state('tab.recipes', {
+      url: '/recipes',
+      views: {
+        'tab-recipes': {
+          templateUrl: 'templates/tab-recipes.html',
+          controller: 'RecipesCtrl'
+        }
+      }
+    }).state('tab.recipeinfo', {
+      url: '/recipeinfo/:id',
+      views: {
+        'tab-recipes': {
+          templateUrl: 'templates/item-info.html',
+          controller: 'ItemInfoCtrl'
+        }
+      }
+    }).state('tab.account', {
+      url: '/account',
+      views: {
+        'tab-account': {
+          templateUrl: 'templates/tab-account.html',
+          controller: 'AccountCtrl'
+        }
+      }
+    });
     return $urlRouterProvider.otherwise('/tab/bag');
   } else {
+    $stateProvider.state('tab.login', {
+      url: '/login',
+      views: {
+        'view-auth': {
+          templateUrl: 'templates/login.html',
+          controller: 'authCtrl'
+        }
+      }
+    });
     return $urlRouterProvider.otherwise('/tab/login');
   }
 }).filter('titlecase', function() {
@@ -155,13 +158,13 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.account', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
     $ionicSlideBoxDelegate.update();
   });
-}).controller('AccountCtrl', function() {});
+});
 
 angular.module('starter.directives', []).directive('recipeCard', function() {
   return {
@@ -287,30 +290,38 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   };
 });
 
+angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
+  user.then(function(user) {
+    console.log(user);
+    return $scope.username = user.name;
+  });
+  return $scope.logout = function() {
+    delete sessionStorage.user;
+    return location.reload();
+  };
+});
+
 angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state) {
   return $scope.login = function(user, pass) {
     var socket;
-    if (user == null) {
-      user = "rgausnet";
-    }
-    if (pass == null) {
-      pass = "my_token";
-    }
-    console.log(234);
     socket = io(window.host + "/handshake");
     socket.emit("login", {
       username: user,
       password: pass
     });
     return socket.on("login:callback", function(data) {
-      sessionStorage.user = {
-        id: data._id,
-        token: data.token
-      };
-      $state.go("tab.bag");
-      return setTimeout(function() {
-        return location.reload();
-      }, 2000);
+      if (data.msg) {
+        return console.log(data);
+      } else {
+        sessionStorage.user = {
+          id: data._id,
+          token: data.token
+        };
+        return setTimeout(function() {
+          location.replace('#/tab/bag');
+          return location.reload();
+        }, 2000);
+      }
     });
   };
 });

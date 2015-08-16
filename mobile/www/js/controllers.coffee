@@ -57,6 +57,7 @@ angular.module 'starter.controllers', [
 
   # authorization stuff
   'starter.authorization'
+  'starter.controllers.account'
 
   # local controllers in different files
   'starter.controllers.tab_bag'
@@ -79,7 +80,7 @@ angular.module 'starter.controllers', [
 
 
 
-.controller('RecipeListCtrl', ($scope, socket, $ionicSlideBoxDelegate) ->
+.controller 'RecipeListCtrl', ($scope, socket, $ionicSlideBoxDelegate) ->
   # get all recipes
   # this fires once at the load of the controller, but also repeadedly when
   # any function wants th reload the whole view.
@@ -92,4 +93,3 @@ angular.module 'starter.controllers', [
     $ionicSlideBoxDelegate.update()
     return
   return
-).controller 'AccountCtrl', ->
