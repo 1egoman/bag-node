@@ -4,6 +4,9 @@
 
     <!-- name, and other personal details -->
     <div ng-if="step === 'welcome'">
+      <p>We'd like to know your name. No, not that thing on your birth
+      certificate, we only care about your nickname.
+      </p>
       <label class="item item-input">
         <input type="text" placeholder="What would you like us to call you?" ng-model="realname" />
       </label>
@@ -12,11 +15,15 @@
       <button 
         class="button button-block button-positive"
         ng-click="to_step('userdetails')"
+        ng-disabled="!realname.length"
       >Next</button>
     </div>
 
     <!-- username and password -->
     <div ng-if="step === 'userdetails'">
+      <p>
+        We'll also need some user information.
+      </p>
       <label class="item item-input">
         <input type="text" placeholder="Username" ng-model="user" />
       </label>

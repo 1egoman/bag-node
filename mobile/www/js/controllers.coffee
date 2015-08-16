@@ -38,10 +38,9 @@ else
     getSuccess: -> false
     $get: -> success: false
 
-  # empty factories
-  .factory 'socket', ->
-    emit: ->
-    on: ->
+  # onboarding factories
+  .factory 'socket', (socketFactory) ->
+    socketFactory ioSocket: io("#{window.host}/handshake")
   .factory 'user', -> then: ->
 
 

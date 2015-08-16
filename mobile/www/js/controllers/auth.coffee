@@ -5,10 +5,10 @@ angular.module 'starter.controllers.login', []
   $scope
   $http
   $state
+  socket
 ) ->
 
   $scope.login = (user, pass) ->
-    socket = io "#{window.host}/handshake"
     socket.emit "login",
       username: user
       password: pass

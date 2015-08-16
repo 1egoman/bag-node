@@ -152,11 +152,10 @@ if (sessionStorage.user) {
         };
       }
     };
-  }).factory('socket', function() {
-    return {
-      emit: function() {},
-      on: function() {}
-    };
+  }).factory('socket', function(socketFactory) {
+    return socketFactory({
+      ioSocket: io(window.host + "/handshake")
+    });
   }).factory('user', function() {
     return {
       then: function() {}
@@ -310,10 +309,8 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state) {
+angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket) {
   $scope.login = function(user, pass) {
-    var socket;
-    socket = io(window.host + "/handshake");
     socket.emit("login", {
       username: user,
       password: pass
@@ -795,6 +792,17 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
   $scope.to_step = function(step) {
     return $state.go("tab.onboard", {
       step: step
+    });
+  };
+  $scope.create_account = function(realname, email, user, pass) {
+    user = {
+      realname: realname,
+      name: user,
+      email: email,
+      password: pass
+    };
+    return socket.emit("user:create", {
+      user: user
     });
   };
   $scope.step = $stateParams.step;
