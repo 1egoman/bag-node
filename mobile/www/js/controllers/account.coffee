@@ -7,8 +7,6 @@ angular.module 'starter.controllers.account', []
 
   # store user info
   user.then (user) ->
-    console.log user
-
     $scope.username = user.name
 
   # logout a user

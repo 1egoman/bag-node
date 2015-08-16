@@ -42,7 +42,7 @@ else
   .factory 'socket', ->
     emit: ->
     on: ->
-  .factory 'user', -> {}
+  .factory 'user', -> then: ->
 
 
 # get rid of some of the angular crud
@@ -58,6 +58,7 @@ angular.module 'starter.controllers', [
   # authorization stuff
   'starter.authorization'
   'starter.controllers.account'
+  'starter.controllers.onboarding'
 
   # local controllers in different files
   'starter.controllers.tab_bag'

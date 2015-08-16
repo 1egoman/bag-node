@@ -118,12 +118,23 @@ angular.module 'starter', [
 
   # If the user isn't logged in / hasn't created an account with us yet....
   else
-    # login tab
-    $stateProvider.state 'tab.login',
+    $stateProvider
+      
+
+    .state 'tab.onboard',
+      url: '/onboarding/:step'
+      views:
+        'view-auth':
+          templateUrl: 'templates/auth/onboard.html'
+          controller: 'onboardCtrl'
+
+
+    # login page
+    .state 'tab.login',
       url: '/login'
       views:
         'view-auth':
-          templateUrl: 'templates/login.html'
+          templateUrl: 'templates/auth/login.html'
           controller: 'authCtrl'
 
     $urlRouterProvider.otherwise '/tab/login'

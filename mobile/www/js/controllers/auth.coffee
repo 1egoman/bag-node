@@ -26,3 +26,9 @@ angular.module 'starter.controllers.login', []
           location.replace('#/tab/bag')
           location.reload()
         , 2000
+
+
+
+  # transition to onoarding
+  $scope.to_onboarding = ->
+    $state.go "tab.onboard", step: 'welcome'

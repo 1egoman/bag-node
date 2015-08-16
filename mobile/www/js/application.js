@@ -69,11 +69,19 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     });
     return $urlRouterProvider.otherwise('/tab/bag');
   } else {
-    $stateProvider.state('tab.login', {
+    $stateProvider.state('tab.onboard', {
+      url: '/onboarding/:step',
+      views: {
+        'view-auth': {
+          templateUrl: 'templates/auth/onboard.html',
+          controller: 'onboardCtrl'
+        }
+      }
+    }).state('tab.login', {
       url: '/login',
       views: {
         'view-auth': {
-          templateUrl: 'templates/login.html',
+          templateUrl: 'templates/auth/login.html',
           controller: 'authCtrl'
         }
       }
@@ -150,7 +158,9 @@ if (sessionStorage.user) {
       on: function() {}
     };
   }).factory('user', function() {
-    return {};
+    return {
+      then: function() {}
+    };
   });
 }
 
@@ -158,7 +168,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.account', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.account', 'starter.controllers.onboarding', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -292,7 +302,6 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
   user.then(function(user) {
-    console.log(user);
     return $scope.username = user.name;
   });
   return $scope.logout = function() {
@@ -302,7 +311,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
 });
 
 angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state) {
-  return $scope.login = function(user, pass) {
+  $scope.login = function(user, pass) {
     var socket;
     socket = io(window.host + "/handshake");
     socket.emit("login", {
@@ -322,6 +331,11 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
           return location.reload();
         }, 2000);
       }
+    });
+  };
+  return $scope.to_onboarding = function() {
+    return $state.go("tab.onboard", {
+      step: 'welcome'
     });
   };
 });
@@ -775,6 +789,20 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
     return $scope.recipe_contents = [];
   };
   return $scope.init();
+});
+
+angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, $state, $stateParams) {
+  $scope.to_step = function(step) {
+    return $state.go("tab.onboard", {
+      step: step
+    });
+  };
+  $scope.step = $stateParams.step;
+  return $scope.title = {
+    welcome: "Welcome to Bag!",
+    userdetails: "Login Details",
+    createaccount: "Create my Account!"
+  }[$scope.step];
 });
 
 angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {

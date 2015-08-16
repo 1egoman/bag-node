@@ -1,0 +1,42 @@
+<ion-view view-title="{{title || 'Bag Setup'}}">
+  <ion-content class="padding">
+
+
+    <!-- name, and other personal details -->
+    <div ng-if="step === 'welcome'">
+      <label class="item item-input">
+        <input type="text" placeholder="What would you like us to call you?" ng-model="realname" />
+      </label>
+
+      <!-- next button -->
+      <button 
+        class="button button-block button-positive"
+        ng-click="to_step('userdetails')"
+      >Next</button>
+    </div>
+
+    <!-- username and password -->
+    <div ng-if="step === 'userdetails'">
+      <label class="item item-input">
+        <input type="text" placeholder="Username" ng-model="user" />
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="Password" ng-model="pass" />
+      </label>
+
+      <!-- next button -->
+      <button 
+        class="button button-block button-positive"
+        ng-click="to_step('createaccount')"
+      >Next</button>
+    </div>
+
+    <div ng-if="step === 'createaccount'">
+      <button 
+        class="button button-block button-positive"
+        ng-click="create_account(user,pass)"
+      >Create account</button>
+    </div>
+
+  </ion-content>
+</ion-view>
