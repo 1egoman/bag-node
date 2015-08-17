@@ -7,6 +7,7 @@
 ###
 uuid = require "uuid"
 _ = require "underscore"
+bcrypt = require "bcrypt"
 User = require "../models/user_model"
 
 # get a user of all lists
@@ -35,19 +36,35 @@ exports.create = (req, res) ->
     user_params.password?
 
       # hash password and create salt
-      user_params.salt = do (salt_len) -> [0..salt_len].map(-> _.random(65, 95)).join ''
-      console.log user_params
-
-      user = new User user_params
-      user.save (err) ->
+      bcrypt.genSalt 10, (err, salt) ->
         if err
           res.send
             status: "bag.error.user.create"
             error: err
         else
-          res.send
-            status: "bag.success.user.create"
-            data: user
+          bcrypt.hash user_params.password, salt, (err, hash) ->
+            if err
+              res.send
+                status: "bag.error.user.create"
+                error: err
+            else
+              user_params.password = hash
+              user_params.salt = salt
+
+              # generate request token
+              user_params.token = do (token_len=128) -> [0..token_len].map(-> String.fromCharCode(_.random(65, 95))).join ''
+
+              # generate user model and save it
+              user = new User user_params
+              user.save (err) ->
+                if err
+                  res.send
+                    status: "bag.error.user.create"
+                    error: err
+                else
+                  res.send
+                    status: "bag.success.user.create"
+                    data: user
   else
     res.send
       status: "bag.error.user.create"

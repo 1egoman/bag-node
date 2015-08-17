@@ -54,7 +54,6 @@ exports.websocket = (app) ->
 
   # handshake socket
   io.of("handshake").on "connection", (socket) ->
-    console.log 1
 
     # exchange user information for token and user id
     socket.on "login", (data) ->
@@ -69,7 +68,7 @@ exports.websocket = (app) ->
     # onboard a new user
     socket.on "user:create", (data) ->
       console.log chalk.green("--> ws"), "user:create", data
-      user_ctrl
+      user_ctrl.create
         body: data
         type: 'ws'
       , send: (payload) ->

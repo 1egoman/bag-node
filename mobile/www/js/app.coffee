@@ -128,6 +128,11 @@ angular.module 'starter', [
           templateUrl: 'templates/auth/onboard.html'
           controller: 'onboardCtrl'
 
+    .state 'tab.onboard.failed_create_user',
+      url: '/user_created_failed'
+      views:
+        'view-auth':
+          templateUrl: 'templates/auth/user_created_failed.html'
 
     # login page
     .state 'tab.login',

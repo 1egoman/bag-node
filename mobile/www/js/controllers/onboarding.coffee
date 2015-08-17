@@ -10,8 +10,12 @@ angular.module 'starter.controllers.onboarding', []
   $stateParams
 ) ->
 
-  socket.on "user:create:callback", console.log.bind(console)
-
+  socket.on "user:create:callback", (payload) ->
+    if payload.status is "bag.success.user.create"
+      $state.go "tab.onboard", step: "created_user"
+    else
+      console.log payload
+      $state.go "tab.onboard.failed_create_user" 
 
 
   $scope.to_step = (step) ->
@@ -23,15 +27,8 @@ angular.module 'starter.controllers.onboarding', []
 
 
 
-  # FIXME: I'm Untested!!!!!!!!!
-  $scope.create_account = (user) ->
-    # user =
-    #   realname: realname
-    #   name: user
-    #   email: email
-    #   password: pass
-    console.log user
-    socket.emit "user:create", user: user
+  # create a user account
+  $scope.create_account = (user) -> socket.emit "user:create", user: user
 
 
 

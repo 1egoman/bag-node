@@ -77,6 +77,13 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
           controller: 'onboardCtrl'
         }
       }
+    }).state('tab.onboard.failed_create_user', {
+      url: '/user_created_failed',
+      views: {
+        'view-auth': {
+          templateUrl: 'templates/auth/user_created_failed.html'
+        }
+      }
     }).state('tab.login', {
       url: '/login',
       views: {
@@ -789,7 +796,16 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
 });
 
 angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
-  socket.on("user:create:callback", console.log.bind(console));
+  socket.on("user:create:callback", function(payload) {
+    if (payload.status === "bag.success.user.create") {
+      return $state.go("tab.onboard", {
+        step: "created_user"
+      });
+    } else {
+      console.log(payload);
+      return $state.go("tab.onboard.failed_create_user");
+    }
+  });
   $scope.to_step = function(step) {
     persistant.new_user = $scope.user;
     return $state.go("tab.onboard", {
@@ -797,7 +813,6 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     });
   };
   $scope.create_account = function(user) {
-    console.log(user);
     return socket.emit("user:create", {
       user: user
     });
