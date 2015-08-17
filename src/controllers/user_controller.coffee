@@ -27,14 +27,18 @@ exports.new = (req, res) -> res.send "Not supported."
 # create a new user
 # POST /user
 exports.create = (req, res) ->
-  user_params = req.body?.list
+  user_params = req.body?.user
   if user_params and \
+    user_params.realname? and \
     user_params.name? and \
-    user_params.desc? and \
-    user_params.price? and \
-    user_params.store? and \
-    user_params.tags?
-      user = new User list_params
+    user_params.email? and \
+    user_params.password?
+
+      # hash password and create salt
+      user_params.salt = do (salt_len) -> [0..salt_len].map(-> _.random(65, 95)).join ''
+      console.log user_params
+
+      user = new User user_params
       user.save (err) ->
         if err
           res.send

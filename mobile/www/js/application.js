@@ -788,29 +788,27 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
   return $scope.init();
 });
 
-angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, $state, $stateParams) {
+angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
+  socket.on("user:create:callback", console.log.bind(console));
   $scope.to_step = function(step) {
+    persistant.new_user = $scope.user;
     return $state.go("tab.onboard", {
       step: step
     });
   };
-  $scope.create_account = function(realname, email, user, pass) {
-    user = {
-      realname: realname,
-      name: user,
-      email: email,
-      password: pass
-    };
+  $scope.create_account = function(user) {
+    console.log(user);
     return socket.emit("user:create", {
       user: user
     });
   };
   $scope.step = $stateParams.step;
-  return $scope.title = {
+  $scope.title = {
     welcome: "Welcome to Bag!",
     userdetails: "Login Details",
     createaccount: "Create my Account!"
   }[$scope.step];
+  return $scope.user = persistant.new_user || {};
 });
 
 angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {

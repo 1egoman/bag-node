@@ -54,13 +54,27 @@ exports.websocket = (app) ->
 
   # handshake socket
   io.of("handshake").on "connection", (socket) ->
+    console.log 1
+
+    # exchange user information for token and user id
     socket.on "login", (data) ->
       console.log chalk.yellow("--> hnd"), data
       auth_ctrl.handshake
         body: data
+        type: 'ws'
       , send: (payload) ->
         socket.emit "login:callback", payload
         console.log chalk.yellow("<-- hnd"), payload
+
+    # onboard a new user
+    socket.on "user:create", (data) ->
+      console.log chalk.green("--> ws"), "user:create", data
+      user_ctrl
+        body: data
+        type: 'ws'
+      , send: (payload) ->
+        console.log chalk.green("<-- ws"), "user:create:callback", payload
+        socket.emit "user:create:callback", payload
 
 
   io.use (socket, next) ->

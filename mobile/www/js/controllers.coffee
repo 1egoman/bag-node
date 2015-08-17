@@ -39,12 +39,10 @@ else
     getSuccess: -> false
     $get: -> success: false
 
-  # empty factories
-  .factory 'socket', ->
-    emit: ->
-    on: ->
-  .factory 'user', -> {}
-
+  # onboarding factories
+  .factory 'socket', (socketFactory) ->
+    socketFactory ioSocket: io("#{window.host}/handshake")
+  .factory 'user', -> then: ->
 
 # get rid of some of the angular crud
 # this is needed when doing client <-> server stuff
@@ -59,6 +57,7 @@ angular.module 'starter.controllers', [
   # authorization stuff
   'starter.authorization'
   'starter.controllers.account'
+  'starter.controllers.onboarding'
 
   # local controllers in different files
   'starter.controllers.tab_bag'

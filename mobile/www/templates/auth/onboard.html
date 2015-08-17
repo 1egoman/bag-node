@@ -11,14 +11,15 @@
       </p>
       <br/>
       <label class="item item-input">
-        <input type="text" placeholder="What would you like us to call you?" ng-model="realname" />
+        <input type="text" placeholder="What would you like us to call you?"
+        ng-model="user.realname" />
       </label>
 
       <!-- next button -->
       <button 
         class="button button-block button-positive"
         ng-click="to_step('userdetails')"
-        ng-disabled="!realname.length"
+        ng-disabled="!user.realname.length"
       >Next</button>
     </div>
 
@@ -28,18 +29,18 @@
         We'll also need some user information.
       </p>
       <label class="item item-input">
-        <input type="text" placeholder="Username" ng-model="user"
+        <input type="text" placeholder="Username" ng-model="user.name"
         autocomplete="off" autocapitalize="off" />
       </label>
       <label class="item item-input">
-        <input type="password" placeholder="Password" ng-model="pass" />
+        <input type="password" placeholder="Password" ng-model="user.password" />
       </label>
 
       <!-- next button -->
       <button
         class="button button-block button-positive"
         ng-click="to_step('email')"
-        ng-disabled="!( user.length > 0 && pass.length > 0 )"
+        ng-disabled="!( user.name.length > 0 && user.password.length > 0 )"
       >Next</button>
     </div>
 
@@ -52,7 +53,7 @@
       communication to you and will never send you spam.</p>
       <br/>
       <label class="item item-input">
-        <input type="text" placeholder="Email Address" ng-model="email" />
+        <input type="text" placeholder="Email Address" ng-model="user.email" />
       </label>
 
       <!-- next button -->
@@ -69,7 +70,7 @@
       <p>Does everything look ok? If so, let's create your account!</p>
       <button 
         class="button button-block button-positive"
-        ng-click="create_account(realname, email, user, pass)"
+        ng-click="create_account(user)"
       >Create account</button>
     </div>
 
