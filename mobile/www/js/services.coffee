@@ -70,11 +70,9 @@ angular.module('starter.services', [])
 # using the specified user id, return the user object
 .factory 'userFactory', ($q, socket) ->
   (user_id) ->
-    console.log 1, user_id
     defer = $q.defer()
     socket.emit 'user:show', user: user_id
     socket.on 'user:show:callback', (evt) ->
-      console.log evt
       defer.resolve evt.data
       return
     defer.promise

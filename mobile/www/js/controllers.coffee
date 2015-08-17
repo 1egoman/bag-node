@@ -11,7 +11,6 @@ if sessionStorage.user
   ref = JSON.parse sessionStorage.user
   user_id = ref.id
   user_token = ref.token
-  console.log user_id
 
   # get a reference to the logged-in user
   socket = io "#{window.host}/#{user_id}", query: "token=#{user_token}"

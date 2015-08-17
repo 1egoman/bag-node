@@ -9,6 +9,7 @@ uuid = require "uuid"
 _ = require "underscore"
 bcrypt = require "bcrypt"
 User = require "../models/user_model"
+Bag = require "../models/bag_model"
 
 # get a user of all lists
 # GET /user
@@ -62,9 +63,17 @@ exports.create = (req, res) ->
                     status: "bag.error.user.create"
                     error: err
                 else
-                  res.send
-                    status: "bag.success.user.create"
-                    data: user
+                  # generate a bag, too
+                  bag = new Bag user: user._id
+                  bag.save (err) ->
+                    if err
+                      res.send
+                        status: "bag.error.user.create"
+                        error: err
+                    else
+                      res.send
+                        status: "bag.success.user.create"
+                        data: user
   else
     res.send
       status: "bag.error.user.create"

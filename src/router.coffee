@@ -72,8 +72,14 @@ exports.websocket = (app) ->
         body: data
         type: 'ws'
       , send: (payload) ->
-        console.log chalk.green("<-- ws"), "user:create:callback", payload
         socket.emit "user:create:callback", payload
+        console.log chalk.green("<-- ws"), "user:create:callback", payload
+
+        # the user just completed the handshake, why do they still need this?
+        # this is needed so the client doesn't cache that the conenction is
+        # still open (at least that's my guess)
+        if payload.status.indexOf("success") isnt -1
+          socket.disconnect()
 
 
   io.use (socket, next) ->

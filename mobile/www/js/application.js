@@ -123,7 +123,6 @@ if (sessionStorage.user) {
   ref = JSON.parse(sessionStorage.user);
   user_id = ref.id;
   user_token = ref.token;
-  console.log(user_id);
   socket = io(window.host + "/" + user_id, {
     query: "token=" + user_token
   });
@@ -279,13 +278,11 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 }).factory('userFactory', function($q, socket) {
   return function(user_id) {
     var defer;
-    console.log(1, user_id);
     defer = $q.defer();
     socket.emit('user:show', {
       user: user_id
     });
     socket.on('user:show:callback', function(evt) {
-      console.log(evt);
       defer.resolve(evt.data);
     });
     return defer.promise;
@@ -313,7 +310,6 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
   user.then(function(user) {
-    console.log(user);
     return $scope.username = user.name;
   });
   return $scope.logout = function() {
