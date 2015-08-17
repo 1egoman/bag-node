@@ -42,8 +42,11 @@ exports.create = (req, res) ->
         (cb) -> cb null, user_params
 
         # make sure email is really an email
-        # (user_params, cb) ->
-        #   if user_params.email.match
+        (user_params, cb) ->
+          if user_params.email.match /\S+@\S+\.\S+/i
+            cb null, user_params
+          else
+            cb "The email specified isn't an email!"
 
         # make sure username and email are unique
         (user_params, cb) ->
