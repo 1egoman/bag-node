@@ -1,6 +1,6 @@
 {
   "name": "bag",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "description": "manage grocery items with ease",
   "homepage": "getbag.io",
