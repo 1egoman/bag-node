@@ -50,10 +50,11 @@ angular.module 'starter.controllers.onboarding', []
   # our hack to reload the app
   # HACKY ALERT!!!
   $scope.to_app = ->
-    setTimeout ->
-      location.replace('#/tab/bag')
-      location.reload()
-    , 100
+    # setTimeout ->
+    #   location.replace('#/tab/bag')
+    #   location.reload()
+    # , 2000
+    $state.go "tab.login"
 
 
   # is a username unique?

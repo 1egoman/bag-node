@@ -825,10 +825,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     });
   };
   $scope.to_app = function() {
-    return setTimeout(function() {
-      location.replace('#/tab/bag');
-      return location.reload();
-    }, 100);
+    return $state.go("tab.login");
   };
   $scope.check_user_unique = function(user) {
     return socket.emit("user:unique", {

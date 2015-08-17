@@ -78,9 +78,9 @@ exports.websocket = (app) ->
         # the user just completed the handshake, why do they still need this?
         # this is needed so the client doesn't cache that the conenction is
         # still open (at least that's my guess)
-        setTimeout ->
-          socket.disconnect()
-        , 100
+        # setTimeout ->
+        #   socket.disconnect()
+        # , 100
 
     # check if a username is unique
     socket.on "user:unique", (data) ->
