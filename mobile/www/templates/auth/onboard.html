@@ -30,7 +30,11 @@
       </p>
       <label class="item item-input">
         <input type="text" placeholder="Username" ng-model="user.name"
-        autocomplete="off" autocapitalize="off" />
+        autocomplete="off" autocapitalize="off"
+        ng-change="check_user_unique(user.name)" />
+        <span class="icon ion-checkmark balanced" ng-show="username_clean"></span>
+        <span class="icon ion-alert energized" ng-show="!username_clean &&
+        user.name.length > 0" title="Username isn't unique" ></span>
       </label>
       <label class="item item-input">
         <input type="password" placeholder="Password" ng-model="user.password" />
@@ -40,7 +44,8 @@
       <button
         class="button button-block button-positive"
         ng-click="to_step('email')"
-        ng-disabled="!( user.name.length > 0 && user.password.length > 0 )"
+        ng-disabled="!( user.name.length > 0 && user.password.length > 0 &&
+        username_clean )"
       >Next</button>
     </div>
 

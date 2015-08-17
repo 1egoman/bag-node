@@ -26,6 +26,11 @@ angular.module 'starter.controllers.onboarding', []
       $scope.error_logs = "Error creating account: \n#{JSON.stringify payload, null, 2}"
 
 
+  # is the specified username unique?
+  socket.on "user:unique:callback", (payload) ->
+    $scope.username_clean = payload.status.indexOf("clean") > -1
+
+
   # move to a new onboarding step
   $scope.to_step = (step) ->
     # save the user object
@@ -46,6 +51,11 @@ angular.module 'starter.controllers.onboarding', []
       location.replace('#/tab/bag')
       location.reload()
     , 100
+
+
+  # is a username unique?
+  $scope.check_user_unique = (user) -> socket.emit "user:unique", user: user
+  $scope.username_clean = false
 
   # starting step in onboarding
   $scope.step = $stateParams.step

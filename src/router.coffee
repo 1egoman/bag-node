@@ -81,6 +81,16 @@ exports.websocket = (app) ->
         if payload.status.indexOf("success") isnt -1
           socket.disconnect()
 
+    # check if a username is unique
+    socket.on "user:unique", (data) ->
+      console.log chalk.green("--> ws"), "user:unique", data
+      user_ctrl.unique
+        body: data
+        type: 'ws'
+      , send: (payload) ->
+        socket.emit "user:unique:callback", payload
+        console.log chalk.green("<-- ws"), "user:unique:callback", payload
+
 
   io.use (socket, next) ->
     token = socket.request?._query?.token

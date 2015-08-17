@@ -809,6 +809,9 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
       return $scope.error_logs = "Error creating account: \n" + (JSON.stringify(payload, null, 2));
     }
   });
+  socket.on("user:unique:callback", function(payload) {
+    return $scope.username_clean = payload.status.indexOf("clean") > -1;
+  });
   $scope.to_step = function(step) {
     persistant.new_user = $scope.user;
     return $state.go("tab.onboard", {
@@ -826,6 +829,12 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
       return location.reload();
     }, 100);
   };
+  $scope.check_user_unique = function(user) {
+    return socket.emit("user:unique", {
+      user: user
+    });
+  };
+  $scope.username_clean = false;
   $scope.step = $stateParams.step;
   $scope.title = {
     welcome: "Welcome to Bag!",
