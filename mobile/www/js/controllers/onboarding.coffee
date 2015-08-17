@@ -20,6 +20,9 @@ angular.module 'starter.controllers.onboarding', []
         id: payload.data._id
         token: payload.data.token
 
+      # dosconnect from socket
+      socket.disconnect()
+
       # lastly, redirect to tutorial
       $state.go "tab.howtouse"
     else

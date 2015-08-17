@@ -804,6 +804,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
         id: payload.data._id,
         token: payload.data.token
       });
+      socket.disconnect();
       return $state.go("tab.howtouse");
     } else {
       return $scope.error_logs = "Error creating account: \n" + (JSON.stringify(payload, null, 2));
