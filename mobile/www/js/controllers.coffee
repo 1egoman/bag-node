@@ -1,7 +1,8 @@
 # set up the socket.io connection
 # user_id = '55a84d00e4b06e29cb4eb960'
 # user_token='my_token'
-window.host = "http://192.168.1.13:8000"
+# window.host = "http://192.168.1.13:8000"
+window.host = "http://bagp.herokuapp.com"
 
 auth_module = angular.module 'starter.authorization', []
 if sessionStorage.user
