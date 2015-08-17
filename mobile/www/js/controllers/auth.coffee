@@ -16,7 +16,9 @@ angular.module 'starter.controllers.login', []
       if data.msg
         console.log data
       else
-        sessionStorage.user =
+
+
+        sessionStorage.user = JSON.stringify
           id: data._id
           token: data.token
 

@@ -10,14 +10,23 @@ angular.module 'starter.controllers.onboarding', []
   $stateParams
 ) ->
 
+  # once user has been created, then this callback will fire and the user will
+  # be moved to the tutorial or given an error.
   socket.on "user:create:callback", (payload) ->
     if payload.status is "bag.success.user.create"
-      $state.go "tab.onboard", step: "created_user"
+
+      # store in session
+      sessionStorage.user = JSON.stringify
+        id: payload.data._id
+        token: payload.data.token
+
+      # lastly, redirect to tutorial
+      $state.go "tab.howtouse"
     else
-      console.log payload
-      $state.go "tab.onboard.failed_create_user" 
+      $scope.error_logs = "Error creating account: \n#{JSON.stringify payload, null, 2}"
 
 
+  # move to a new onboarding step
   $scope.to_step = (step) ->
     # save the user object
     persistant.new_user = $scope.user
@@ -26,11 +35,17 @@ angular.module 'starter.controllers.onboarding', []
     $state.go "tab.onboard", step: step
 
 
-
   # create a user account
   $scope.create_account = (user) -> socket.emit "user:create", user: user
 
 
+  # our hack to reload the app
+  # HACKY ALERT!!!
+  $scope.to_app = ->
+    setTimeout ->
+      location.replace('#/tab/bag')
+      location.reload()
+    , 100
 
   # starting step in onboarding
   $scope.step = $stateParams.step

@@ -16,6 +16,14 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
+  }).state('tab.howtouse', {
+    url: '/howtouse',
+    views: {
+      'view-auth': {
+        templateUrl: 'templates/auth/howtouse.html',
+        controller: 'onboardCtrl'
+      }
+    }
   });
   if (authProvider.getSuccess()) {
     $stateProvider.state('tab.bag', {
@@ -77,13 +85,6 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
           controller: 'onboardCtrl'
         }
       }
-    }).state('tab.onboard.failed_create_user', {
-      url: '/user_created_failed',
-      views: {
-        'view-auth': {
-          templateUrl: 'templates/auth/user_created_failed.html'
-        }
-      }
     }).state('tab.login', {
       url: '/login',
       views: {
@@ -112,15 +113,17 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
   };
 });
 
-var auth_module, socket, user_id, user_token;
+var auth_module, ref, socket, user_id, user_token;
 
 window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
 if (sessionStorage.user) {
-  user_id = '55a84d00e4b06e29cb4eb960';
-  user_token = 'my_token';
+  ref = JSON.parse(sessionStorage.user);
+  user_id = ref.id;
+  user_token = ref.token;
+  console.log(user_id);
   socket = io(window.host + "/" + user_id, {
     query: "token=" + user_token
   });
@@ -276,11 +279,13 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 }).factory('userFactory', function($q, socket) {
   return function(user_id) {
     var defer;
+    console.log(1, user_id);
     defer = $q.defer();
     socket.emit('user:show', {
       user: user_id
     });
     socket.on('user:show:callback', function(evt) {
+      console.log(evt);
       defer.resolve(evt.data);
     });
     return defer.promise;
@@ -308,6 +313,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
   user.then(function(user) {
+    console.log(user);
     return $scope.username = user.name;
   });
   return $scope.logout = function() {
@@ -326,10 +332,10 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
       if (data.msg) {
         return console.log(data);
       } else {
-        sessionStorage.user = {
+        sessionStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
-        };
+        });
         return setTimeout(function() {
           location.replace('#/tab/bag');
           return location.reload();
@@ -798,12 +804,13 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
 angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
-      return $state.go("tab.onboard", {
-        step: "created_user"
+      sessionStorage.user = JSON.stringify({
+        id: payload.data._id,
+        token: payload.data.token
       });
+      return $state.go("tab.howtouse");
     } else {
-      console.log(payload);
-      return $state.go("tab.onboard.failed_create_user");
+      return $scope.error_logs = "Error creating account: \n" + (JSON.stringify(payload, null, 2));
     }
   });
   $scope.to_step = function(step) {
@@ -816,6 +823,12 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     return socket.emit("user:create", {
       user: user
     });
+  };
+  $scope.to_app = function() {
+    return setTimeout(function() {
+      location.replace('#/tab/bag');
+      return location.reload();
+    }, 100);
   };
   $scope.step = $stateParams.step;
   $scope.title = {

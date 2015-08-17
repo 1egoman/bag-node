@@ -6,8 +6,12 @@ window.host = "http://192.168.1.13:8000"
 
 auth_module = angular.module 'starter.authorization', []
 if sessionStorage.user
-  user_id = '55a84d00e4b06e29cb4eb960'
-  user_token='my_token'
+  # user_id = '55a84d00e4b06e29cb4eb960'
+  # user_token='my_token'
+  ref = JSON.parse sessionStorage.user
+  user_id = ref.id
+  user_token = ref.token
+  console.log user_id
 
   # get a reference to the logged-in user
   socket = io "#{window.host}/#{user_id}", query: "token=#{user_token}"
