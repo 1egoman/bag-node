@@ -2,6 +2,7 @@
 # user_id = '55a84d00e4b06e29cb4eb960'
 # user_token='my_token'
 window.host = "http://192.168.1.13:8000"
+# window.host = "http://bagp.herokuapp.com"
 
 auth_module = angular.module 'starter.authorization', []
 if sessionStorage.user
@@ -38,10 +39,11 @@ else
     getSuccess: -> false
     $get: -> success: false
 
-  # onboarding factories
-  .factory 'socket', (socketFactory) ->
-    socketFactory ioSocket: io("#{window.host}/handshake")
-  .factory 'user', -> then: ->
+  # empty factories
+  .factory 'socket', ->
+    emit: ->
+    on: ->
+  .factory 'user', -> {}
 
 
 # get rid of some of the angular crud
@@ -57,7 +59,6 @@ angular.module 'starter.controllers', [
   # authorization stuff
   'starter.authorization'
   'starter.controllers.account'
-  'starter.controllers.onboarding'
 
   # local controllers in different files
   'starter.controllers.tab_bag'
