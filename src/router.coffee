@@ -55,6 +55,7 @@ exports.websocket = (app) ->
 
   # handshake socket
   io.of("handshake").on "connection", (socket) ->
+    console.log chalk.yellow "--- new handshake attempt..."
 
     # exchange user information for token and user id
     socket.on "login", (data) ->

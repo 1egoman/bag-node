@@ -24,4 +24,4 @@ exports.handshake = (req, res) ->
 
     # username doesn't exist
     else
-      res.send msg: "Permission denied."
+      res.send err: "Permission denied."

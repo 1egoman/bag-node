@@ -10,6 +10,8 @@ angular.module 'starter.controllers.onboarding', []
   $stateParams
 ) ->
 
+  $scope.Math = Math
+
   # once user has been created, then this callback will fire and the user will
   # be moved to the tutorial or given an error.
   socket.on "user:create:callback", (payload) ->
@@ -21,6 +23,11 @@ angular.module 'starter.controllers.onboarding', []
         sessionStorage.user = JSON.stringify
           id: data._id
           token: data.token
+
+        # get user to login
+        socket.emit "login",
+          username: $scope.creating_user.name
+          password: $scope.creating_user.password
 
         # HACKY ALERT!!!
         # to get the page to re "pull in" all the stuff, reload
@@ -52,7 +59,9 @@ angular.module 'starter.controllers.onboarding', []
 
 
   # create a user account
-  $scope.create_account = (user) -> socket.emit "user:create", user: user
+  $scope.create_account = (user) ->
+    $scope.creating_user = user
+    socket.emit "user:create", user: user
 
 
   # our hack to reload the app

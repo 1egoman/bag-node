@@ -798,12 +798,17 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
 });
 
 angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
+  $scope.Math = Math;
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
       return (function(data) {
         sessionStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
+        });
+        socket.emit("login", {
+          username: $scope.creating_user.name,
+          password: $scope.creating_user.password
         });
         return setTimeout(function() {
           location.replace('#/tab/bag');
@@ -824,6 +829,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     });
   };
   $scope.create_account = function(user) {
+    $scope.creating_user = user;
     return socket.emit("user:create", {
       user: user
     });
