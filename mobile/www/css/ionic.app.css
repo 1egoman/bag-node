@@ -7952,3 +7952,22 @@ tags-input .autocomplete .suggestion-item em {
     margin-bottom: 64px;
     min-height: 200px;
     background: #fff; }
+
+.arrow-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  border: 10px solid transparent; }
+  .arrow-container .arrow {
+    position: absolute; }
+  .arrow-container .arrow-filter {
+    top: 0px;
+    left: 10px;
+    width: 90%; }
+  .arrow-container .arrow-add {
+    top: 0px;
+    right: 10px;
+    width: 70%; }
+  .arrow-container .arrow-desc {
+    top: 250px;
+    left: 0px; }
