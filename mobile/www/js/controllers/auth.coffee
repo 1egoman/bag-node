@@ -5,10 +5,10 @@ angular.module 'starter.controllers.login', []
   $scope
   $http
   $state
+  socket
 ) ->
 
   $scope.login = (user, pass) ->
-    socket = io "#{window.host}/handshake"
     socket.emit "login",
       username: user
       password: pass
@@ -16,7 +16,9 @@ angular.module 'starter.controllers.login', []
       if data.msg
         console.log data
       else
-        sessionStorage.user =
+
+
+        sessionStorage.user = JSON.stringify
           id: data._id
           token: data.token
 
@@ -26,3 +28,9 @@ angular.module 'starter.controllers.login', []
           location.replace('#/tab/bag')
           location.reload()
         , 2000
+
+
+
+  # transition to onoarding
+  $scope.to_onboarding = ->
+    $state.go "tab.onboard", step: 'welcome'

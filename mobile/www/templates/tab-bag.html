@@ -51,14 +51,22 @@
       <!-- <ion&#45;slide> -->
         <!-- <div ng&#45;controller="RecipeListCtrl"> -->
 
-        <!-- show a combined list of recipes and foodstuffs -->
-        <ion-list >
 
-          <!-- Nothing in bag? -->
-          <div class="grayed item" ng-if="get_all_content(bag).length === 0">
+        <!-- Nothing in bag? -->
+        <div class="grayed item arrow-container" ng-if="get_all_content(bag).length === 0">
+
+          <img src="img/arrow_filter.svg" class="arrow arrow-filter" />
+          <img src="img/arrow_add.svg" class="arrow arrow-add" />
+
+          <span class="arrow arrow-desc">
             <h2>Your bag is empty</h2>
             <h4>And Lonely. You should add something.</h4>
-          </div>
+          </span>
+        </div>
+
+
+        <!-- show a combined list of recipes and foodstuffs -->
+        <ion-list ng-if="get_all_content(bag).length !== 0">
 
           <div ng-repeat="(section, items) in (
             filter_open ? 

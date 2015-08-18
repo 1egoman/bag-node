@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="519.28101"
+   height="427.74997"
+   viewBox="0 0 519.28102 427.74993"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r"
+   sodipodi:docname="arrow_filter.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4142"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="414.06911"
+     inkscape:cy="420.33396"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1029"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-1.3568295e-7,-624.61231)">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Lstart)"
+       d="m 18.063162,631.88883 c 0.097,3.09356 0.1989,6.15804 0.30546,9.19374 10.63962,303.09072 68.29303,319.1929 93.133648,328.43933"
+       id="path4136"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="csc" />
+    <image
+       y="919.74634"
+       x="130.57623"
+       id="image4493"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAA3CAYAAABO8hkCAAAABHNCSVQICAgIfAhkiAAAAvhJREFU aIHtmC102lAYhp/u7CQmGKKigmkNUVFgqCkqiprUUFWVGmrALCozzAwzVNWqMEWhOjNFVVRqNgMq Ckww1DDRdqPtgJCkpzmcPJJD7nffe7/fu7dYLBbsAB/eewNJkQlJG5mQtJEJSRuZkLSRCUkbmZC0 sTNCPkb7LMD3XFzPw/N+Mx77+JMJk+mM+1f/FZDyMrKsoKgq+5qGpunomkIu5uaX2Qs/jwSMfg7o 9fvc3I6ZxTYtoZaq1GomxmEhtqhQQibDbzjOFbfT5X2oFHUNTSuiqQUUJY8sy+QlAVEUAZjP59zP pkwmE6a+z2jsced5eO4d4+WTyJeo2zbnZfnthPiDBqZz++gyEnrNom5WKRfinWEwGnLTu6Lbdx9v V6Bk9+gYSqT11guZe3wyzvgxA8hT6/Zo6Ul6NgRuG9PqMwWQDC4HNpq4/Tobs1aENd+F9UJEDatV QQJgSt8ysdrXDEdBbMPBaMh12/p3G0hUWlak24BQwT7H+3rKWW/8/OfHYNf1IgdqAUVRUHISkpRD fNrMfE4wmzELfHzfZzT+xZ3rvg52QDUv+X6hRfaAkOnXZ2CZOO7rKpEEgm7T6xpEC/MHQlZ2BaPd wcjHsLSKvEG7HU8EbNOi5HSaXYv9mAafU6TRbVJOIBFu1WuJhVM6TgUhvl1AotL+wkkhmby4ddMo V206CfiYanZwDqNX8pdE6H5z6M0OdTW6UUFv0omRof5HtDZePOC83aAY5Vuhgu0cxw7ul0SfRwon fG7qW8aLRMVpUU3Oo/4Sa7BSjm1aengp0pGDnWBcLBNzQlQw7JAuJpRoXZQTHaaWiT/qKgYtc3MW U88ab+JSTyQws4scnJyyPompmNVCfFNrSObxQVJYf9gyspSIpZXszCtKJiRtZEKeIQgbKryAkEzL vJJkhIga5tHqWpI/MiPP4mHZ4qVxExO86y7dq5+4/sNALik6h3UL61jbkJ7jk6CQ9yUL9rSRCUkb mZC0kQlJG5mQtLEzQv4A3pvlMa74TbUAAAAASUVORK5CYII= "
+       style="image-rendering:optimizeSpeed"
+       preserveAspectRatio="none"
+       height="55"
+       width="50" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:29.66700363px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="182.59036"
+       y="959.39569"
+       id="text4496"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4498"
+         x="182.59036"
+         y="959.39569">Filter your Bag</tspan><tspan
+         sodipodi:role="line"
+         x="182.59036"
+         y="996.47943"
+         id="tspan4500" /></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4502"
+       y="999.17322"
+       x="130.38864"
+       style="font-style:normal;font-weight:normal;font-size:35.86449051px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         id="tspan4506"
+         y="999.17322"
+         x="130.38864"
+         sodipodi:role="line"
+         style="font-size:21.15577888px">Choose between views such as a</tspan><tspan
+         y="1025.6179"
+         x="130.38864"
+         sodipodi:role="line"
+         style="font-size:21.15577888px"
+         id="tspan4510">checkable grocery list, sortable tags,</tspan><tspan
+         y="1052.0626"
+         x="130.38864"
+         sodipodi:role="line"
+         style="font-size:21.15577888px"
+         id="tspan4512">and more!</tspan></text>
+  </g>
+</svg>

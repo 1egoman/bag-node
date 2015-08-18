@@ -1,4 +1,5 @@
 ###
+#
  * bag
  * getbag.io
  *
@@ -9,8 +10,12 @@
 mongoose = require 'mongoose'
 
 user = mongoose.Schema
+  realname: String
   name: String
   email: String
+  password: String
+  salt: String
+
   token: String
   favs: Array
 

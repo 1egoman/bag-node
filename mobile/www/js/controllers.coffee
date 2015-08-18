@@ -6,11 +6,15 @@ window.host = "http://bagp.herokuapp.com"
 
 auth_module = angular.module 'starter.authorization', []
 if sessionStorage.user
-  user_id = '55a84d00e4b06e29cb4eb960'
-  user_token='my_token'
+  # user_id = '55a84d00e4b06e29cb4eb960'
+  # user_token='my_token'
+  ref = JSON.parse sessionStorage.user
+  user_id = ref.id
+  user_token = ref.token
 
   # get a reference to the logged-in user
   socket = io "#{window.host}/#{user_id}", query: "token=#{user_token}"
+  socket.on "connection", -> console.log 67890
 
   # inject these details into the controller
   do (auth_module) ->
@@ -39,12 +43,10 @@ else
     getSuccess: -> false
     $get: -> success: false
 
-  # empty factories
-  .factory 'socket', ->
-    emit: ->
-    on: ->
-  .factory 'user', -> {}
-
+  # onboarding factories
+  .factory 'socket', (socketFactory) ->
+    socketFactory ioSocket: io("#{window.host}/handshake")
+  .factory 'user', -> then: ->
 
 # get rid of some of the angular crud
 # this is needed when doing client <-> server stuff
@@ -59,6 +61,7 @@ angular.module 'starter.controllers', [
   # authorization stuff
   'starter.authorization'
   'starter.controllers.account'
+  'starter.controllers.onboarding'
 
   # local controllers in different files
   'starter.controllers.tab_bag'

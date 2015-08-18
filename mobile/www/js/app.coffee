@@ -55,6 +55,16 @@ angular.module 'starter', [
     abstract: true
     templateUrl: 'templates/tabs.html'
 
+
+  # tutorial on how to us the app
+  .state 'tab.howtouse',
+    url: '/howtouse'
+    views:
+      'view-auth':
+        templateUrl: 'templates/auth/howtouse.html'
+        controller: 'onboardCtrl'
+
+
   # if auth was successful, then register the whole gambit of routes
   if authProvider.getSuccess()
 
@@ -118,12 +128,24 @@ angular.module 'starter', [
 
   # If the user isn't logged in / hasn't created an account with us yet....
   else
-    # login tab
-    $stateProvider.state 'tab.login',
+    $stateProvider
+      
+
+    .state 'tab.onboard',
+      url: '/onboarding/:step'
+      views:
+        'view-auth':
+          templateUrl: 'templates/auth/onboard.html'
+          controller: 'onboardCtrl'
+
+
+
+    # login page
+    .state 'tab.login',
       url: '/login'
       views:
         'view-auth':
-          templateUrl: 'templates/login.html'
+          templateUrl: 'templates/auth/login.html'
           controller: 'authCtrl'
 
     $urlRouterProvider.otherwise '/tab/login'

@@ -16,6 +16,14 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
+  }).state('tab.howtouse', {
+    url: '/howtouse',
+    views: {
+      'view-auth': {
+        templateUrl: 'templates/auth/howtouse.html',
+        controller: 'onboardCtrl'
+      }
+    }
   });
   if (authProvider.getSuccess()) {
     $stateProvider.state('tab.bag', {
@@ -69,11 +77,19 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     });
     return $urlRouterProvider.otherwise('/tab/bag');
   } else {
-    $stateProvider.state('tab.login', {
+    $stateProvider.state('tab.onboard', {
+      url: '/onboarding/:step',
+      views: {
+        'view-auth': {
+          templateUrl: 'templates/auth/onboard.html',
+          controller: 'onboardCtrl'
+        }
+      }
+    }).state('tab.login', {
       url: '/login',
       views: {
         'view-auth': {
-          templateUrl: 'templates/login.html',
+          templateUrl: 'templates/auth/login.html',
           controller: 'authCtrl'
         }
       }
@@ -97,17 +113,21 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
   };
 });
 
-var auth_module, socket, user_id, user_token;
+var auth_module, ref, socket, user_id, user_token;
 
 window.host = "http://bagp.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
 if (sessionStorage.user) {
-  user_id = '55a84d00e4b06e29cb4eb960';
-  user_token = 'my_token';
+  ref = JSON.parse(sessionStorage.user);
+  user_id = ref.id;
+  user_token = ref.token;
   socket = io(window.host + "/" + user_id, {
     query: "token=" + user_token
+  });
+  socket.on("connection", function() {
+    return console.log(67890);
   });
   (function(auth_module) {
     auth_module;
@@ -144,13 +164,14 @@ if (sessionStorage.user) {
         };
       }
     };
-  }).factory('socket', function() {
-    return {
-      emit: function() {},
-      on: function() {}
-    };
+  }).factory('socket', function(socketFactory) {
+    return socketFactory({
+      ioSocket: io(window.host + "/handshake")
+    });
   }).factory('user', function() {
-    return {};
+    return {
+      then: function() {}
+    };
   });
 }
 
@@ -158,7 +179,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.account', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.account', 'starter.controllers.onboarding', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -292,7 +313,6 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
   user.then(function(user) {
-    console.log(user);
     return $scope.username = user.name;
   });
   return $scope.logout = function() {
@@ -301,10 +321,8 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state) {
-  return $scope.login = function(user, pass) {
-    var socket;
-    socket = io(window.host + "/handshake");
+angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket) {
+  $scope.login = function(user, pass) {
     socket.emit("login", {
       username: user,
       password: pass
@@ -313,15 +331,20 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
       if (data.msg) {
         return console.log(data);
       } else {
-        sessionStorage.user = {
+        sessionStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
-        };
+        });
         return setTimeout(function() {
           location.replace('#/tab/bag');
           return location.reload();
         }, 2000);
       }
+    });
+  };
+  return $scope.to_onboarding = function() {
+    return $state.go("tab.onboard", {
+      step: 'welcome'
     });
   };
 });
@@ -775,6 +798,59 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
     return $scope.recipe_contents = [];
   };
   return $scope.init();
+});
+
+angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
+  socket.on("user:create:callback", function(payload) {
+    if (payload.status === "bag.success.user.create") {
+      return (function(data) {
+        sessionStorage.user = JSON.stringify({
+          id: data._id,
+          token: data.token
+        });
+        return setTimeout(function() {
+          location.replace('#/tab/bag');
+          return location.reload();
+        }, 2000);
+      })(payload.data);
+    } else {
+      return $scope.error_logs = "Error creating account: \n" + (JSON.stringify(payload, null, 2));
+    }
+  });
+  socket.on("user:unique:callback", function(payload) {
+    return $scope.username_clean = payload.status.indexOf("clean") > -1;
+  });
+  $scope.to_step = function(step) {
+    persistant.new_user = $scope.user;
+    return $state.go("tab.onboard", {
+      step: step
+    });
+  };
+  $scope.create_account = function(user) {
+    $scope.creating_user = user;
+    return socket.emit("user:create", {
+      user: user
+    });
+  };
+  $scope.to_app = function() {
+    return setTimeout(function() {
+      location.replace('#/tab/bag');
+      return location.reload();
+    }, 2000);
+  };
+  $scope.check_user_unique = function(user) {
+    return socket.emit("user:unique", {
+      user: user
+    });
+  };
+  $scope.username_clean = false;
+  $scope.step = $stateParams.step;
+  $scope.title = {
+    welcome: "Welcome to Bag!",
+    userdetails: "Login Details",
+    createaccount: "Create my Account!"
+  }[$scope.step];
+  return $scope.user = persistant.new_user || {};
 });
 
 angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {

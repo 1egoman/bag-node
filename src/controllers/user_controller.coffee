@@ -7,7 +7,10 @@
 ###
 uuid = require "uuid"
 _ = require "underscore"
+bcrypt = require "bcrypt"
+async = require "async"
 User = require "../models/user_model"
+Bag = require "../models/bag_model"
 
 # get a user of all lists
 # GET /user
@@ -27,23 +30,95 @@ exports.new = (req, res) -> res.send "Not supported."
 # create a new user
 # POST /user
 exports.create = (req, res) ->
-  user_params = req.body?.list
+  user_params = req.body?.user
   if user_params and \
+    user_params.realname? and \
     user_params.name? and \
-    user_params.desc? and \
-    user_params.price? and \
-    user_params.store? and \
-    user_params.tags?
-      user = new User list_params
-      user.save (err) ->
+    user_params.email? and \
+    user_params.password?
+
+      async.waterfall [
+        # pass in our user params object
+        (cb) -> cb null, user_params
+
+        # make sure email is really an email
+        (user_params, cb) ->
+          if user_params.email.match /\S+@\S+\.\S+/i
+            cb null, user_params
+          else
+            cb "The email specified isn't an email!"
+
+        # make sure username and email are unique
+        (user_params, cb) ->
+          User.findOne
+            $or: [
+              name: user_params.name
+            ,
+              email: user_params.email
+            ]
+          , (err, result) ->
+            if err
+              cb err
+            else if not result
+              cb null, user_params
+            else
+              cb "Username or email not unique"
+
+        # hash password and create salt
+        (user_params, cb) ->
+          bcrypt.genSalt 10, (err, salt) ->
+            if err
+              res.send
+                status: "bag.error.user.create"
+                error: err
+            else
+              bcrypt.hash user_params.password, salt, (err, hash) ->
+                if err
+                  res.send
+                    status: "bag.error.user.create"
+                    error: err
+                else
+                  user_params.password = hash
+                  user_params.salt = salt
+                  cb null, user_params
+
+        # generate request token
+        (user_params, cb) ->
+          user_params.token = do (token_len=128) ->
+            [0..token_len].map ->
+              String.fromCharCode(_.random(65, 95))
+            .join ''
+          cb null, user_params
+
+        # create user model and save it
+        (user_params, cb) ->
+          user = new User user_params
+          user.save (err) ->
+            if err
+              res.send
+                status: "bag.error.user.create"
+                error: err
+            else
+
+              # generate a bag, too
+              bag = new Bag user: user._id
+              bag.save (err) ->
+                if err
+                  res.send
+                    status: "bag.error.user.create"
+                    error: err
+                else
+                  res.send
+                    status: "bag.success.user.create"
+                    data: user
+      ], (err) ->
         if err
           res.send
             status: "bag.error.user.create"
             error: err
-        else
-          res.send
-            status: "bag.success.user.create"
-            data: user
+
+
+
   else
     res.send
       status: "bag.error.user.create"
@@ -156,3 +231,19 @@ exports.un_fav = (req, res) ->
       else
         res.send
           status: "bag.success.user.unfavorite"
+
+
+
+# check if a username is unique
+exports.unique = (req, res) ->
+
+ # length of zero? That cannot be a username.....
+  if req.body.user.length is 0
+    return res.send status: "bag.success.user.dirty"
+
+  User.findOne name: req.body.user, (err, result) ->
+    if err or not result
+      res.send status: "bag.success.user.clean"
+    else
+      res.send status: "bag.success.user.dirty"
+
