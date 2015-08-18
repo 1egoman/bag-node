@@ -126,6 +126,9 @@ if (sessionStorage.user) {
   socket = io(window.host + "/" + user_id, {
     query: "token=" + user_token
   });
+  socket.on("connection", function() {
+    return console.log(67890);
+  });
   (function(auth_module) {
     auth_module;
     return auth_module.provider('auth', function() {
@@ -805,10 +808,6 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
         sessionStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
-        });
-        socket.emit("login", {
-          username: $scope.creating_user.name,
-          password: $scope.creating_user.password
         });
         return setTimeout(function() {
           location.replace('#/tab/bag');

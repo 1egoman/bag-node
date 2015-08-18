@@ -24,11 +24,6 @@ angular.module 'starter.controllers.onboarding', []
           id: data._id
           token: data.token
 
-        # get user to login
-        socket.emit "login",
-          username: $scope.creating_user.name
-          password: $scope.creating_user.password
-
         # HACKY ALERT!!!
         # to get the page to re "pull in" all the stuff, reload
         setTimeout ->

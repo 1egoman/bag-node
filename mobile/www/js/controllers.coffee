@@ -15,6 +15,7 @@ if sessionStorage.user
 
   # get a reference to the logged-in user
   socket = io "#{window.host}/#{user_id}", query: "token=#{user_token}"
+  socket.on "connection", -> console.log 67890
 
   # inject these details into the controller
   do (auth_module) ->

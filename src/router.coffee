@@ -74,15 +74,13 @@ exports.websocket = (app) ->
         body: data
         type: 'ws'
       , send: (payload) ->
+
+        # create a new user socket for that user
+        initialize_user_socket io, payload.data
+
+        # do dat logging!
         socket.emit "user:create:callback", payload
         console.log chalk.green("<-- ws"), "user:create:callback", payload
-
-        # the user just completed the handshake, why do they still need this?
-        # this is needed so the client doesn't cache that the conenction is
-        # still open (at least that's my guess)
-        # setTimeout ->
-        #   socket.disconnect()
-        # , 100
 
     # check if a username is unique
     socket.on "user:unique", (data) ->
@@ -113,48 +111,55 @@ exports.websocket = (app) ->
   # iterate for each user
   user_ctrl.index {}, send: (users) ->
     for user in users.data
-      io.of(user._id).on "connection", (socket) ->
-
-        # we need to be authorized!!!
-        if socket.has_perms is false
-          return socket.emit "permissiondenied"
-
-
-        # iterate through routes
-        for k, v of exports.routes
-          for method in v.routes
-
-            # wrap in closure so loop doesn't "outpace" the current scope
-            do (k, v, method) ->
-              socket.on "#{k}:#{method}", (data) ->
-                data or= {}
-
-                # log the request happening
-                console.log chalk.green("--> ws"), "#{k}:#{method}", data
-
-                # extract params
-                params = {}
-                params[k] = data[k]
-
-                v.controller[method]
-                  body: data
-                  type: 'ws'
-                  params: params
-                  user: user
-                ,
-                  send: (data) ->
-                    # log the event response
-                    console.log \
-                      chalk.green("<-- ws"), \
-                      "#{k}:#{method}:callback", \
-                      JSON.stringify data, null, 2
-
-                    # let everyone know
-                    if method in ["create", "update", "destroy"]
-                      socket.broadcast.emit "#{k}:#{method}:callback", data
-                    socket.emit "#{k}:#{method}:callback", data
+      initialize_user_socket io, user
 
   server
+
+# create a new user socket for the specified user.
+# this happens on startup for each user and for each user that is created.
+initialize_user_socket = (io, user) ->
+  io.of(user._id).on "connection", (socket) ->
+    console.log chalk.green "--- User '#{user._id}' connected!!!!"
+
+    # we need to be authorized!!!
+    if socket.has_perms is false
+      return socket.emit "permissiondenied"
+
+
+    # iterate through routes
+    for k, v of exports.routes
+      for method in v.routes
+
+        # wrap in closure so loop doesn't "outpace" the current scope
+        do (k, v, method) ->
+          socket.on "#{k}:#{method}", (data) ->
+            data or= {}
+
+            # log the request happening
+            console.log chalk.green("--> ws"), "#{k}:#{method}", data
+
+            # extract params
+            params = {}
+            params[k] = data[k]
+
+            v.controller[method]
+              body: data
+              type: 'ws'
+              params: params
+              user: user
+            ,
+              send: (data) ->
+                # log the event response
+                console.log \
+                  chalk.green("<-- ws"), \
+                  "#{k}:#{method}:callback", \
+                  JSON.stringify data, null, 2
+
+                # let everyone know
+                if method in ["create", "update", "destroy"]
+                  socket.broadcast.emit "#{k}:#{method}:callback", data
+                socket.emit "#{k}:#{method}:callback", data
+
 
 # TODO un half-ass this....
 exports.http = (app) ->
