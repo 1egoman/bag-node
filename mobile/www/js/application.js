@@ -115,7 +115,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://10.0.0.7:8000";
+window.host = "http://bagp.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 

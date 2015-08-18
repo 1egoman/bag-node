@@ -13,6 +13,7 @@ user_ctrl = require "./controllers/user_controller"
 tags_ctrl = require "./controllers/tags_controller"
 auth_ctrl = require "./controllers/auth_controller"
 chalk = require "chalk"
+pjson = require "../package.json"
 
 
 # this object maps all routes to their respective methods
@@ -165,3 +166,12 @@ initialize_user_socket = (io, user) ->
 exports.http = (app) ->
   app.resource "lists", list_ctrl
   app.resource "foodstuffs", foodstuff_ctrl
+
+  app.get "/", (req, res) ->
+    res.send """
+    <style>code {padding:2px 4px;font-size:90%;white-space:nowrap;background-color:#f9f2f4;border-radius:4px;color:#c7254e;}</style>
+    <h1>Hello World!</h1>
+    <p>This is the root of bag's server. (version <code>#{pjson.version}</code>)</p>
+    <p>Nothing to see here, why not take a look at
+    <a href="http://getbag.io">bag's website</a>?</p>
+    """
