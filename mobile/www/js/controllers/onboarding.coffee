@@ -15,16 +15,24 @@ angular.module 'starter.controllers.onboarding', []
   socket.on "user:create:callback", (payload) ->
     if payload.status is "bag.success.user.create"
 
-      # store in session
-      sessionStorage.user = JSON.stringify
-        id: payload.data._id
-        token: payload.data.token
+      do (data=payload.data) ->
 
-      # dosconnect from socket
-      socket.disconnect()
+        # store in session
+        sessionStorage.user = JSON.stringify
+          id: data._id
+          token: data.token
+
+        # HACKY ALERT!!!
+        # to get the page to re "pull in" all the stuff, reload
+        setTimeout ->
+          location.replace('#/tab/bag')
+          location.reload()
+        , 2000
+
 
       # lastly, redirect to tutorial
-      $state.go "tab.howtouse"
+      # are we still doing this???? TODO
+      # $state.go "tab.howtouse"
     else
       $scope.error_logs = "Error creating account: \n#{JSON.stringify payload, null, 2}"
 
@@ -50,11 +58,11 @@ angular.module 'starter.controllers.onboarding', []
   # our hack to reload the app
   # HACKY ALERT!!!
   $scope.to_app = ->
-    # setTimeout ->
-    #   location.replace('#/tab/bag')
-    #   location.reload()
-    # , 2000
-    $state.go "tab.login"
+    setTimeout ->
+      location.replace('#/tab/bag')
+      location.reload()
+    , 2000
+    # $state.go "tab.login"
 
 
   # is a username unique?

@@ -49,8 +49,9 @@ exports.routes = routes =
 exports.websocket = (app) ->
 
   server = require('http').createServer app
-  io = require('socket.io') server
-
+  io = require('socket.io') server,
+   'close timeout': .2
+   'client store expiration': .2
 
   # handshake socket
   io.of("handshake").on "connection", (socket) ->

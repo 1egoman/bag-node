@@ -800,12 +800,16 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
 angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
-      sessionStorage.user = JSON.stringify({
-        id: payload.data._id,
-        token: payload.data.token
-      });
-      socket.disconnect();
-      return $state.go("tab.howtouse");
+      return (function(data) {
+        sessionStorage.user = JSON.stringify({
+          id: data._id,
+          token: data.token
+        });
+        return setTimeout(function() {
+          location.replace('#/tab/bag');
+          return location.reload();
+        }, 2000);
+      })(payload.data);
     } else {
       return $scope.error_logs = "Error creating account: \n" + (JSON.stringify(payload, null, 2));
     }
@@ -825,7 +829,10 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     });
   };
   $scope.to_app = function() {
-    return $state.go("tab.login");
+    return setTimeout(function() {
+      location.replace('#/tab/bag');
+      return location.reload();
+    }, 2000);
   };
   $scope.check_user_unique = function(user) {
     return socket.emit("user:unique", {
