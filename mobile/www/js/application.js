@@ -801,7 +801,6 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
 });
 
 angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
-  $scope.Math = Math;
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
       return (function(data) {

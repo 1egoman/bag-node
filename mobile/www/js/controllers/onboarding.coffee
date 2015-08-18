@@ -10,8 +10,6 @@ angular.module 'starter.controllers.onboarding', []
   $stateParams
 ) ->
 
-  $scope.Math = Math
-
   # once user has been created, then this callback will fire and the user will
   # be moved to the tutorial or given an error.
   socket.on "user:create:callback", (payload) ->
