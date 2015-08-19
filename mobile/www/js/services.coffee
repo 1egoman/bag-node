@@ -100,7 +100,7 @@ angular.module('starter.services', [])
 # calculate total price for a whole bag
 # this takes into account any sub-recipes
 # through recursion.
-.factory 'calculateTotal', ->
+.factory 'calculateTotal', (pickPrice) ->
 
   # get all contents, both sub-lists and foodstuffs
   # this lets us recurively wander
@@ -120,8 +120,22 @@ angular.module('starter.services', [])
         total += calculate_total(item) * (parseFloat(item.quantity) or 1)
       else
         # do total
-        total += parseFloat(item.price) * (parseFloat(item.quantity) or 1)
+        total += pickPrice(item) * (parseFloat(item.quantity) or 1)
 
     return total
 
   calculate_total
+
+
+# pick the correct price for an item
+# if a store is specified, go with that
+# otherwise, ik the minimum price
+.factory 'pickPrice', ->
+  (item) ->
+    if item.store and item.stores
+      item.stores[item.store].price
+    else if item.price
+      parseFloat item.price
+    else
+      _.min item.stores.map (i) -> i.price
+

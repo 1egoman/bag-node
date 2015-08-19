@@ -309,7 +309,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     };
     return $scope;
   };
-}).factory('calculateTotal', function() {
+}).factory('calculateTotal', function(pickPrice) {
   var calculate_total, get_all_content;
   get_all_content = function(bag, return_self) {
     if (bag && bag.contents) {
@@ -331,12 +331,24 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       } else if (item.contents) {
         return total += calculate_total(item) * (parseFloat(item.quantity) || 1);
       } else {
-        return total += parseFloat(item.price) * (parseFloat(item.quantity) || 1);
+        return total += pickPrice(item) * (parseFloat(item.quantity) || 1);
       }
     });
     return total;
   };
   return calculate_total;
+}).factory('pickPrice', function() {
+  return function(item) {
+    if (item.store && item.stores) {
+      return item.stores[item.store].price;
+    } else if (item.price) {
+      return parseFloat(item.price);
+    } else {
+      return _.min(item.stores.map(function(i) {
+        return i.price;
+      }));
+    }
+  };
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {

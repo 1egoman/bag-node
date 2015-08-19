@@ -35,7 +35,7 @@
             ng-change="change(item)"
           />
           <span>@</span>
-          <span>{{item.price | currency}}</span>
+          <span>{{ (item.store && item.stores[item.store].price || item.price) | currency}}</span>
         </span>
       </span>
 
