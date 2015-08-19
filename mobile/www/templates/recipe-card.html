@@ -58,8 +58,9 @@
           <span ng-bind-html="format_name(item.name)"></span>
 
           <!-- rightmost icons -->
-          <span class="pull-right" ng-show="item.price || item.contents" style="margin-right: -16px;">
-            {{item.price || calculate_total(item) | currency}}
+          <span class="pull-right" style="margin-right: -16px;">
+          {{ (item.store && item.stores[item.store].price || item.price) ||
+          calculate_total(item) | currency}}
           </span>
         </span>
       </li>

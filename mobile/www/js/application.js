@@ -312,7 +312,9 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 }).factory('calculateTotal', function(pickPrice) {
   var calculate_total, get_all_content;
   get_all_content = function(bag, return_self) {
-    if (bag && bag.contents) {
+    if (bag.length) {
+      return bag;
+    } else if (bag && bag.contents) {
       return bag.contents.concat(bag.contentsLists || []);
     } else {
       if (return_self) {
@@ -326,8 +328,11 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     var total;
     total = 0;
     get_all_content(bag, true).forEach(function(item) {
+      if (!item) {
+        return 0;
+      }
       if (item.checked === true) {
-
+        return 0;
       } else if (item.contents) {
         return total += calculate_total(item) * (parseFloat(item.quantity) || 1);
       } else {

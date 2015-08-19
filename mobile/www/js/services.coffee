@@ -105,7 +105,9 @@ angular.module('starter.services', [])
   # get all contents, both sub-lists and foodstuffs
   # this lets us recurively wander
   get_all_content = (bag, return_self) ->
-    if bag and bag.contents
+    if bag.length
+      bag
+    else if bag and bag.contents
       bag.contents.concat bag.contentsLists or []
     else
       if return_self then [ bag ] else []
@@ -113,8 +115,10 @@ angular.module('starter.services', [])
   calculate_total = (bag) ->
     total = 0
     get_all_content(bag, true).forEach (item) ->
+      return 0 if not item # callbacks haven't resolved yet
+
       if item.checked == true
-        return
+        return 0
       else if item.contents
         # this recipe has items of its own
         total += calculate_total(item) * (parseFloat(item.quantity) or 1)

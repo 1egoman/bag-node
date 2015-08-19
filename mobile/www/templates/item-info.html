@@ -32,7 +32,7 @@
           <span>
             <h1>{{item.name | titlecase}}</h1>
             <span class="pull-right">
-              {{item.price ? item.price : calculate_total(item) | currency}}
+              {{calculate_total([item]) | currency}}
             </span>
           </span>
 
