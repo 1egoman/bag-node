@@ -1019,9 +1019,24 @@ angular.module('starter.controllers.stores_picker', []).controller('StorePickerC
     }));
     $scope.other_stores = _.compact(stores.map(function(s) {
       var ref1;
-      return (ref1 = s._id, indexOf.call($scope.user.stores, ref1) >= 0) || s;
+      return (ref1 = s._id, indexOf.call($scope.user.stores, ref1) < 0) && s;
     }));
-    return console.log($scope.my_stores, $scope.other_stores);
+    return socket.emit("user:updatestores", {
+      user: $scope.user._id,
+      stores: $scope.user.stores
+    });
+  };
+  $scope.toggle_store_in_user = function(item, user) {
+    var ref1;
+    if (user == null) {
+      user = $scope.user;
+    }
+    if (ref1 = item._id, indexOf.call(user.stores, ref1) < 0) {
+      user.stores.push(item._id);
+    } else {
+      user.stores = _.without(user.stores, item._id);
+    }
+    return $scope.sort_stores($scope.stores);
   };
   return $scope.item_details = function(item) {
     var hideSheet, ref1;
@@ -1042,7 +1057,7 @@ angular.module('starter.controllers.stores_picker', []).controller('StorePickerC
         var ref;
         switch (index) {
           case 0:
-            1;
+            $scope.toggle_store_in_user(item);
             break;
           case 1:
             ref = window.open(item.website, '_blank', 'location=yes');

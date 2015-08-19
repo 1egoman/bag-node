@@ -1,6 +1,8 @@
 <ion-view view-title="Choose Stores">
   <ion-content>
 
+    <div class="item item-divider">My Stores</div>
+
     <ion-item
       ng-repeat="store in my_stores"
       class="item-avatar"
@@ -11,9 +13,7 @@
       <p>{{store.desc}}</p>
     </ion-item>
 
-    <div class="item item-divider">
-      Other.....
-    </div>
+    <div class="item item-divider">Other Stores</div>
 
     <ion-item
       ng-repeat="store in other_stores"
