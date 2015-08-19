@@ -8,16 +8,13 @@
 
 mongoose = require 'mongoose'
 
-foodstuff = mongoose.Schema
+store = mongoose.Schema
   name: String
   desc: String
   tags: Array
-  checked: Boolean
-  user: String
-  price: String
-  verified: Boolean
+  website: String
 
-  stores: Object
+store.set 'versionKey', false
 
+module.exports = mongoose.model 'Store', store
 
-module.exports = mongoose.model 'foodstuff', foodstuff

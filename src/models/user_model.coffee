@@ -18,5 +18,6 @@ user = mongoose.Schema
 
   token: String
   favs: Array
+  stores: Array
 
 module.exports = mongoose.model 'user', user
