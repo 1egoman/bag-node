@@ -3,6 +3,7 @@ angular.module 'starter.controllers.account', []
 .controller 'AccountCtrl', (
   $scope
   user
+  $state
 ) ->
 
   # store user info
@@ -14,3 +15,6 @@ angular.module 'starter.controllers.account', []
     delete sessionStorage.user
     location.reload()
 
+  # move to stores picker page
+  $scope.to_stores_chooser = ->
+    $state.go "tab.stores"

@@ -74,6 +74,14 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
           controller: 'AccountCtrl'
         }
       }
+    }).state('tab.stores', {
+      url: '/stores',
+      views: {
+        'tab-account': {
+          templateUrl: 'templates/tab-store-picker.html',
+          controller: 'AccountCtrl'
+        }
+      }
     });
     return $urlRouterProvider.otherwise('/tab/bag');
   } else {
@@ -356,13 +364,16 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   };
 });
 
-angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
+angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
   user.then(function(user) {
     return $scope.username = user.name;
   });
-  return $scope.logout = function() {
+  $scope.logout = function() {
     delete sessionStorage.user;
     return location.reload();
+  };
+  return $scope.to_stores_chooser = function() {
+    return $state.go("tab.stores");
   };
 });
 
