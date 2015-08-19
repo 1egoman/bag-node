@@ -294,6 +294,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       user: user_id
     });
     socket.on('user:show:callback', function(evt) {
+      window.user = evt.data;
       defer.resolve(evt.data);
     });
     return defer.promise;
@@ -317,7 +318,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     };
     return $scope;
   };
-}).factory('calculateTotal', function(pickPrice) {
+}).factory('calculateTotal', function(pickPrice, user) {
   var calculate_total, get_all_content;
   get_all_content = function(bag, return_self) {
     if (bag.length) {
@@ -351,8 +352,31 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   };
   return calculate_total;
 }).factory('pickPrice', function() {
-  return function(item) {
-    if (item.store && item.stores) {
+  return function(item, user) {
+    var pickable_stores, possible_stores, price, store;
+    if (user == null) {
+      user = window.user;
+    }
+    if (item.stores && user) {
+      possible_stores = _.mapObject(item.stores, function(v, k) {
+        return v.price;
+      });
+      pickable_stores = _(possible_stores).chain().map(function(ea) {
+        return _.find(user.stores, function(eb) {
+          return ea.id === eb.id;
+        });
+      }).compact().value();
+      price = _.min(pickable_stores.map(function(s) {
+        return item.stores[s].price;
+      })) || _.min(_.mapObject(item.stores, function(v, k) {
+        return v.price;
+      }));
+      store = _.invert(possible_stores)[price];
+      if (store) {
+        item.store = store;
+      }
+      return price;
+    } else if (item.store && item.stores) {
       return item.stores[item.store].price;
     } else if (item.price) {
       return parseFloat(item.price);

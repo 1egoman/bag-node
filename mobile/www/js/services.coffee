@@ -73,6 +73,7 @@ angular.module('starter.services', [])
     defer = $q.defer()
     socket.emit 'user:show', user: user_id
     socket.on 'user:show:callback', (evt) ->
+      window.user = evt.data # hack so we can use user in sync stuff (yea, I know, there are a lot of issues with this, but it works for now. Used in pickPrice.)
       defer.resolve evt.data
       return
     defer.promise
@@ -100,7 +101,7 @@ angular.module('starter.services', [])
 # calculate total price for a whole bag
 # this takes into account any sub-recipes
 # through recursion.
-.factory 'calculateTotal', (pickPrice) ->
+.factory 'calculateTotal', (pickPrice, user) ->
 
   # get all contents, both sub-lists and foodstuffs
   # this lets us recurively wander
@@ -135,11 +136,40 @@ angular.module('starter.services', [])
 # if a store is specified, go with that
 # otherwise, ik the minimum price
 .factory 'pickPrice', ->
-  (item) ->
-    if item.store and item.stores
+  (item, user=window.user) ->
+
+   # we'll pick the best store with the lowest price from a user's stores
+    if item.stores and user
+      possible_stores = _.mapObject item.stores, (v, k) -> v.price
+
+      # do an intersection (of objects!) between the item's stores and the
+      # user's stores to try and find commonalities
+      pickable_stores = _(possible_stores).chain().map (ea) ->
+        return _.find(user.stores, (eb) -> ea.id == eb.id)
+      .compact().value()
+
+      # which store to choose? How about the first one? Or if that doesn't work,
+      # lets just go with the item's first store.
+      price = _.min(pickable_stores.map (s) ->
+        item.stores[s].price
+      ) or _.min _.mapObject item.stores, (v, k) -> v.price # well, or just find a price.....
+
+      # set this store for next time
+      store = _.invert(possible_stores)[price]
+      item.store = store if store
+
+      price
+
+
+    # a store was specified
+    else if item.store and item.stores
       item.stores[item.store].price
+
+    # a price was specified, and in that case we don't care about any
+    # store-stuff
     else if item.price
       parseFloat item.price
     else
       _.min item.stores.map (i) -> i.price
+
 
