@@ -79,7 +79,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
       views: {
         'tab-account': {
           templateUrl: 'templates/tab-store-picker.html',
-          controller: 'AccountCtrl'
+          controller: 'StorePickerCtrl'
         }
       }
     });
@@ -123,7 +123,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagp.herokuapp.com";
+window.host = "10.0.0.7:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -187,7 +187,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.account', 'starter.controllers.onboarding', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -999,4 +999,56 @@ angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', f
   /*
    * Intializers
    */
+});
+
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+angular.module('starter.controllers.stores_picker', []).controller('StorePickerCtrl', function($scope, socket, user, $ionicActionSheet) {
+  socket.emit("store:index");
+  socket.on("store:index:callback", function(payload) {
+    $scope.stores = payload.data;
+    return $scope.sort_stores(payload.data);
+  });
+  user.then(function(user) {
+    return $scope.user = user;
+  });
+  $scope.sort_stores = function(stores) {
+    $scope.my_stores = _.compact(stores.map(function(s) {
+      var ref1;
+      return (ref1 = s._id, indexOf.call($scope.user.stores, ref1) >= 0) && s;
+    }));
+    $scope.other_stores = _.compact(stores.map(function(s) {
+      var ref1;
+      return (ref1 = s._id, indexOf.call($scope.user.stores, ref1) >= 0) || s;
+    }));
+    return console.log($scope.my_stores, $scope.other_stores);
+  };
+  return $scope.item_details = function(item) {
+    var hideSheet, ref1;
+    return hideSheet = $ionicActionSheet.show({
+      buttons: [
+        {
+          text: (ref1 = item._id, indexOf.call($scope.user.stores, ref1) < 0) && 'Add to My Stores' || 'Remove from My Stores'
+        }, {
+          text: 'Go to store website'
+        }
+      ],
+      titleText: 'Modify Store',
+      cancelText: 'Cancel',
+      cancel: function() {
+        return hideSheet();
+      },
+      buttonClicked: function(index) {
+        var ref;
+        switch (index) {
+          case 0:
+            1;
+            break;
+          case 1:
+            ref = window.open(item.website, '_blank', 'location=yes');
+        }
+        return true;
+      }
+    });
+  };
 });

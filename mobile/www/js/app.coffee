@@ -129,7 +129,7 @@ angular.module 'starter', [
       views:
         'tab-account':
           templateUrl: 'templates/tab-store-picker.html'
-          controller: 'AccountCtrl'
+          controller: 'StorePickerCtrl'
 
 
     # if none of the above states are matched, use this as the fallback
