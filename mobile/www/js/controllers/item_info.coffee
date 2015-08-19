@@ -10,6 +10,7 @@ angular.module('starter.controllers.item_info', [])
   $ionicPopup,
   user,
   $ionicLoading
+  calculateTotal
 ) ->
   AllItems.by_id $scope, $stateParams.id, (val) ->
     $scope.item = val
@@ -33,20 +34,7 @@ angular.module('starter.controllers.item_info', [])
   # calculate total price for a whole recipe
   # this takes into account any sub-recipes
   # through recursion. Anything checked off won't be taken into account.
-
-  $scope.calculate_total = (bag) ->
-    total = 0
-    $scope.get_all_content(bag).forEach (item) ->
-      if item.checked == true
-        return
-      else if item.contents
-        # this recipe has items of its own
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) or 1)
-      else
-        # do total
-        total += parseFloat(item.price) * (parseFloat(item.quantity) or 1)
-      return
-    total
+  $scope.calculate_total = calculateTotal
 
   # "like" an item
   $scope.fav_item = (item) ->

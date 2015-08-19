@@ -94,3 +94,34 @@ angular.module('starter.services', [])
         filterProperties: 'name')
 
     $scope
+
+
+
+# calculate total price for a whole bag
+# this takes into account any sub-recipes
+# through recursion.
+.factory 'calculateTotal', ->
+
+  # get all contents, both sub-lists and foodstuffs
+  # this lets us recurively wander
+  get_all_content = (bag, return_self) ->
+    if bag and bag.contents
+      bag.contents.concat bag.contentsLists or []
+    else
+      if return_self then [ bag ] else []
+
+  calculate_total = (bag) ->
+    total = 0
+    get_all_content(bag, true).forEach (item) ->
+      if item.checked == true
+        return
+      else if item.contents
+        # this recipe has items of its own
+        total += calculate_total(item) * (parseFloat(item.quantity) or 1)
+      else
+        # do total
+        total += parseFloat(item.price) * (parseFloat(item.quantity) or 1)
+
+    return total
+
+  calculate_total

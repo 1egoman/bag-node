@@ -309,6 +309,34 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     };
     return $scope;
   };
+}).factory('calculateTotal', function() {
+  var calculate_total, get_all_content;
+  get_all_content = function(bag, return_self) {
+    if (bag && bag.contents) {
+      return bag.contents.concat(bag.contentsLists || []);
+    } else {
+      if (return_self) {
+        return [bag];
+      } else {
+        return [];
+      }
+    }
+  };
+  calculate_total = function(bag) {
+    var total;
+    total = 0;
+    get_all_content(bag, true).forEach(function(item) {
+      if (item.checked === true) {
+
+      } else if (item.contents) {
+        return total += calculate_total(item) * (parseFloat(item.quantity) || 1);
+      } else {
+        return total += parseFloat(item.price) * (parseFloat(item.quantity) || 1);
+      }
+    });
+    return total;
+  };
+  return calculate_total;
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
@@ -349,30 +377,17 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem) {
+angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal) {
   socket.emit('bag:index');
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
     $ionicSlideBoxDelegate.update();
     return $scope.sorted_bag = $scope.sort_items();
   });
-  $scope.calculate_total = function(bag) {
-    var total;
-    total = 0;
-    $scope.get_all_content(bag, true).forEach(function(item) {
-      if (item.checked === true) {
-        return;
-      } else if (item.contents) {
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) || 1);
-      } else {
-        total += parseFloat(item.price) * (parseFloat(item.quantity) || 1);
-      }
-    });
-    return total;
-  };
+  $scope.calculate_total = calculateTotal;
   $scope.calculate_total_section = function(items) {
     return _(items).map(function(i) {
-      return $scope.calculate_total(i) * i.quantity;
+      return $scope.calculate_total(i);
     }).reduce((function(m, x) {
       return m + x;
     }), 0);
@@ -615,7 +630,7 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   return $scope.amount_in_page = 25;
 });
 
-angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading) {
+angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal) {
   AllItems.by_id($scope, $stateParams.id, function(val) {
     return $scope.item = val;
   });
@@ -636,20 +651,7 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       return [];
     }
   };
-  $scope.calculate_total = function(bag) {
-    var total;
-    total = 0;
-    $scope.get_all_content(bag).forEach(function(item) {
-      if (item.checked === true) {
-        return;
-      } else if (item.contents) {
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) || 1);
-      } else {
-        total += parseFloat(item.price) * (parseFloat(item.quantity) || 1);
-      }
-    });
-    return total;
-  };
+  $scope.calculate_total = calculateTotal;
   $scope.fav_item = function(item) {
     socket.emit('user:fav', {
       item: item._id
@@ -935,21 +937,8 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
   });
 });
 
-angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize) {
-  $scope.calculate_total = function(bag) {
-    var total;
-    total = 0;
-    $scope.get_all_content(bag).forEach(function(item) {
-      if (item.checked === true) {
-        return;
-      } else if (item.contents) {
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) || 1);
-      } else {
-        total += parseFloat(item.price) * (parseFloat(item.quantity) || 1);
-      }
-    });
-    return total;
-  };
+angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize, calculateTotal) {
+  $scope.calculate_total = calculateTotal;
 
   /*
    * Updating a recipe
