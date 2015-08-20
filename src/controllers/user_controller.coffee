@@ -247,3 +247,19 @@ exports.unique = (req, res) ->
     else
       res.send status: "bag.success.user.dirty"
 
+
+# using the req body, post an update to the stores for a user
+exports.updatestores = (req, res) ->
+  query = User.findOne _id: req.user._id
+  query.exec (err, data) ->
+    data.stores = req.body.stores
+
+    # save it
+    data.save (err) ->
+      if err
+        res.send
+          status: "bag.error.user.updatestores"
+          error: err
+      else
+        res.send
+          status: "bag.success.user.updatestores"

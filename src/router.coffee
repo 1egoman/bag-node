@@ -12,6 +12,7 @@ foodstuff_ctrl = require "./controllers/foodstuff_controller"
 user_ctrl = require "./controllers/user_controller"
 tags_ctrl = require "./controllers/tags_controller"
 auth_ctrl = require "./controllers/auth_controller"
+store_ctrl = require "./controllers/stores_controller"
 chalk = require "chalk"
 pjson = require "../package.json"
 
@@ -32,12 +33,12 @@ exports.routes = routes =
 
   user:
     controller: user_ctrl
-    routes: ["fav", "un_fav", "show"]
+    routes: ["fav", "un_fav", "show", "updatestores"]
 
 
   bag:
     controller: bag_ctrl
-    routes: ["index", "show", "create", "update", "delete"]
+    routes: ["index", "show", "create", "update", "delete", "update_store"]
 
   list:
     controller: list_ctrl
@@ -46,6 +47,10 @@ exports.routes = routes =
   foodstuff:
     controller: foodstuff_ctrl
     routes: ["index", "show", "create", "update", "delete"]
+
+  store:
+    controller: store_ctrl
+    routes: ["index"]
 
 exports.websocket = (app) ->
 

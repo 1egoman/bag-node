@@ -2,7 +2,8 @@
 # user_id = '55a84d00e4b06e29cb4eb960'
 # user_token='my_token'
 # window.host = "http://192.168.1.13:8000"
-window.host = "http://bagp.herokuapp.com"
+# window.host = "http://bagp.herokuapp.com"
+window.host = "10.0.0.7:8000"
 
 auth_module = angular.module 'starter.authorization', []
 if sessionStorage.user
@@ -14,7 +15,6 @@ if sessionStorage.user
 
   # get a reference to the logged-in user
   socket = io "#{window.host}/#{user_id}", query: "token=#{user_token}"
-  socket.on "connection", -> console.log 67890
 
   # inject these details into the controller
   do (auth_module) ->
@@ -60,8 +60,11 @@ angular.module 'starter.controllers', [
 
   # authorization stuff
   'starter.authorization'
-  'starter.controllers.account'
   'starter.controllers.onboarding'
+
+  # settings
+  'starter.controllers.account'
+  'starter.controllers.stores_picker'
 
   # local controllers in different files
   'starter.controllers.tab_bag'
@@ -76,6 +79,7 @@ angular.module 'starter.controllers', [
 
   # recipe card controller for recipe-card directive
   'starter.controllers.recipe_card'
+  'starter.controllers.checkableitem'
 
   # login controller
   'starter.controllers.login'

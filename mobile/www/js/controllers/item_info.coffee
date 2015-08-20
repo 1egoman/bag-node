@@ -10,18 +10,105 @@ angular.module('starter.controllers.item_info', [])
   $ionicPopup,
   user,
   $ionicLoading
+  calculateTotal
+  stores
+  storePicker
 ) ->
-  AllItems.by_id $scope, $stateParams.id, (val) ->
-    $scope.item = val
 
-  $scope.go_back_to_bag = ->
-    $state.go 'tab.bag'
 
+  # are we viewing a bag item or a recipe that is seperate?
   $scope.get_item_or_recipe = ->
     if $ionicHistory.currentView().stateName.indexOf('recipe') == -1
       'iteminfo'
     else
       'recipeinfo'
+
+
+  if $scope.get_item_or_recipe() is 'recipeinfo'
+
+    # a recipe, so lets just find the item
+    AllItems.by_id $scope, $stateParams.id, (val) ->
+      $scope.item = val
+
+      # methods that will be called below that don't acctually do anything in
+      # this mode.
+      $scope.get_store_details = ->
+
+  else
+
+    # an item in the bag, so lets find it within the bag
+    user.then (usr) ->
+      socket.emit "bag:index", user: usr._id
+      socket.on "bag:index:callback", (bag) ->
+        $scope.bag = bag.data
+
+        # # get item from bag
+        # $scope.item = _($scope.get_all_content(bag.data)).find (i) ->
+        #   i._id is $stateParams.id
+
+        # for each matching item (recipe's don't have stores), find the
+        # most likely store to match the specified item id
+        # this is done by traversing the bag's tree recursively
+        to_level = (haystack=$scope.bag) ->
+
+          # concat together the lists and the foodstuffs into one big array
+          list_contents = (haystack.contentsLists or []).map (i) -> i.contents
+          for needle in list_contents.concat(haystack.contents)
+            if needle and needle._id is $stateParams.id
+              $scope.item = needle
+              break
+            else if needle
+              to_level needle
+        to_level()
+
+        # lastly, if we don't have anthing at this point it isn't an item. Let's
+        # just look it up.
+        if not $scope.item
+          AllItems.by_id $scope, $stateParams.id, (val) ->
+            $scope.item = val
+
+
+        # what is our store?
+        # once resolved, we'll use this to display the store next to the price
+        $scope.get_store_details = ->
+          if $scope.item?.store
+            stores.then (s) ->
+              $scope.store = s[$scope.item.store]
+        $scope.get_store_details()
+
+
+  # move back to the bag view
+  $scope.go_back_to_bag = ->
+    $state.go 'tab.bag'
+
+
+  # open the store chooser so the user can pick a store for our item
+  $scope.open_store_chooser = ->
+    storePicker($scope).then (store) -> store.choose().then (resp) ->
+      if resp
+        # set the store id, re-fetch the store info, and save it to the database
+        $scope.item.store = resp._id
+        $scope.get_store_details()
+
+        # for each matching item (recipe's don't have stores), update the
+        # store to the specified one
+        # this is done by traversing the bag's tree recursively
+        to_level = (haystack=$scope.bag) ->
+
+          # concat together the lists and the foodstuffs into one big array
+          list_contents = (haystack.contentsLists or []).map (i) -> i.contents
+          for needle in list_contents.concat(haystack.contents)
+            if needle and needle._id is $scope.item._id
+              needle.store = $scope.item.store
+              break
+            else if needle
+              to_level needle
+        to_level()
+
+
+        # and propagate the change
+        socket.emit 'bag:update', bag: window.strip_$$($scope.bag)
+
 
   # get all contents, both sub-recipes and foodstuffs
   $scope.get_all_content = (bag) ->
@@ -33,20 +120,7 @@ angular.module('starter.controllers.item_info', [])
   # calculate total price for a whole recipe
   # this takes into account any sub-recipes
   # through recursion. Anything checked off won't be taken into account.
-
-  $scope.calculate_total = (bag) ->
-    total = 0
-    $scope.get_all_content(bag).forEach (item) ->
-      if item.checked == true
-        return
-      else if item.contents
-        # this recipe has items of its own
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) or 1)
-      else
-        # do total
-        total += parseFloat(item.price) * (parseFloat(item.quantity) or 1)
-      return
-    total
+  $scope.calculate_total = calculateTotal
 
   # "like" an item
   $scope.fav_item = (item) ->
@@ -81,3 +155,8 @@ angular.module('starter.controllers.item_info', [])
   # are we a favorite?
   user.then (data) ->
     $scope.favs = data.favs
+
+  ###
+  # Initializers
+  ###
+  $scope.store = {}
