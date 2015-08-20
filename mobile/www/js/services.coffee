@@ -190,7 +190,7 @@ angular.module('starter.services', [])
 
 # store chooser
 .factory "storePicker", ($ionicModal, $q, stores) ->
-  ($scope) ->
+  ($scope, item) ->
 
     initial_p = $q.defer()
     p = $q.defer()
@@ -205,7 +205,8 @@ angular.module('starter.services', [])
 
       # get stores, and at those to the $scope below
       stores.then (s) ->
-        $scope.store_picker.stores = s
+        console.log $scope.item.stores
+        $scope.store_picker.stores = _.compact _.mapObject s, (v) -> $scope.item.stores[v._id] and v
 
         # resolve the intial promise, which will return methods to interact with
         # the store picker modal

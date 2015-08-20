@@ -402,7 +402,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   });
   return defer.promise;
 }).factory("storePicker", function($ionicModal, $q, stores) {
-  return function($scope) {
+  return function($scope, item) {
     var initial_p, p;
     initial_p = $q.defer();
     p = $q.defer();
@@ -413,7 +413,10 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     }).then(function(m) {
       $scope.store_picker_modal = m;
       return stores.then(function(s) {
-        $scope.store_picker.stores = s;
+        console.log($scope.item.stores);
+        $scope.store_picker.stores = _.compact(_.mapObject(s, function(v) {
+          return $scope.item.stores[v._id] && v;
+        }));
         return initial_p.resolve({
           choose: function() {
             $scope.store_picker_modal.show();
