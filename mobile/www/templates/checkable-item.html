@@ -1,5 +1,5 @@
 <!-- all items within this recipe -->
-<div class="card">
+<div class="card" ng-controller="CheckableItemCtrl">
   <ion-item class="item-icon-right">
     <i 
       class="pull-right icon ion-chevron-right icon-accessory"
@@ -22,10 +22,13 @@
 
         <!-- rightmost icons -->
         <span class="pull-right">
+          <span style="font-size: 12px; color: {{stores[item.store].color || '#444'}}">
+            {{stores[item.store].name}}
+          </span>
           <input
             type="number"
             placeholder="Qty"
-            style="width: 2em; display: inline; margin-top: -4px; direction: rtl;"
+            style="width: 2em; display: inline; margin-top: -4px; text-align: center;"
 
             min="1"
             max="99"

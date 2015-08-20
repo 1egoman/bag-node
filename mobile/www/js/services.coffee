@@ -173,3 +173,14 @@ angular.module('starter.services', [])
       _.min item.stores.map (i) -> i.price
 
 
+# get a reference to all stores
+.factory 'stores', (socket, $q) ->
+    defer = $q.defer()
+    socket.emit "store:index"
+    socket.on "store:index:callback", (evt) ->
+      stores = {}
+      for item in evt.data
+        stores[item._id] = item
+      defer.resolve stores
+      return
+    defer.promise

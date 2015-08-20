@@ -187,7 +187,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -386,6 +386,21 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       }));
     }
   };
+}).factory('stores', function(socket, $q) {
+  var defer;
+  defer = $q.defer();
+  socket.emit("store:index");
+  socket.on("store:index:callback", function(evt) {
+    var item, j, len, ref, stores;
+    stores = {};
+    ref = evt.data;
+    for (j = 0, len = ref.length; j < len; j++) {
+      item = ref[j];
+      stores[item._id] = item;
+    }
+    defer.resolve(stores);
+  });
+  return defer.promise;
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
@@ -682,9 +697,19 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   return $scope.amount_in_page = 25;
 });
 
-angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal) {
+angular.module('starter.controllers.checkableitem', []).controller('CheckableItemCtrl', function($scope, stores) {
+  stores.then(function(s) {
+    return $scope.stores = s;
+  });
+  return $scope.stores = {};
+});
+
+angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores) {
   AllItems.by_id($scope, $stateParams.id, function(val) {
-    return $scope.item = val;
+    $scope.item = val;
+    return stores.then(function(s) {
+      return $scope.store = s[$scope.item.store];
+    });
   });
   $scope.go_back_to_bag = function() {
     return $state.go('tab.bag');
@@ -733,9 +758,14 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       return false;
     }
   };
-  return user.then(function(data) {
+  user.then(function(data) {
     return $scope.favs = data.favs;
   });
+
+  /*
+   * Initializers
+   */
+  return $scope.store = {};
 });
 
 angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q) {

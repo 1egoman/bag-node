@@ -21,12 +21,13 @@ angular.module('starter.controllers.tab_bag', [])
   socket.on 'bag:index:callback', (evt) ->
     # console.log("bag:index:callback", evt)
     $scope.bag = evt.data
+
     # force the slide-box to update and make
     # each "page" > 0px (stupid bugfix)
     $ionicSlideBoxDelegate.update()
+
     # updating the sorting for the bag
     $scope.sorted_bag = $scope.sort_items()
-
 
   # calculate total price for a whole bag
   # this takes into account any sub-recipes

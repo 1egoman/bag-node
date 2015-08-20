@@ -11,10 +11,18 @@ angular.module('starter.controllers.item_info', [])
   user,
   $ionicLoading
   calculateTotal
+  stores
 ) ->
   AllItems.by_id $scope, $stateParams.id, (val) ->
     $scope.item = val
 
+    # what is our store?
+    # once resolved, we'll use this to display the store next to the price
+    stores.then (s) ->
+      $scope.store = s[$scope.item.store]
+
+
+  # move back to the bag view
   $scope.go_back_to_bag = ->
     $state.go 'tab.bag'
 
@@ -69,3 +77,8 @@ angular.module('starter.controllers.item_info', [])
   # are we a favorite?
   user.then (data) ->
     $scope.favs = data.favs
+
+  ###
+  # Initializers
+  ###
+  $scope.store = {}
