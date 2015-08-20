@@ -188,7 +188,8 @@ angular.module('starter.controllers.tab_bag', [])
   # transistion to a more info page about the specified item
   $scope.more_info = (item) ->
     $ionicListDelegate.closeOptionButtons()
-    $state.go 'tab.iteminfo', id: item._id
+    $state.go 'tab.iteminfo',
+      id: item._id
 
   ###
   # Updating a bag

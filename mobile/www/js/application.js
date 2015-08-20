@@ -134,9 +134,6 @@ if (sessionStorage.user) {
   socket = io(window.host + "/" + user_id, {
     query: "token=" + user_token
   });
-  socket.on("connection", function() {
-    return console.log(67890);
-  });
   (function(auth_module) {
     auth_module;
     return auth_module.provider('auth', function() {
@@ -381,9 +378,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     } else if (item.price) {
       return parseFloat(item.price);
     } else {
-      return _.min(item.stores.map(function(i) {
-        return i.price;
-      }));
+      return 0;
     }
   };
 }).factory('stores', function(socket, $q) {
@@ -391,11 +386,11 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   defer = $q.defer();
   socket.emit("store:index");
   socket.on("store:index:callback", function(evt) {
-    var item, j, len, ref, stores;
+    var i, item, len, ref, stores;
     stores = {};
     ref = evt.data;
-    for (j = 0, len = ref.length; j < len; j++) {
-      item = ref[j];
+    for (i = 0, len = ref.length; i < len; i++) {
+      item = ref[i];
       stores[item._id] = item;
     }
     defer.resolve(stores);
@@ -413,7 +408,6 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     }).then(function(m) {
       $scope.store_picker_modal = m;
       return stores.then(function(s) {
-        console.log($scope.item.stores);
         $scope.store_picker.stores = _.compact(_.mapObject(s, function(v) {
           return $scope.item.stores[v._id] && v;
         }));
@@ -747,34 +741,107 @@ angular.module('starter.controllers.checkableitem', []).controller('CheckableIte
 });
 
 angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
-  AllItems.by_id($scope, $stateParams.id, function(val) {
-    $scope.item = val;
-    $scope.get_store_details = function() {
-      return stores.then(function(s) {
-        return $scope.store = s[$scope.item.store];
-      });
-    };
-    return $scope.get_store_details();
-  });
-  $scope.go_back_to_bag = function() {
-    return $state.go('tab.bag');
-  };
-  $scope.open_store_chooser = function() {
-    return storePicker($scope).then(function(store) {
-      return store.choose().then(function(resp) {
-        if (resp) {
-          $scope.item.store = resp._id;
-          return $scope.get_store_details();
-        }
-      });
-    });
-  };
   $scope.get_item_or_recipe = function() {
     if ($ionicHistory.currentView().stateName.indexOf('recipe') === -1) {
       return 'iteminfo';
     } else {
       return 'recipeinfo';
     }
+  };
+  if ($scope.get_item_or_recipe() === 'recipeinfo') {
+    AllItems.by_id($scope, $stateParams.id, function(val) {
+      $scope.item = val;
+      return $scope.get_store_details = function() {};
+    });
+  } else {
+    user.then(function(usr) {
+      socket.emit("bag:index", {
+        user: usr._id
+      });
+      return socket.on("bag:index:callback", function(bag) {
+        var to_level;
+        $scope.bag = bag.data;
+        to_level = function(haystack) {
+          var j, len, list_contents, needle, ref, results;
+          if (haystack == null) {
+            haystack = $scope.bag;
+          }
+          list_contents = (haystack.contentsLists || []).map(function(i) {
+            return i.contents;
+          });
+          ref = list_contents.concat(haystack.contents);
+          results = [];
+          for (j = 0, len = ref.length; j < len; j++) {
+            needle = ref[j];
+            if (needle && needle._id === $stateParams.id) {
+              $scope.item = needle;
+              break;
+            } else if (needle) {
+              results.push(to_level(needle));
+            } else {
+              results.push(void 0);
+            }
+          }
+          return results;
+        };
+        to_level();
+        if (!$scope.item) {
+          AllItems.by_id($scope, $stateParams.id, function(val) {
+            return $scope.item = val;
+          });
+        }
+        $scope.get_store_details = function() {
+          var ref;
+          if ((ref = $scope.item) != null ? ref.store : void 0) {
+            return stores.then(function(s) {
+              return $scope.store = s[$scope.item.store];
+            });
+          }
+        };
+        return $scope.get_store_details();
+      });
+    });
+  }
+  $scope.go_back_to_bag = function() {
+    return $state.go('tab.bag');
+  };
+  $scope.open_store_chooser = function() {
+    return storePicker($scope).then(function(store) {
+      return store.choose().then(function(resp) {
+        var to_level;
+        if (resp) {
+          $scope.item.store = resp._id;
+          $scope.get_store_details();
+          to_level = function(haystack) {
+            var j, len, list_contents, needle, ref, results;
+            if (haystack == null) {
+              haystack = $scope.bag;
+            }
+            list_contents = (haystack.contentsLists || []).map(function(i) {
+              return i.contents;
+            });
+            ref = list_contents.concat(haystack.contents);
+            results = [];
+            for (j = 0, len = ref.length; j < len; j++) {
+              needle = ref[j];
+              if (needle && needle._id === $scope.item._id) {
+                needle.store = $scope.item.store;
+                break;
+              } else if (needle) {
+                results.push(to_level(needle));
+              } else {
+                results.push(void 0);
+              }
+            }
+            return results;
+          };
+          to_level();
+          return socket.emit('bag:update', {
+            bag: window.strip_$$($scope.bag)
+          });
+        }
+      });
+    });
   };
   $scope.get_all_content = function(bag) {
     if (bag && bag.contents) {

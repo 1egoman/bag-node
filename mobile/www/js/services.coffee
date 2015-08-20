@@ -147,33 +147,33 @@ angular.module('starter.services', [])
 
      # we'll pick the best store with the lowest price from a user's stores
     else if item.stores and user
-        possible_stores = _.mapObject item.stores, (v, k) -> v.price
+      possible_stores = _.mapObject item.stores, (v, k) -> v.price
 
-        # do an intersection (of objects!) between the item's stores and the
-        # user's stores to try and find commonalities
-        pickable_stores = _(possible_stores).chain().map (ea) ->
-          return _.find(user.stores, (eb) -> ea.id == eb.id)
-        .compact().value()
+      # do an intersection (of objects!) between the item's stores and the
+      # user's stores to try and find commonalities
+      pickable_stores = _(possible_stores).chain().map (ea) ->
+        return _.find(user.stores, (eb) -> ea.id == eb.id)
+      .compact().value()
 
-        # which store to choose? How about the first one? Or if that doesn't work,
-        # lets just go with the item's first store.
-        price = _.min(pickable_stores.map (s) ->
-          item.stores[s].price
-        ) or _.min _.mapObject item.stores, (v, k) -> v.price # well, or just find a price.....
+      # which store to choose? How about the first one? Or if that doesn't work,
+      # lets just go with the item's first store.
+      price = _.min(pickable_stores.map (s) ->
+        item.stores[s].price
+      ) or _.min _.mapObject item.stores, (v, k) -> v.price # well, or just find a price.....
 
-        # set this store for next time
-        store = _.invert(possible_stores)[price]
-        item.store = store if store
+      # set this store for next time
+      store = _.invert(possible_stores)[price]
+      item.store = store if store
 
-        price
+      price
 
 
-      # a price was specified, and in that case we don't care about any
-      # store-stuff
-      else if item.price
-        parseFloat item.price
-      else
-        _.min item.stores.map (i) -> i.price
+    # a price was specified, and in that case we don't care about any
+    # store-stuff
+    else if item.price
+      parseFloat item.price
+    else
+      0 # well, we give up?
 
 
 # get a reference to all stores
@@ -205,7 +205,6 @@ angular.module('starter.services', [])
 
       # get stores, and at those to the $scope below
       stores.then (s) ->
-        console.log $scope.item.stores
         $scope.store_picker.stores = _.compact _.mapObject s, (v) -> $scope.item.stores[v._id] and v
 
         # resolve the intial promise, which will return methods to interact with

@@ -38,7 +38,7 @@ exports.routes = routes =
 
   bag:
     controller: bag_ctrl
-    routes: ["index", "show", "create", "update", "delete"]
+    routes: ["index", "show", "create", "update", "delete", "update_store"]
 
   list:
     controller: list_ctrl
