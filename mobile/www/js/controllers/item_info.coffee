@@ -12,19 +12,32 @@ angular.module('starter.controllers.item_info', [])
   $ionicLoading
   calculateTotal
   stores
+  storePicker
 ) ->
   AllItems.by_id $scope, $stateParams.id, (val) ->
     $scope.item = val
 
     # what is our store?
     # once resolved, we'll use this to display the store next to the price
-    stores.then (s) ->
-      $scope.store = s[$scope.item.store]
-
+    $scope.get_store_details = ->
+      stores.then (s) ->
+        $scope.store = s[$scope.item.store]
+    $scope.get_store_details()
 
   # move back to the bag view
   $scope.go_back_to_bag = ->
     $state.go 'tab.bag'
+
+
+  # open the store chooser so the user can pick a store for our item
+  $scope.open_store_chooser = ->
+    storePicker($scope).then (store) -> store.choose().then (resp) ->
+      if resp
+        # set the store id, re-fetch the store info, and save it to the database
+        $scope.item.store = resp._id
+        $scope.get_store_details()
+        # TODO save to database
+
 
   $scope.get_item_or_recipe = ->
     if $ionicHistory.currentView().stateName.indexOf('recipe') == -1

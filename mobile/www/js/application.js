@@ -357,7 +357,9 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     if (user == null) {
       user = window.user;
     }
-    if (item.stores && user) {
+    if (item.store && item.stores && item.stores[item.store]) {
+      return item.stores[item.store].price;
+    } else if (item.stores && user) {
       possible_stores = _.mapObject(item.stores, function(v, k) {
         return v.price;
       });
@@ -376,8 +378,6 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         item.store = store;
       }
       return price;
-    } else if (item.store && item.stores) {
-      return item.stores[item.store].price;
     } else if (item.price) {
       return parseFloat(item.price);
     } else {
@@ -401,6 +401,45 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     defer.resolve(stores);
   });
   return defer.promise;
+}).factory("storePicker", function($ionicModal, $q, stores) {
+  return function($scope) {
+    var initial_p, p;
+    initial_p = $q.defer();
+    p = $q.defer();
+    $scope.store_picker_modal = null;
+    $ionicModal.fromTemplateUrl('templates/model-pick-store.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(m) {
+      $scope.store_picker_modal = m;
+      return stores.then(function(s) {
+        $scope.store_picker.stores = s;
+        return initial_p.resolve({
+          choose: function() {
+            $scope.store_picker_modal.show();
+            return p.promise;
+          },
+          close: function() {
+            return $scope.store_picker_modal.hide();
+          }
+        });
+      });
+    });
+    $scope.store_picker = {
+      pick_store: function(item) {
+        p.resolve(item);
+        return $scope.store_picker_modal.hide();
+      },
+      dismiss: function() {
+        p.resolve(null);
+        return $scope.store_picker_modal.hide();
+      }
+    };
+    $scope.$on('$destroy', function() {
+      return $scope.store_picker_modal.remove();
+    });
+    return initial_p.promise;
+  };
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
@@ -704,15 +743,28 @@ angular.module('starter.controllers.checkableitem', []).controller('CheckableIte
   return $scope.stores = {};
 });
 
-angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores) {
+angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
   AllItems.by_id($scope, $stateParams.id, function(val) {
     $scope.item = val;
-    return stores.then(function(s) {
-      return $scope.store = s[$scope.item.store];
-    });
+    $scope.get_store_details = function() {
+      return stores.then(function(s) {
+        return $scope.store = s[$scope.item.store];
+      });
+    };
+    return $scope.get_store_details();
   });
   $scope.go_back_to_bag = function() {
     return $state.go('tab.bag');
+  };
+  $scope.open_store_chooser = function() {
+    return storePicker($scope).then(function(store) {
+      return store.choose().then(function(resp) {
+        if (resp) {
+          $scope.item.store = resp._id;
+          return $scope.get_store_details();
+        }
+      });
+    });
   };
   $scope.get_item_or_recipe = function() {
     if ($ionicHistory.currentView().stateName.indexOf('recipe') === -1) {
