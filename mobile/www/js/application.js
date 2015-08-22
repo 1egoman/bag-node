@@ -396,7 +396,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     defer.resolve(stores);
   });
   return defer.promise;
-}).factory("storePicker", function($ionicModal, $q, stores) {
+}).factory("storePicker", function($ionicModal, $q, stores, user) {
   return function($scope, item) {
     var initial_p, p;
     initial_p = $q.defer();
@@ -408,17 +408,19 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     }).then(function(m) {
       $scope.store_picker_modal = m;
       return stores.then(function(s) {
-        $scope.store_picker.stores = _.compact(_.mapObject(s, function(v) {
-          return $scope.item.stores[v._id] && v;
-        }));
-        return initial_p.resolve({
-          choose: function() {
-            $scope.store_picker_modal.show();
-            return p.promise;
-          },
-          close: function() {
-            return $scope.store_picker_modal.hide();
-          }
+        return user.then(function(u) {
+          $scope.store_picker.stores = _.compact(_.map(u.stores, function(v) {
+            return $scope.item.stores[v] && s[v];
+          }));
+          return initial_p.resolve({
+            choose: function() {
+              $scope.store_picker_modal.show();
+              return p.promise;
+            },
+            close: function() {
+              return $scope.store_picker_modal.hide();
+            }
+          });
         });
       });
     });
