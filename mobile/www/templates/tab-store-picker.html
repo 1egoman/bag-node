@@ -1,0 +1,34 @@
+<ion-view view-title="Choose Stores">
+  <ion-content>
+
+    <div class="item item-divider">My Stores</div>
+
+    <ion-item ng-if="my_stores.length === 0">
+      <h2>Click on a store below to add it up here!</h2>
+    </ion-item>
+
+    <ion-item
+      ng-repeat="store in my_stores"
+      class="item-avatar"
+      ng-click="item_details(store)"
+    >
+      <img src="{{store.image}}"/>
+      <h2 class="title">{{store.name}}</h2>
+      <p>{{store.desc}}</p>
+    </ion-item>
+
+    <div class="item item-divider">Other Stores</div>
+
+    <ion-item
+      ng-repeat="store in other_stores"
+      class="item-avatar"
+      ng-click="item_details(store)"
+    >
+      <img src="{{store.image}}"/>
+      <h2 class="title">{{store.name}}</h2>
+      <p>{{store.desc}}</h2>
+    </ion-item>
+
+
+  </ion-content>
+</ion-view>

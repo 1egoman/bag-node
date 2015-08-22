@@ -12,6 +12,7 @@ angular.module('starter.controllers.tab_bag', [])
   persistant,
   $rootScope,
   searchItem
+  calculateTotal
 ) ->
   # get all bags
   # this fires once at the load of the controller, but also repeadedly when
@@ -20,35 +21,24 @@ angular.module('starter.controllers.tab_bag', [])
   socket.on 'bag:index:callback', (evt) ->
     # console.log("bag:index:callback", evt)
     $scope.bag = evt.data
+
     # force the slide-box to update and make
     # each "page" > 0px (stupid bugfix)
     $ionicSlideBoxDelegate.update()
+
     # updating the sorting for the bag
     $scope.sorted_bag = $scope.sort_items()
-
 
   # calculate total price for a whole bag
   # this takes into account any sub-recipes
   # through recursion.
-  $scope.calculate_total = (bag) ->
-    total = 0
-    $scope.get_all_content(bag, true).forEach (item) ->
-      if item.checked == true
-        return
-      else if item.contents
-        # this recipe has items of its own
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) or 1)
-      else
-        # do total
-        total += parseFloat(item.price) * (parseFloat(item.quantity) or 1)
-      return
-    total
+  $scope.calculate_total = calculateTotal
 
 
   # for an entire section, calculate the total
   $scope.calculate_total_section = (items) ->
     _(items).map((i) ->
-      $scope.calculate_total(i) * i.quantity
+      $scope.calculate_total i
     ).reduce ((m, x) ->
       m + x
     ), 0
@@ -198,7 +188,8 @@ angular.module('starter.controllers.tab_bag', [])
   # transistion to a more info page about the specified item
   $scope.more_info = (item) ->
     $ionicListDelegate.closeOptionButtons()
-    $state.go 'tab.iteminfo', id: item._id
+    $state.go 'tab.iteminfo',
+      id: item._id
 
   ###
   # Updating a bag

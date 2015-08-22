@@ -73,6 +73,7 @@ angular.module('starter.services', [])
     defer = $q.defer()
     socket.emit 'user:show', user: user_id
     socket.on 'user:show:callback', (evt) ->
+      window.user = evt.data # hack so we can use user in sync stuff (yea, I know, there are a lot of issues with this, but it works for now. Used in pickPrice.)
       defer.resolve evt.data
       return
     defer.promise
@@ -206,12 +207,11 @@ angular.module('starter.services', [])
       stores.then (s) ->
         $scope.store_picker.stores = _.compact _.mapObject s, (v) -> $scope.item.stores[v._id] and v
 
-
       # get stores, and at those to the $scope below
-      stores.then (s) ->
-        user.then (u) ->
-          console.log $scope.item, u.stores
-          $scope.store_picker.stores = _.compact _.map u.stores, (v) -> $scope.item.stores[v] and s[v]
+      # stores.then (s) ->
+      #   user.then (u) ->
+      #     console.log $scope.item, u.stores
+      #     $scope.store_picker.stores = _.compact _.map u.stores, (v) -> $scope.item.stores[v] and s[v]
 
         # resolve the intial promise, which will return methods to interact with
         # the store picker modal

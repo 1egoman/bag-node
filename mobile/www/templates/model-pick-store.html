@@ -1,0 +1,26 @@
+<!-- choose to use a recipe or foodstuff when adding a new item -->
+<ion-modal-view>
+
+  <ion-header-bar class="">
+    <div class="title title-center header-item">Choose a different store</div>
+    <div class="buttons buttons-right">
+      <span class="right-buttons">
+        <button ng-click="store_picker.dismiss()" class="button button-icon icon
+          ion-close-round activated"></button>
+      </span>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+    <ion-item
+      class="item-avatar"
+      ng-repeat="(id, store) in store_picker.stores"
+      ng-click="store_picker.pick_store(store)"
+    >
+      <img src="{{store.image}}"/>
+      <h2 class="title">{{store.name}}</h2>
+      <p>{{store.desc}}</p>
+    </ion-item>
+  </ion-content>
+
+</ion-modal-view>

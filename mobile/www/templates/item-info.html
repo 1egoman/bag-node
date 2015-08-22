@@ -27,12 +27,15 @@
 
       <div class="list item-overlap">
  
+
+
+
         <div class="item">
           <!-- item name and price -->
           <span>
             <h1>{{item.name | titlecase}}</h1>
             <span class="pull-right">
-              {{item.price ? item.price : calculate_total(item) | currency}}
+              {{calculate_total([item]) | currency}}
             </span>
           </span>
 
@@ -40,6 +43,23 @@
           <p>{{item.desc}}</p>
 
         </div>
+
+
+
+
+        <!-- the store the item has been bought from -->
+        <ion-item class="item-avatar" ng-if="store.name">
+          <img src="{{store.image}}"/>
+          <span
+            class="pull-right icon ion-more icon-accessory"
+            style="font-size: 32px; margin: 10px;"
+            ng-click="open_store_chooser()"
+          ></span>
+          <h2 class="title">{{store.name}}</h2>
+          <p>{{store.desc}}</p>
+        </ion-item>
+
+
 
         <div class="item item-divider" ng-show="item.contents.length">Foodstuffs</div>
         <a
