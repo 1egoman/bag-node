@@ -396,7 +396,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     defer.resolve(stores);
   });
   return defer.promise;
-}).factory("storePicker", function($ionicModal, $q, stores, user) {
+}).factory("storePicker", function($ionicModal, $q, stores, user, $state, $timeout) {
   return function($scope, item) {
     var initial_p, p;
     initial_p = $q.defer();
@@ -432,6 +432,13 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       dismiss: function() {
         p.resolve(null);
         return $scope.store_picker_modal.hide();
+      },
+      to_stores_picker: function() {
+        this.dismiss();
+        $state.go("tab.account");
+        return $timeout(function() {
+          return $state.go("tab.stores");
+        }, 100);
       }
     };
     $scope.$on('$destroy', function() {

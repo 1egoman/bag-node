@@ -189,7 +189,7 @@ angular.module('starter.services', [])
     defer.promise
 
 # store chooser
-.factory "storePicker", ($ionicModal, $q, stores, user) ->
+.factory "storePicker", ($ionicModal, $q, stores, user, $state, $timeout) ->
   ($scope, item) ->
 
     initial_p = $q.defer()
@@ -228,6 +228,14 @@ angular.module('starter.services', [])
       dismiss: ->
         p.resolve null
         $scope.store_picker_modal.hide()
+
+      # change to stores picker so user can add stores to their list
+      to_stores_picker: ->
+        @dismiss()
+        $state.go "tab.account"
+        $timeout ->
+          $state.go "tab.stores"
+        , 100
 
     $scope.$on '$destroy', ->
       $scope.store_picker_modal.remove()
