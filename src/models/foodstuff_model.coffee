@@ -12,6 +12,8 @@ foodstuff = mongoose.Schema
   name: String
   desc: String
   tags: Array
+  image: String
+
   checked: Boolean
   user: String
   price: String
