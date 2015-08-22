@@ -309,6 +309,136 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     };
     return $scope;
   };
+}).factory('calculateTotal', function(pickPrice, user) {
+  var calculate_total, get_all_content;
+  get_all_content = function(bag, return_self) {
+    if (bag.length) {
+      return bag;
+    } else if (bag && bag.contents) {
+      return bag.contents.concat(bag.contentsLists || []);
+    } else {
+      if (return_self) {
+        return [bag];
+      } else {
+        return [];
+      }
+    }
+  };
+  calculate_total = function(bag) {
+    var total;
+    total = 0;
+    get_all_content(bag, true).forEach(function(item) {
+      if (!item) {
+        return 0;
+      }
+      if (item.checked === true) {
+        return 0;
+      } else if (item.contents) {
+        return total += calculate_total(item) * (parseFloat(item.quantity) || 1);
+      } else {
+        return total += pickPrice(item) * (parseFloat(item.quantity) || 1);
+      }
+    });
+    return total;
+  };
+  return calculate_total;
+}).factory('pickPrice', function() {
+  return function(item, user) {
+    var pickable_stores, possible_stores, price, store;
+    if (user == null) {
+      user = window.user;
+    }
+    if (item.store && item.stores && item.stores[item.store]) {
+      return item.stores[item.store].price;
+    } else if (item.stores && user) {
+      possible_stores = _.mapObject(item.stores, function(v, k) {
+        return v.price;
+      });
+      pickable_stores = _(possible_stores).chain().map(function(ea) {
+        return _.find(user.stores, function(eb) {
+          return ea.id === eb.id;
+        });
+      }).compact().value();
+      price = _.min(pickable_stores.map(function(s) {
+        return item.stores[s].price;
+      })) || _.min(_.mapObject(item.stores, function(v, k) {
+        return v.price;
+      }));
+      store = _.invert(possible_stores)[price];
+      if (store) {
+        item.store = store;
+      }
+      return price;
+    } else if (item.price) {
+      return parseFloat(item.price);
+    } else {
+      return 0;
+    }
+  };
+}).factory('stores', function(socket, $q) {
+  var defer;
+  defer = $q.defer();
+  socket.emit("store:index");
+  socket.on("store:index:callback", function(evt) {
+    var i, item, len, ref, stores;
+    stores = {};
+    ref = evt.data;
+    for (i = 0, len = ref.length; i < len; i++) {
+      item = ref[i];
+      stores[item._id] = item;
+    }
+    defer.resolve(stores);
+  });
+  return defer.promise;
+}).factory("storePicker", function($ionicModal, $q, stores) {
+  return function($scope, item) {
+    var initial_p, p;
+    initial_p = $q.defer();
+    p = $q.defer();
+    $scope.store_picker_modal = null;
+    $ionicModal.fromTemplateUrl('templates/model-pick-store.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(m) {
+      $scope.store_picker_modal = m;
+      stores.then(function(s) {
+        return $scope.store_picker.stores = _.compact(_.mapObject(s, function(v) {
+          return $scope.item.stores[v._id] && v;
+        }));
+      });
+      return stores.then(function(s) {
+        user.then(function(u) {
+          console.log($scope.item, u.stores);
+          return $scope.store_picker.stores = _.compact(_.map(u.stores, function(v) {
+            return $scope.item.stores[v] && s[v];
+          }));
+        });
+        return initial_p.resolve({
+          choose: function() {
+            $scope.store_picker_modal.show();
+            return p.promise;
+          },
+          close: function() {
+            return $scope.store_picker_modal.hide();
+          }
+        });
+      });
+    });
+    $scope.store_picker = {
+      pick_store: function(item) {
+        p.resolve(item);
+        return $scope.store_picker_modal.hide();
+      },
+      dismiss: function() {
+        p.resolve(null);
+        return $scope.store_picker_modal.hide();
+      }
+    };
+    $scope.$on('$destroy', function() {
+      return $scope.store_picker_modal.remove();
+    });
+    return initial_p.promise;
+  };
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user) {
