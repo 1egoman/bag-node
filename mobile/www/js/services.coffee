@@ -189,7 +189,7 @@ angular.module('starter.services', [])
     defer.promise
 
 # store chooser
-.factory "storePicker", ($ionicModal, $q, stores) ->
+.factory "storePicker", ($ionicModal, $q, stores, user, $state, $timeout) ->
   ($scope, item) ->
 
     initial_p = $q.defer()
@@ -205,17 +205,18 @@ angular.module('starter.services', [])
 
       # get stores, and at those to the $scope below
       stores.then (s) ->
-        $scope.store_picker.stores = _.compact _.mapObject s, (v) -> $scope.item.stores[v._id] and v
+        user.then (u) ->
+          $scope.store_picker.stores = _.compact _.map u.stores, (v) -> $scope.item.stores[v] and s[v]
 
-        # resolve the intial promise, which will return methods to interact with
-        # the store picker modal
-        initial_p.resolve
-          choose: ->
-            $scope.store_picker_modal.show()
-            p.promise
+          # resolve the intial promise, which will return methods to interact with
+          # the store picker modal
+          initial_p.resolve
+            choose: ->
+              $scope.store_picker_modal.show()
+              p.promise
 
-          close: ->
-            $scope.store_picker_modal.hide()
+            close: ->
+              $scope.store_picker_modal.hide()
 
  
     # these methods are called within the view to choose a store or dismiss one.
@@ -227,6 +228,14 @@ angular.module('starter.services', [])
       dismiss: ->
         p.resolve null
         $scope.store_picker_modal.hide()
+
+      # change to stores picker so user can add stores to their list
+      to_stores_picker: ->
+        @dismiss()
+        $state.go "tab.account"
+        $timeout ->
+          $state.go "tab.stores"
+        , 100
 
     $scope.$on '$destroy', ->
       $scope.store_picker_modal.remove()

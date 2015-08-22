@@ -123,7 +123,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "10.0.0.7:8000";
+window.host = "http://bagp.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -396,7 +396,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     defer.resolve(stores);
   });
   return defer.promise;
-}).factory("storePicker", function($ionicModal, $q, stores) {
+}).factory("storePicker", function($ionicModal, $q, stores, user, $state, $timeout) {
   return function($scope, item) {
     var initial_p, p;
     initial_p = $q.defer();
@@ -408,17 +408,19 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     }).then(function(m) {
       $scope.store_picker_modal = m;
       return stores.then(function(s) {
-        $scope.store_picker.stores = _.compact(_.mapObject(s, function(v) {
-          return $scope.item.stores[v._id] && v;
-        }));
-        return initial_p.resolve({
-          choose: function() {
-            $scope.store_picker_modal.show();
-            return p.promise;
-          },
-          close: function() {
-            return $scope.store_picker_modal.hide();
-          }
+        return user.then(function(u) {
+          $scope.store_picker.stores = _.compact(_.map(u.stores, function(v) {
+            return $scope.item.stores[v] && s[v];
+          }));
+          return initial_p.resolve({
+            choose: function() {
+              $scope.store_picker_modal.show();
+              return p.promise;
+            },
+            close: function() {
+              return $scope.store_picker_modal.hide();
+            }
+          });
         });
       });
     });
@@ -430,6 +432,13 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       dismiss: function() {
         p.resolve(null);
         return $scope.store_picker_modal.hide();
+      },
+      to_stores_picker: function() {
+        this.dismiss();
+        $state.go("tab.account");
+        return $timeout(function() {
+          return $state.go("tab.stores");
+        }, 100);
       }
     };
     $scope.$on('$destroy', function() {

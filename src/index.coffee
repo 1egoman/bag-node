@@ -42,7 +42,7 @@ exports.middleware = (app) ->
 
 
 exports.connectToDB = ->
-  require("./db") module.exports.mongouri or module.exports.db or "mongodb://bag:bag@ds047602.mongolab.com:47602/bag-dev"
+  require("./db") module.exports.MONGOLAB_URI or module.exports.db or "mongodb://bag:bag@ds047602.mongolab.com:47602/bag-dev"
 
 
 exports.main()

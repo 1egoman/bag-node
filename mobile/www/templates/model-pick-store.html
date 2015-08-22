@@ -1,6 +1,8 @@
 <!-- choose to use a recipe or foodstuff when adding a new item -->
 <ion-modal-view>
 
+
+
   <ion-header-bar class="">
     <div class="title title-center header-item">Choose a different store</div>
     <div class="buttons buttons-right">
@@ -12,12 +14,24 @@
   </ion-header-bar>
 
   <ion-content>
+
+    <ion-item ng-if="store_picker.stores.length === 0">
+      <h2>You haven't told us where you buy food.</h2>
+      <button
+        class="button button-block button-balanced"
+        ng-click="store_picker.to_stores_picker()"
+      >
+        Where do you shop?
+      </button>
+    </ion-item>
+    {{user}}
+
     <ion-item
       class="item-avatar"
       ng-repeat="(id, store) in store_picker.stores"
       ng-click="store_picker.pick_store(store)"
     >
-      <img src="{{store.image}}"/>
+      <img ng-src="{{store.image}}"/>
       <h2 class="title">{{store.name}}</h2>
       <p>{{store.desc}}</p>
     </ion-item>
