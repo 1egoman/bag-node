@@ -206,7 +206,11 @@ angular.module('starter.services', [])
       # get stores, and at those to the $scope below
       stores.then (s) ->
         user.then (u) ->
-          $scope.store_picker.stores = _.compact _.map u.stores, (v) -> $scope.item.stores[v] and s[v]
+          $scope.store_picker.stores = _.compact _.map u.stores, (v) ->
+            if $scope.item.stores[v]
+              obj = s[v]
+              obj.price_for_item = $scope.item.stores[v].price # add the price
+              obj
 
           # resolve the intial promise, which will return methods to interact with
           # the store picker modal
@@ -236,6 +240,16 @@ angular.module('starter.services', [])
         $timeout ->
           $state.go "tab.stores"
         , 100
+
+      # switch to the custom price view
+      to_custom_price: ->
+        @do_custom_price = true
+
+      # add a store to the list of stores, and select that store.
+      custom_price: (price) ->
+        $scope.item.stores["custom"] =
+          price: parseFloat price
+        @pick_store _id: "custom"
 
     $scope.$on '$destroy', ->
       $scope.store_picker_modal.remove()

@@ -13,28 +13,62 @@
     </div>
   </ion-header-bar>
 
+  <!-- Choose a store -->
   <ion-content>
 
-    <ion-item ng-if="store_picker.stores.length === 0">
-      <h2>You haven't told us where you buy food.</h2>
-      <button
-        class="button button-block button-balanced"
-        ng-click="store_picker.to_stores_picker()"
-      >
-        Where do you shop?
-      </button>
-    </ion-item>
-    {{user}}
+    <section ng-if="!store_picker.do_custom_price">
+      <ion-item ng-if="store_picker.stores.length === 0">
+        <h2>You haven't told us where you buy food.</h2>
+        <button
+          class="button button-block button-balanced"
+          ng-click="store_picker.to_stores_picker()"
+        >
+          Where do you shop?
+        </button>
+      </ion-item>
+      {{user}}
 
-    <ion-item
-      class="item-avatar"
-      ng-repeat="(id, store) in store_picker.stores"
-      ng-click="store_picker.pick_store(store)"
-    >
-      <img ng-src="{{store.image}}"/>
-      <h2 class="title">{{store.name}}</h2>
-      <p>{{store.desc}}</p>
-    </ion-item>
+      <ion-item
+        class="item-avatar"
+        ng-repeat="(id, store) in store_picker.stores"
+        ng-click="store_picker.pick_store(store)"
+      >
+        <img ng-src="{{store.image}}"/>
+        <h2 class="title">{{store.name}}</h2>
+        <p>
+          {{store.desc}}
+
+          <!-- price for the item -->
+          <span class="pull-right">{{store.price_for_item | currency}}</span>
+        </p>
+      </ion-item>
+
+
+      <!-- what is a user wants to add one of their own? -->
+      <ion-item ng-click="store_picker.to_custom_price()">
+        <h2>Add a custom price</h2>
+        <p>If your store isn't here...</p>
+      </ion-item>
+    </section>
+
+    <!-- add a custom price to the specified item -->
+    <section ng-if="store_picker.do_custom_price" class="padding">
+      <h1>Add custom price</h1>
+      <p>
+        Is your store not in our list? If not, you can add a custom price here.
+        We'd also appreciate if you could let us know your store
+        <a target="_blank" href="mailto:support@getbag.io">here</a>, so we can
+        hopefully officially add it at some point.
+      </p>
+
+      <div class="item item-input">
+        <input type="number" placeholder="Price" ng-model="custom_price" />
+      </div>
+
+      <button class="button button-royal button-block"
+        ng-click="store_picker.custom_price(custom_price)">Add Custom Price</button>
+    </section>
+
   </ion-content>
 
 </ion-modal-view>

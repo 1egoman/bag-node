@@ -410,7 +410,12 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       return stores.then(function(s) {
         return user.then(function(u) {
           $scope.store_picker.stores = _.compact(_.map(u.stores, function(v) {
-            return $scope.item.stores[v] && s[v];
+            var obj;
+            if ($scope.item.stores[v]) {
+              obj = s[v];
+              obj.price_for_item = $scope.item.stores[v].price;
+              return obj;
+            }
           }));
           return initial_p.resolve({
             choose: function() {
@@ -439,6 +444,17 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return $timeout(function() {
           return $state.go("tab.stores");
         }, 100);
+      },
+      to_custom_price: function() {
+        return this.do_custom_price = true;
+      },
+      custom_price: function(price) {
+        $scope.item.stores["custom"] = {
+          price: parseFloat(price)
+        };
+        return this.pick_store({
+          _id: "custom"
+        });
       }
     };
     $scope.$on('$destroy', function() {
@@ -803,8 +819,15 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
           });
         }
         $scope.get_store_details = function() {
-          var ref;
-          if ((ref = $scope.item) != null ? ref.store : void 0) {
+          var ref, ref1;
+          if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
+            return $scope.store = {
+              _id: "custom",
+              name: "Custom Price",
+              desc: "User-created price",
+              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
+            };
+          } else if ((ref1 = $scope.item) != null ? ref1.store : void 0) {
             return stores.then(function(s) {
               return $scope.store = s[$scope.item.store];
             });

@@ -71,7 +71,17 @@ angular.module('starter.controllers.item_info', [])
         # what is our store?
         # once resolved, we'll use this to display the store next to the price
         $scope.get_store_details = ->
-          if $scope.item?.store
+
+          # a custom price
+          if $scope.item?.store is "custom"
+            $scope.store =
+              _id: "custom"
+              name: "Custom Price"
+              desc: "User-created price"
+              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
+
+          # a registered store
+          else if $scope.item?.store
             stores.then (s) ->
               $scope.store = s[$scope.item.store]
         $scope.get_store_details()
