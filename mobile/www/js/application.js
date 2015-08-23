@@ -824,7 +824,8 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
             return $scope.store = {
               _id: "custom",
               name: "Custom Price",
-              desc: "User-created price"
+              desc: "User-created price",
+              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
             };
           } else if ((ref1 = $scope.item) != null ? ref1.store : void 0) {
             return stores.then(function(s) {

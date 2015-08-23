@@ -78,6 +78,7 @@ angular.module('starter.controllers.item_info', [])
               _id: "custom"
               name: "Custom Price"
               desc: "User-created price"
+              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
 
           # a registered store
           else if $scope.item?.store
