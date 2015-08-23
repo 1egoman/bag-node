@@ -26,7 +26,6 @@
           Where do you shop?
         </button>
       </ion-item>
-      {{user}}
 
       <ion-item
         class="item-avatar"
@@ -45,7 +44,7 @@
 
 
       <!-- what is a user wants to add one of their own? -->
-      <ion-item ng-click="store_picker.to_custom_price()">
+      <ion-item ng-click="store_picker.to_custom_price()" ng-if="store_picker.stores.length !== 0">
         <h2>Add a custom price</h2>
         <p>If your store isn't here...</p>
       </ion-item>

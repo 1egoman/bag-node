@@ -84,6 +84,13 @@ angular.module('starter.controllers.item_info', [])
           else if $scope.item?.store
             stores.then (s) ->
               $scope.store = s[$scope.item.store]
+
+          # no store
+          else
+            $scope.store =
+              name: "No Store"
+              desc: "Please choose a store."
+
         $scope.get_store_details()
 
 

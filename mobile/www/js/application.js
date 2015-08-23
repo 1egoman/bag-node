@@ -831,6 +831,11 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
             return stores.then(function(s) {
               return $scope.store = s[$scope.item.store];
             });
+          } else {
+            return $scope.store = {
+              name: "No Store",
+              desc: "Please choose a store."
+            };
           }
         };
         return $scope.get_store_details();
