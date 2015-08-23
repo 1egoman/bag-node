@@ -461,7 +461,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket) {
+angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading) {
   $scope.login = function(user, pass) {
     socket.emit("login", {
       username: user,
@@ -475,8 +475,12 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
           id: data._id,
           token: data.token
         });
+        $ionicLoading.show({
+          template: 'Loading<br/><br/><ion-spinner></ion-spinner>'
+        });
         return setTimeout(function() {
           location.replace('#/tab/bag');
+          $ionicLoading.hide();
           return location.reload();
         }, 2000);
       }
