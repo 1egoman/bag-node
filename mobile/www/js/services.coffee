@@ -222,6 +222,7 @@ angular.module('starter.services', [])
     # these methods are called within the view to choose a store or dismiss one.
     $scope.store_picker =
       pick_store: (item) ->
+        console.log item
         p.resolve item
         $scope.store_picker_modal.hide()
 
@@ -236,6 +237,16 @@ angular.module('starter.services', [])
         $timeout ->
           $state.go "tab.stores"
         , 100
+
+      # switch to the custom price view
+      to_custom_price: ->
+        @do_custom_price = true
+
+      # add a store to the list of stores, and select that store.
+      custom_price: (price) ->
+        $scope.item.stores["custom"] =
+          price: parseFloat price
+        @pick_store _id: "custom"
 
     $scope.$on '$destroy', ->
       $scope.store_picker_modal.remove()
