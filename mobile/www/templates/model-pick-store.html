@@ -35,7 +35,12 @@
       >
         <img ng-src="{{store.image}}"/>
         <h2 class="title">{{store.name}}</h2>
-        <p>{{store.desc}}</p>
+        <p>
+          {{store.desc}}
+
+          <!-- price for the item -->
+          <span class="pull-right">{{store.price_for_item | currency}}</span>
+        </p>
       </ion-item>
 
 

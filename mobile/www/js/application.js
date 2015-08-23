@@ -410,7 +410,12 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       return stores.then(function(s) {
         return user.then(function(u) {
           $scope.store_picker.stores = _.compact(_.map(u.stores, function(v) {
-            return $scope.item.stores[v] && s[v];
+            var obj;
+            if ($scope.item.stores[v]) {
+              obj = s[v];
+              obj.price_for_item = $scope.item.stores[v].price;
+              return obj;
+            }
           }));
           return initial_p.resolve({
             choose: function() {
@@ -426,7 +431,6 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     });
     $scope.store_picker = {
       pick_store: function(item) {
-        console.log(item);
         p.resolve(item);
         return $scope.store_picker_modal.hide();
       },
@@ -816,7 +820,6 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
         }
         $scope.get_store_details = function() {
           var ref, ref1;
-          console.log($scope.item);
           if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
             return $scope.store = {
               _id: "custom",

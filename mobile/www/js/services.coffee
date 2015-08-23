@@ -206,7 +206,11 @@ angular.module('starter.services', [])
       # get stores, and at those to the $scope below
       stores.then (s) ->
         user.then (u) ->
-          $scope.store_picker.stores = _.compact _.map u.stores, (v) -> $scope.item.stores[v] and s[v]
+          $scope.store_picker.stores = _.compact _.map u.stores, (v) ->
+            if $scope.item.stores[v]
+              obj = s[v]
+              obj.price_for_item = $scope.item.stores[v].price # add the price
+              obj
 
           # resolve the intial promise, which will return methods to interact with
           # the store picker modal
@@ -222,7 +226,6 @@ angular.module('starter.services', [])
     # these methods are called within the view to choose a store or dismiss one.
     $scope.store_picker =
       pick_store: (item) ->
-        console.log item
         p.resolve item
         $scope.store_picker_modal.hide()
 
