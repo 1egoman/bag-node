@@ -11,6 +11,7 @@ bcrypt = require "bcrypt"
 async = require "async"
 User = require "../models/user_model"
 Bag = require "../models/bag_model"
+Store = require "../models/store_model"
 
 # get a user of all lists
 # GET /user
@@ -89,6 +90,16 @@ exports.create = (req, res) ->
               String.fromCharCode(_.random(65, 95))
             .join ''
           cb null, user_params
+
+        # if no stores were saved, just inject one to start with.
+        # new users start with whole foods, by default
+        (user_params, cb) ->
+          if user_params.stores
+            cb user_params
+          else
+            Store.findOne name: "Whole Foods", (err, item) ->
+              user_params.stores = [ item._id ]
+              cb user_params
 
         # create user model and save it
         (user_params, cb) ->
