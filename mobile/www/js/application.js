@@ -547,7 +547,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   });
   $scope.add_item_to_bag = function(item) {
     var item_in_bag;
-    console.log(1);
     item.quantity = 1;
     item_in_bag = _($scope.get_all_content($scope.bag)).find(function(i) {
       return i._id === item._id;

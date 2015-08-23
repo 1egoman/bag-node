@@ -90,7 +90,6 @@ angular.module('starter.controllers.tab_bag', [])
 
   # add a new item to the bag
   $scope.add_item_to_bag = (item) ->
-    console.log 1
 
     # set quantity to one, for an initial new item
     item.quantity = 1
