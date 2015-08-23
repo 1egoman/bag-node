@@ -521,9 +521,12 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.calculate_total = calculateTotal;
   $scope.calculate_total_section = function(items) {
     return _(items).map(function(i) {
-      return $scope.calculate_total(i);
+      return {
+        price: $scope.calculate_total(i),
+        ref: i
+      };
     }).reduce((function(m, x) {
-      return m + x;
+      return m + x.price * x.ref.quantity;
     }), 0);
   };
 
