@@ -1119,17 +1119,12 @@ angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', func
       "_id": "54c50a4a901b060c006372d4",
       "name": "pumpkin seeds",
       "desc": "raw seeds, lb.",
+      "price": 5.00,
       "item_type": {
         "wegmans": "bulk"
       },
-      "stores": {
-        "55d4e9ede4b09c3179ca6ad9": {
-          "price": 33
-        },
-        "55d3caf3e4b092268554cd06": {
-          "price": 10
-        }
-      },
+      "contents": [],
+      "contentsLists": [],
       "__v": 0
     }
   ];
@@ -1138,8 +1133,14 @@ angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', func
       return p.name;
     });
   })(picks);
-  return $scope.to_user_recipes = function() {
+  $scope.to_user_recipes = function() {
     return $state.go("tab.recipes");
+  };
+  return $scope.more_info = function(item) {
+    console.log(item);
+    return $state.go("tab.recipeinfo", {
+      id: item._id
+    });
   };
 });
 
