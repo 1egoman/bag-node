@@ -411,7 +411,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return user.then(function(u) {
           $scope.store_picker.stores = _.compact(_.map(u.stores, function(v) {
             var obj;
-            if ($scope.item.stores[v]) {
+            if ($scope.item.stores && $scope.item.stores[v]) {
               obj = s[v];
               obj.price_for_item = $scope.item.stores[v].price;
               return obj;
@@ -449,6 +449,8 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return this.do_custom_price = true;
       },
       custom_price: function(price) {
+        var base;
+        (base = $scope.item).stores || (base.stores = {});
         $scope.item.stores["custom"] = {
           price: parseFloat(price)
         };
@@ -519,9 +521,12 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.calculate_total = calculateTotal;
   $scope.calculate_total_section = function(items) {
     return _(items).map(function(i) {
-      return $scope.calculate_total(i);
+      return {
+        price: $scope.calculate_total(i),
+        ref: i
+      };
     }).reduce((function(m, x) {
-      return m + x;
+      return m + x.price * x.ref.quantity;
     }), 0);
   };
 

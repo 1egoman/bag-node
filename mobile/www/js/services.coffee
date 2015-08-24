@@ -207,7 +207,7 @@ angular.module('starter.services', [])
       stores.then (s) ->
         user.then (u) ->
           $scope.store_picker.stores = _.compact _.map u.stores, (v) ->
-            if $scope.item.stores[v]
+            if $scope.item.stores and $scope.item.stores[v]
               obj = s[v]
               obj.price_for_item = $scope.item.stores[v].price # add the price
               obj
@@ -247,6 +247,7 @@ angular.module('starter.services', [])
 
       # add a store to the list of stores, and select that store.
       custom_price: (price) ->
+        $scope.item.stores or= {}
         $scope.item.stores["custom"] =
           price: parseFloat price
         @pick_store _id: "custom"

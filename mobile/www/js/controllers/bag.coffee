@@ -38,9 +38,10 @@ angular.module('starter.controllers.tab_bag', [])
   # for an entire section, calculate the total
   $scope.calculate_total_section = (items) ->
     _(items).map((i) ->
-      $scope.calculate_total i
+      price: $scope.calculate_total i
+      ref: i
     ).reduce ((m, x) ->
-      m + x
+      m + x.price * x.ref.quantity # account for both price and quantity
     ), 0
 
   ###
