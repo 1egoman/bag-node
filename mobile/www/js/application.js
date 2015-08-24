@@ -50,10 +50,18 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
           controller: 'ItemInfoCtrl'
         }
       }
+    }).state('tab.picks', {
+      url: '/picks',
+      views: {
+        'tab-picks': {
+          templateUrl: 'templates/tab-picks.html',
+          controller: 'PicksCtrl'
+        }
+      }
     }).state('tab.recipes', {
       url: '/recipes',
       views: {
-        'tab-recipes': {
+        'tab-picks': {
           templateUrl: 'templates/tab-recipes.html',
           controller: 'RecipesCtrl'
         }
@@ -184,7 +192,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.tab_picks', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -1102,6 +1110,12 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     createaccount: "Create my Account!"
   }[$scope.step];
   return $scope.user = persistant.new_user || {};
+});
+
+angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {
+  return $scope.to_user_recipes = function() {
+    return $state.go("tab.recipes");
+  };
 });
 
 angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {

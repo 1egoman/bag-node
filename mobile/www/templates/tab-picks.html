@@ -1,18 +1,18 @@
-<ion-view view-title="Your Picks">
+<ion-view view-title="My Picks">
 
   <ion-nav-buttons side="right">
-    <!-- plus for adding a new foodstuff -->
+    <!-- plus for seeing our recipes -->
     <button 
-      ng-click="open_foodstuff_or_recipe_modal()" 
-      class="button button-icon icon ion-plus-round"
+      ng-click="to_user_recipes()" 
+      class="button button-icon icon ion-coffee"
     ></button>
   </ion-nav-buttons>
+
 
   <ion-content>
     <ion-list>
       <ion-item>
-        <h2>This, based on your history, is what we think you should be interested
-          in!</h2>
+        <h2>Coming Soon!</h2>
       </ion-item>
       <ion-item class="item-remove-animate item-avatar item-icon-right"
         ng-repeat="pick in picks" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">

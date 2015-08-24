@@ -68,6 +68,7 @@ angular.module 'starter.controllers', [
   # local controllers in different files
   'starter.controllers.tab_bag'
   'starter.controllers.tab_recipe'
+  'starter.controllers.tab_picks'
 
   # item info pages, both on bags view and recipes view
   'starter.controllers.item_info'

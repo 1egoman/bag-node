@@ -95,11 +95,20 @@ angular.module 'starter', [
 
 
 
-    # recipes tab
+    # user picks tab
+    .state 'tab.picks',
+      url: '/picks'
+      views:
+        'tab-picks':
+          templateUrl: 'templates/tab-picks.html'
+          controller: 'PicksCtrl'
+
+
+    # user recipes tab
     .state 'tab.recipes',
       url: '/recipes'
       views:
-        'tab-recipes':
+        'tab-picks':
           templateUrl: 'templates/tab-recipes.html'
           controller: 'RecipesCtrl'
 
