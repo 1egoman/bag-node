@@ -69,7 +69,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     }).state('tab.recipeinfo', {
       url: '/recipeinfo/:id',
       views: {
-        'tab-recipes': {
+        'tab-picks': {
           templateUrl: 'templates/item-info.html',
           controller: 'ItemInfoCtrl'
         }

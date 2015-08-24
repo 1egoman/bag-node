@@ -18,12 +18,14 @@
 
     <section ng-if="!store_picker.do_custom_price">
       <ion-item ng-if="store_picker.stores.length === 0">
-        <h2>You haven't told us where you buy food.</h2>
+        <h2>There are no stores available for this item.</h2>
+        <p>Either you haven't picked any stores, or there are no stores
+          assigned to this item.</p>
         <button
           class="button button-block button-balanced"
           ng-click="store_picker.to_stores_picker()"
         >
-          Where do you shop?
+          Choose Stores
         </button>
       </ion-item>
 

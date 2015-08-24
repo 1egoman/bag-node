@@ -118,7 +118,7 @@ angular.module 'starter', [
     .state 'tab.recipeinfo',
       url: '/recipeinfo/:id'
       views:
-        'tab-recipes':
+        'tab-picks':
           templateUrl: 'templates/item-info.html'
           controller: 'ItemInfoCtrl'
 
