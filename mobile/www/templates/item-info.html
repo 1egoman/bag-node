@@ -48,7 +48,7 @@
 
 
         <!-- the store the item has been bought from -->
-        <ion-item class="item-avatar" ng-if="store.name">
+        <ion-item class="item-avatar" ng-if="store.name && !item.contents">
           <img ng-src="{{store.image}}" ng-show="store.image" />
           <span
             class="pull-right icon ion-more icon-accessory"
