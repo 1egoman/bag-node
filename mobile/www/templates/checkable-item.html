@@ -29,6 +29,7 @@
             type="number"
             placeholder="Qty"
             style="width: 2em; display: inline; margin-top: -4px; text-align: center;"
+            ng-hide="sortOpts.hide_quantity"
 
             min="1"
             max="99"
@@ -37,7 +38,7 @@
             ng-model="item.quantity"
             ng-change="change(item)"
           />
-          <span>@</span>
+          <span ng-hide="sortOpts.hide_quantity">@</span>
           <span>{{ (item.store && item.stores[item.store].price || item.price) | currency}}</span>
         </span>
       </span>

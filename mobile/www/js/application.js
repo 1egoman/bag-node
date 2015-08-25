@@ -50,10 +50,18 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
           controller: 'ItemInfoCtrl'
         }
       }
+    }).state('tab.picks', {
+      url: '/picks',
+      views: {
+        'tab-picks': {
+          templateUrl: 'templates/tab-picks.html',
+          controller: 'PicksCtrl'
+        }
+      }
     }).state('tab.recipes', {
       url: '/recipes',
       views: {
-        'tab-recipes': {
+        'tab-picks': {
           templateUrl: 'templates/tab-recipes.html',
           controller: 'RecipesCtrl'
         }
@@ -61,7 +69,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     }).state('tab.recipeinfo', {
       url: '/recipeinfo/:id',
       views: {
-        'tab-recipes': {
+        'tab-picks': {
           templateUrl: 'templates/item-info.html',
           controller: 'ItemInfoCtrl'
         }
@@ -127,8 +135,8 @@ window.host = "http://bagp.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
-if (sessionStorage.user) {
-  ref = JSON.parse(sessionStorage.user);
+if (localStorage.user) {
+  ref = JSON.parse(localStorage.user);
   user_id = ref.id;
   user_token = ref.token;
   socket = io(window.host + "/" + user_id, {
@@ -144,8 +152,8 @@ if (sessionStorage.user) {
         $get: function() {
           return {
             success: true,
-            user_id: sessionStorage.user.id,
-            user_token: sessionStorage.user.token
+            user_id: localStorage.user.id,
+            user_token: localStorage.user.token
           };
         }
       };
@@ -184,7 +192,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.tab_picks', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -471,7 +479,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
     return $scope.username = user.name;
   });
   $scope.logout = function() {
-    delete sessionStorage.user;
+    delete localStorage.user;
     return location.reload();
   };
   return $scope.to_stores_chooser = function() {
@@ -489,7 +497,7 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
       if (data.msg) {
         return console.log(data);
       } else {
-        sessionStorage.user = JSON.stringify({
+        localStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
         });
@@ -784,7 +792,10 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   if ($scope.get_item_or_recipe() === 'recipeinfo') {
     AllItems.by_id($scope, $stateParams.id, function(val) {
       $scope.item = val;
-      return $scope.get_store_details = function() {};
+      $scope.get_store_details = function() {};
+      return socket.emit("user:click", {
+        recipe: $scope.item._id
+      });
     });
   } else {
     user.then(function(usr) {
@@ -1055,7 +1066,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
       return (function(data) {
-        sessionStorage.user = JSON.stringify({
+        localStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
         });
@@ -1102,6 +1113,37 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     createaccount: "Create my Account!"
   }[$scope.step];
   return $scope.user = persistant.new_user || {};
+});
+
+angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {
+  var picks;
+  picks = [
+    {
+      "_id": "54c50a4a901b060c006372d4",
+      "name": "pumpkin seeds",
+      "desc": "raw seeds, lb.",
+      "price": 5.00,
+      "item_type": {
+        "wegmans": "bulk"
+      },
+      "contents": [],
+      "contentsLists": [],
+      "__v": 0
+    }
+  ];
+  (function(picks) {
+    return $scope.picks = _.sortBy(picks, function(p) {
+      return p.name;
+    });
+  })(picks);
+  $scope.to_user_recipes = function() {
+    return $state.go("tab.recipes");
+  };
+  return $scope.more_info = function(item) {
+    return $state.go("tab.recipeinfo", {
+      id: item._id
+    });
+  };
 });
 
 angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {
