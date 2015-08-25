@@ -18,7 +18,7 @@ angular.module 'starter.controllers.onboarding', []
       do (data=payload.data) ->
 
         # store in session
-        sessionStorage.user = JSON.stringify
+        localStorage.user = JSON.stringify
           id: data._id
           token: data.token
 

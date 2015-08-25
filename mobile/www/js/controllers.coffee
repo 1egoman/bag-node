@@ -5,10 +5,10 @@
 window.host = "http://bagp.herokuapp.com"
 
 auth_module = angular.module 'starter.authorization', []
-if sessionStorage.user
+if localStorageuser = .user
   # user_id = '55a84d00e4b06e29cb4eb960'
   # user_token='my_token'
-  ref = JSON.parse sessionStorage.user
+  ref = JSON.parse localStorage.user
   user_id = ref.id
   user_token = ref.token
 
@@ -24,8 +24,8 @@ if sessionStorage.user
       getSuccess: -> true
       $get: ->
         success: true
-        user_id: sessionStorage.user.id
-        user_token: sessionStorage.user.token
+        user_id: localStorage.user.id
+        user_token: localStorage.user.token
 
     # inject socket.io into angular
     .factory 'socket', (socketFactory) -> socketFactory ioSocket: socket

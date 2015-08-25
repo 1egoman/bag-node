@@ -1063,7 +1063,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
       return (function(data) {
-        sessionStorage.user = JSON.stringify({
+        localStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
         });

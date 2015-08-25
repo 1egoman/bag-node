@@ -19,7 +19,7 @@ angular.module 'starter.controllers.login', []
       else
 
 
-        sessionStorage.user = JSON.stringify
+        localStorage.user = JSON.stringify
           id: data._id
           token: data.token
 

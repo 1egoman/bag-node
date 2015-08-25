@@ -12,7 +12,7 @@ angular.module 'starter.controllers.account', []
 
   # logout a user
   $scope.logout = ->
-    delete sessionStorage.user
+    delete localStorage.user
     location.reload()
 
   # move to stores picker page
