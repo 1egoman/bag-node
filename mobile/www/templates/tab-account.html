@@ -1,26 +1,23 @@
 <ion-view view-title="Account">
   <ion-content>
     <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
 
-    <ion-item ng-click="to_stores_chooser()">
-      Stores
-      <i
-        class="pull-right icon ion-chevron-right icon-accessory"
-        style="padding-left: 16px;"
-      ></i>
-    </ion-item>
+      <ion-item ng-click="to_stores_chooser()">
+        My Stores
+        <i
+          class="pull-right icon ion-chevron-right icon-accessory"
+          style="padding-left: 16px;"
+        ></i>
+      </ion-item>
 
-    <ion-item ng-click="logout()">
-      Logout {{username}}
-    </ion-item>
+      <ion-item ng-click="logout()">
+        Logout {{username}}
+      </ion-item>
 
-    <!-- yea, I know. nice and hacky... -->
-    <ion-item onclick="location.reload()">
-      Refresh Page
-    </ion-item>
+      <!-- yea, I know. nice and hacky... -->
+      <ion-item onclick="location.reload()">
+        Refresh Page
+      </ion-item>
 
     </ion-list>
   </ion-content>

@@ -11,6 +11,7 @@ bcrypt = require "bcrypt"
 async = require "async"
 User = require "../models/user_model"
 Bag = require "../models/bag_model"
+Store = require "../models/store_model"
 
 # get a user of all lists
 # GET /user
@@ -89,6 +90,16 @@ exports.create = (req, res) ->
               String.fromCharCode(_.random(65, 95))
             .join ''
           cb null, user_params
+
+        # if no stores were saved, just inject one to start with.
+        # new users start with whole foods, by default
+        (user_params, cb) ->
+          if user_params.stores
+            cb user_params
+          else
+            Store.findOne name: "Whole Foods", (err, item) ->
+              user_params.stores = [ item._id ]
+              cb user_params
 
         # create user model and save it
         (user_params, cb) ->
@@ -263,3 +274,25 @@ exports.updatestores = (req, res) ->
       else
         res.send
           status: "bag.success.user.updatestores"
+
+# register a click for a specific store
+exports.click = (req, res) ->
+  query = User.findOne _id: req.user._id
+  query.exec (err, data) ->
+
+    # add the specific id to the click array
+    data.clicks or= []
+    data.clicks.push
+      store: req.body.recipe
+      date: new Date().toJSON()
+
+    # save it
+    data.save (err) ->
+      if err
+        res.send
+          status: "bag.error.user.click"
+          error: err
+      else
+        res.send
+          status: "bag.success.user.click"
+

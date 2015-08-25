@@ -50,10 +50,18 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
           controller: 'ItemInfoCtrl'
         }
       }
+    }).state('tab.picks', {
+      url: '/picks',
+      views: {
+        'tab-picks': {
+          templateUrl: 'templates/tab-picks.html',
+          controller: 'PicksCtrl'
+        }
+      }
     }).state('tab.recipes', {
       url: '/recipes',
       views: {
-        'tab-recipes': {
+        'tab-picks': {
           templateUrl: 'templates/tab-recipes.html',
           controller: 'RecipesCtrl'
         }
@@ -61,7 +69,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
     }).state('tab.recipeinfo', {
       url: '/recipeinfo/:id',
       views: {
-        'tab-recipes': {
+        'tab-picks': {
           templateUrl: 'templates/item-info.html',
           controller: 'ItemInfoCtrl'
         }
@@ -127,8 +135,8 @@ window.host = "http://bagp.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
-if (sessionStorage.user) {
-  ref = JSON.parse(sessionStorage.user);
+if (localStorage.user) {
+  ref = JSON.parse(localStorage.user);
   user_id = ref.id;
   user_token = ref.token;
   socket = io(window.host + "/" + user_id, {
@@ -144,8 +152,8 @@ if (sessionStorage.user) {
         $get: function() {
           return {
             success: true,
-            user_id: sessionStorage.user.id,
-            user_token: sessionStorage.user.token
+            user_id: localStorage.user.id,
+            user_token: localStorage.user.token
           };
         }
       };
@@ -184,7 +192,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.tab_picks', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -410,7 +418,12 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       return stores.then(function(s) {
         return user.then(function(u) {
           $scope.store_picker.stores = _.compact(_.map(u.stores, function(v) {
-            return $scope.item.stores[v] && s[v];
+            var obj;
+            if ($scope.item.stores && $scope.item.stores[v]) {
+              obj = s[v];
+              obj.price_for_item = $scope.item.stores[v].price;
+              return obj;
+            }
           }));
           return initial_p.resolve({
             choose: function() {
@@ -439,6 +452,19 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return $timeout(function() {
           return $state.go("tab.stores");
         }, 100);
+      },
+      to_custom_price: function() {
+        return this.do_custom_price = true;
+      },
+      custom_price: function(price) {
+        var base;
+        (base = $scope.item).stores || (base.stores = {});
+        $scope.item.stores["custom"] = {
+          price: parseFloat(price)
+        };
+        return this.pick_store({
+          _id: "custom"
+        });
       }
     };
     $scope.$on('$destroy', function() {
@@ -453,7 +479,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
     return $scope.username = user.name;
   });
   $scope.logout = function() {
-    delete sessionStorage.user;
+    delete localStorage.user;
     return location.reload();
   };
   return $scope.to_stores_chooser = function() {
@@ -461,7 +487,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket) {
+angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading) {
   $scope.login = function(user, pass) {
     socket.emit("login", {
       username: user,
@@ -471,12 +497,16 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
       if (data.msg) {
         return console.log(data);
       } else {
-        sessionStorage.user = JSON.stringify({
+        localStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
         });
+        $ionicLoading.show({
+          template: 'Loading<br/><br/><ion-spinner></ion-spinner>'
+        });
         return setTimeout(function() {
           location.replace('#/tab/bag');
+          $ionicLoading.hide();
           return location.reload();
         }, 2000);
       }
@@ -499,9 +529,12 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.calculate_total = calculateTotal;
   $scope.calculate_total_section = function(items) {
     return _(items).map(function(i) {
-      return $scope.calculate_total(i);
+      return {
+        price: $scope.calculate_total(i),
+        ref: i
+      };
     }).reduce((function(m, x) {
-      return m + x;
+      return m + x.price * x.ref.quantity;
     }), 0);
   };
 
@@ -547,7 +580,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   });
   $scope.add_item_to_bag = function(item) {
     var item_in_bag;
-    console.log(1);
     item.quantity = 1;
     item_in_bag = _($scope.get_all_content($scope.bag)).find(function(i) {
       return i._id === item._id;
@@ -760,7 +792,10 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   if ($scope.get_item_or_recipe() === 'recipeinfo') {
     AllItems.by_id($scope, $stateParams.id, function(val) {
       $scope.item = val;
-      return $scope.get_store_details = function() {};
+      $scope.get_store_details = function() {};
+      return socket.emit("user:click", {
+        recipe: $scope.item._id
+      });
     });
   } else {
     user.then(function(usr) {
@@ -800,11 +835,23 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
           });
         }
         $scope.get_store_details = function() {
-          var ref;
-          if ((ref = $scope.item) != null ? ref.store : void 0) {
+          var ref, ref1;
+          if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
+            return $scope.store = {
+              _id: "custom",
+              name: "Custom Price",
+              desc: "User-created price",
+              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
+            };
+          } else if ((ref1 = $scope.item) != null ? ref1.store : void 0) {
             return stores.then(function(s) {
               return $scope.store = s[$scope.item.store];
             });
+          } else {
+            return $scope.store = {
+              name: "No Store",
+              desc: "Please choose a store."
+            };
           }
         };
         return $scope.get_store_details();
@@ -1019,7 +1066,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
       return (function(data) {
-        sessionStorage.user = JSON.stringify({
+        localStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
         });
@@ -1066,6 +1113,37 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
     createaccount: "Create my Account!"
   }[$scope.step];
   return $scope.user = persistant.new_user || {};
+});
+
+angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {
+  var picks;
+  picks = [
+    {
+      "_id": "54c50a4a901b060c006372d4",
+      "name": "pumpkin seeds",
+      "desc": "raw seeds, lb.",
+      "price": 5.00,
+      "item_type": {
+        "wegmans": "bulk"
+      },
+      "contents": [],
+      "contentsLists": [],
+      "__v": 0
+    }
+  ];
+  (function(picks) {
+    return $scope.picks = _.sortBy(picks, function(p) {
+      return p.name;
+    });
+  })(picks);
+  $scope.to_user_recipes = function() {
+    return $state.go("tab.recipes");
+  };
+  return $scope.more_info = function(item) {
+    return $state.go("tab.recipeinfo", {
+      id: item._id
+    });
+  };
 });
 
 angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {

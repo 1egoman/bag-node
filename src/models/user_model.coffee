@@ -20,4 +20,6 @@ user = mongoose.Schema
   favs: Array
   stores: Array
 
+  clicks: Array
+
 module.exports = mongoose.model 'user', user

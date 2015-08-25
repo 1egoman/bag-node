@@ -20,7 +20,7 @@
 
       <div class="img-wrapper">
         <img
-          src="http://lorempixum.com/500/500"
+           src="{{ item.image || 'http://lorempixum.com/500/500'}}"
           class="item-img"
         />
       </div>
@@ -48,8 +48,8 @@
 
 
         <!-- the store the item has been bought from -->
-        <ion-item class="item-avatar" ng-if="store.name">
-          <img ng-src="{{store.image}}"/>
+        <ion-item class="item-avatar" ng-if="store.name && !item.contents">
+          <img ng-src="{{store.image}}" ng-show="store.image" />
           <span
             class="pull-right icon ion-more icon-accessory"
             style="font-size: 32px; margin: 10px;"
