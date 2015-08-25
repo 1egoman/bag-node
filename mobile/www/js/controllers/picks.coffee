@@ -40,5 +40,4 @@ angular.module('starter.controllers.tab_picks', [])
 
   # more info for an item
   $scope.more_info = (item) ->
-    console.log item
     $state.go "tab.recipeinfo", id: item._id

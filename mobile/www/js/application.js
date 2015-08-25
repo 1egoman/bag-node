@@ -131,12 +131,12 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagp.herokuapp.com";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
-if (sessionStorage.user) {
-  ref = JSON.parse(sessionStorage.user);
+if (localStorage.user) {
+  ref = JSON.parse(localStorage.user);
   user_id = ref.id;
   user_token = ref.token;
   socket = io(window.host + "/" + user_id, {
@@ -152,8 +152,8 @@ if (sessionStorage.user) {
         $get: function() {
           return {
             success: true,
-            user_id: sessionStorage.user.id,
-            user_token: sessionStorage.user.token
+            user_id: localStorage.user.id,
+            user_token: localStorage.user.token
           };
         }
       };
@@ -479,7 +479,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
     return $scope.username = user.name;
   });
   $scope.logout = function() {
-    delete sessionStorage.user;
+    delete localStorage.user;
     return location.reload();
   };
   return $scope.to_stores_chooser = function() {
@@ -497,7 +497,7 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
       if (data.msg) {
         return console.log(data);
       } else {
-        sessionStorage.user = JSON.stringify({
+        localStorage.user = JSON.stringify({
           id: data._id,
           token: data.token
         });
@@ -1137,7 +1137,6 @@ angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', func
     return $state.go("tab.recipes");
   };
   return $scope.more_info = function(item) {
-    console.log(item);
     return $state.go("tab.recipeinfo", {
       id: item._id
     });
