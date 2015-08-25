@@ -33,7 +33,7 @@ exports.routes = routes =
 
   user:
     controller: user_ctrl
-    routes: ["fav", "un_fav", "show", "updatestores"]
+    routes: ["fav", "un_fav", "show", "updatestores", "click"]
 
 
   bag:

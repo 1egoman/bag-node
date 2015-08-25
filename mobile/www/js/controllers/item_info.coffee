@@ -34,6 +34,9 @@ angular.module('starter.controllers.item_info', [])
       # this mode.
       $scope.get_store_details = ->
 
+      # since we are a recipe, log a "click" to the backend
+      socket.emit "user:click", recipe: $scope.item._id
+
   else
 
     # an item in the bag, so lets find it within the bag

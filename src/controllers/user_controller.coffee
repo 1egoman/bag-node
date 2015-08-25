@@ -274,3 +274,25 @@ exports.updatestores = (req, res) ->
       else
         res.send
           status: "bag.success.user.updatestores"
+
+# register a click for a specific store
+exports.click = (req, res) ->
+  query = User.findOne _id: req.user._id
+  query.exec (err, data) ->
+
+    # add the specific id to the click array
+    data.clicks or= []
+    data.clicks.push
+      store: req.body.recipe
+      date: new Date().toJSON()
+
+    # save it
+    data.save (err) ->
+      if err
+        res.send
+          status: "bag.error.user.click"
+          error: err
+      else
+        res.send
+          status: "bag.success.user.click"
+

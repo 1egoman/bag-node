@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://192.168.1.13:8000";
+window.host = "http://bagp.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -792,7 +792,10 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   if ($scope.get_item_or_recipe() === 'recipeinfo') {
     AllItems.by_id($scope, $stateParams.id, function(val) {
       $scope.item = val;
-      return $scope.get_store_details = function() {};
+      $scope.get_store_details = function() {};
+      return socket.emit("user:click", {
+        recipe: $scope.item._id
+      });
     });
   } else {
     user.then(function(usr) {
