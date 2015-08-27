@@ -2,7 +2,7 @@ angular.module 'starter.directives', []
   
 .directive 'recipeCard', ->
   restrict: 'E'
-  templateUrl: '/templates/recipe-card.html'
+  templateUrl: 'templates/recipe-card.html'
   require: '^recipe'
   scope:
     recipe: '='
@@ -13,7 +13,7 @@ angular.module 'starter.directives', []
 
 .directive 'checkableItem', ->
   restrict: 'E'
-  templateUrl: '/templates/checkable-item.html'
+  templateUrl: 'templates/checkable-item.html'
   require: '^item'
   scope:
     item: '='

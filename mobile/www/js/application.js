@@ -203,7 +203,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starte
 angular.module('starter.directives', []).directive('recipeCard', function() {
   return {
     restrict: 'E',
-    templateUrl: '/templates/recipe-card.html',
+    templateUrl: 'templates/recipe-card.html',
     require: '^recipe',
     scope: {
       recipe: '=',
@@ -216,7 +216,7 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
 }).directive('checkableItem', function() {
   return {
     restrict: 'E',
-    templateUrl: '/templates/checkable-item.html',
+    templateUrl: 'templates/checkable-item.html',
     require: '^item',
     scope: {
       item: '=',
