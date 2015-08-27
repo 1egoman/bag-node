@@ -1,15 +1,14 @@
 angular.module('starter.controllers.new_foodstuff', [])
 
-.controller 'NewFoodstuffCtrl', ($scope, socket, $q) ->
+.controller 'NewFoodstuffCtrl', (
+  $scope
+  socket
+  $q
+  getTagsForQuery
+) ->
 
   # tags to search through
-  $scope.predefined_tags = (query) ->
-    console.log query
-    defer = $q.defer()
-    socket.emit 'tag:show', tag: query
-    socket.once 'tag:show:callback', (evt) ->
-      defer.resolve evt.data
-    defer.promise
+  $scope.predefined_tags = getTagsForQuery
 
   # create a new foodstuff
   $scope.create_foodstuff = (name, price, tags, desc) ->

@@ -256,3 +256,14 @@ angular.module('starter.services', [])
       $scope.store_picker_modal.remove()
 
     initial_p.promise
+
+
+# given a partial tag name, return a promise that will resolve to all matching
+# tag names for that query.
+.factory "getTagsForQuery", (socket, $q) ->
+  (query) ->
+    defer = $q.defer()
+    socket.emit 'tag:show', tag: query
+    socket.once 'tag:show:callback', (evt) ->
+      defer.resolve evt.data
+    defer.promise

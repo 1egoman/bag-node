@@ -472,6 +472,18 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     });
     return initial_p.promise;
   };
+}).factory("getTagsForQuery", function(socket, $q) {
+  return function(query) {
+    var defer;
+    defer = $q.defer();
+    socket.emit('tag:show', {
+      tag: query
+    });
+    socket.once('tag:show:callback', function(evt) {
+      return defer.resolve(evt.data);
+    });
+    return defer.promise;
+  };
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
@@ -946,19 +958,8 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   return $scope.store = {};
 });
 
-angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q) {
-  $scope.predefined_tags = function(query) {
-    var defer;
-    console.log(query);
-    defer = $q.defer();
-    socket.emit('tag:show', {
-      tag: query
-    });
-    socket.once('tag:show:callback', function(evt) {
-      return defer.resolve(evt.data);
-    });
-    return defer.promise;
-  };
+angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery) {
+  $scope.predefined_tags = getTagsForQuery;
   $scope.create_foodstuff = function(name, price, tags, desc) {
     var foodstuff;
     foodstuff = {
@@ -986,22 +987,14 @@ angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuff
   return $scope.init();
 });
 
-angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q) {
+angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery) {
   $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
     return $scope.item_modal = modal;
   });
-  $scope.predefined_tags = function(query) {
-    var defer;
-    defer = $q.defer();
-    socket.emit('tags:index');
-    socket.once('tags:index:callback', function(evt) {
-      return defer.resolve(evt.data);
-    });
-    return defer.promise;
-  };
+  $scope.predefined_tags = getTagsForQuery;
   $scope.create_recipe = function(name, tags, desc) {
     var r_contents, r_contentsLists, recipe;
     r_contents = [];
