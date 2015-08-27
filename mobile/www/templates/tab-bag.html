@@ -33,6 +33,11 @@
   <!-- content -->
   <ion-content>
 
+  <ion-refresher
+    pulling-text="Pull to reload bag..."
+    on-refresh="do_refresh()">
+  </ion-refresher>
+
     <!-- slide boxes. Each one contains a bag. -->
     <!-- <ion&#45;slide&#45;box on&#45;slide&#45;changed="change_active_bag($index)" show&#45;pager="false"> -->
 

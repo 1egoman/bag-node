@@ -20,7 +20,6 @@ angular.module('starter.controllers.tab_bag', [])
   # any function wants th reload the whole view.
   socket.emit 'bag:index'
   socket.on 'bag:index:callback', (evt) ->
-    # console.log("bag:index:callback", evt)
     $scope.bag = evt.data
 
     # force the slide-box to update and make
@@ -29,6 +28,9 @@ angular.module('starter.controllers.tab_bag', [])
 
     # updating the sorting for the bag
     $scope.sorted_bag = $scope.sort_items()
+
+    # if refreshing, let it know we're done.
+    $scope.$broadcast 'scroll.refreshComplete'
 
   # calculate total price for a whole bag
   # this takes into account any sub-recipes
@@ -47,6 +49,9 @@ angular.module('starter.controllers.tab_bag', [])
   # using the speicified item, calculate the lowest possible price
   # using the user's stores
   $scope.get_lowest_price = (item) -> calculateTotal item
+
+  # pull to refresh handler
+  $scope.do_refresh = -> socket.emit 'bag:index'
 
   ###
   # Create new item

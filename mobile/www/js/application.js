@@ -547,7 +547,8 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
     $ionicSlideBoxDelegate.update();
-    return $scope.sorted_bag = $scope.sort_items();
+    $scope.sorted_bag = $scope.sort_items();
+    return $scope.$broadcast('scroll.refreshComplete');
   });
   $scope.calculate_total = calculateTotal;
   $scope.calculate_total_section = function(items) {
@@ -562,6 +563,9 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   };
   $scope.get_lowest_price = function(item) {
     return calculateTotal(item);
+  };
+  $scope.do_refresh = function() {
+    return socket.emit('bag:index');
   };
 
   /*
