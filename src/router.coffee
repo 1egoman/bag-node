@@ -27,9 +27,9 @@ pjson = require "../package.json"
 #   name_ctrl.a *request stuff*, (data) ->
 #     socket.emit "name:a:callback", data
 exports.routes = routes =
-  tags:
+  tag:
     controller: tags_ctrl
-    routes: ["index"]
+    routes: ["index", "show"]
 
   user:
     controller: user_ctrl

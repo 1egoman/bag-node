@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagp.herokuapp.com";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -949,9 +949,12 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
 angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q) {
   $scope.predefined_tags = function(query) {
     var defer;
+    console.log(query);
     defer = $q.defer();
-    socket.emit('tags:index');
-    socket.once('tags:index:callback', function(evt) {
+    socket.emit('tag:show', {
+      tag: query
+    });
+    socket.once('tag:show:callback', function(evt) {
       return defer.resolve(evt.data);
     });
     return defer.promise;

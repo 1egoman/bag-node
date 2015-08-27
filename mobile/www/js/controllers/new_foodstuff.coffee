@@ -4,9 +4,10 @@ angular.module('starter.controllers.new_foodstuff', [])
 
   # tags to search through
   $scope.predefined_tags = (query) ->
+    console.log query
     defer = $q.defer()
-    socket.emit 'tags:index'
-    socket.once 'tags:index:callback', (evt) ->
+    socket.emit 'tag:show', tag: query
+    socket.once 'tag:show:callback', (evt) ->
       defer.resolve evt.data
     defer.promise
 
