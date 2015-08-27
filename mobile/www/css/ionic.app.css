@@ -7759,13 +7759,13 @@ a.button {
       font-size: 36px;
       margin-bottom: 4px; }
       .tabs.tab-nav .tab-item .icon.icon-plate {
-        background: url(img/recipe_line.svg);
+        background: url(/img/recipe_line.svg);
         height: 32px;
         background-position: center;
         background-size: 32px;
         background-repeat: no-repeat; }
       .tabs.tab-nav .tab-item .icon.icon-plate-selected {
-        background: url(img/recipe_line_selected.svg);
+        background: url(/img/recipe_line_selected.svg);
         height: 32px;
         background-position: center;
         background-size: 32px;
