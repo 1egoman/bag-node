@@ -28,7 +28,7 @@
         <i class="icon ion-ios-plus-outline"></i>
         <p>
           {{item.name}}
-          <span class="pull-right">{{item.price | currency}}</span>
+          <span class="pull-right">{{get_lowest_price(item) | currency}}</span>
         </p>
       </a>
 

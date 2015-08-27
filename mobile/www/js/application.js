@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://api.getbag.io";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -542,7 +542,7 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal) {
+angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice) {
   socket.emit('bag:index');
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
@@ -559,6 +559,9 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
     }).reduce((function(m, x) {
       return m + x.price * x.ref.quantity;
     }), 0);
+  };
+  $scope.get_lowest_price = function(item) {
+    return calculateTotal(item);
   };
 
   /*

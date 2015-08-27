@@ -13,6 +13,7 @@ angular.module('starter.controllers.tab_bag', [])
   $rootScope,
   searchItem
   calculateTotal
+  pickPrice
 ) ->
   # get all bags
   # this fires once at the load of the controller, but also repeadedly when
@@ -34,7 +35,6 @@ angular.module('starter.controllers.tab_bag', [])
   # through recursion.
   $scope.calculate_total = calculateTotal
 
-
   # for an entire section, calculate the total
   $scope.calculate_total_section = (items) ->
     _(items).map((i) ->
@@ -43,6 +43,10 @@ angular.module('starter.controllers.tab_bag', [])
     ).reduce ((m, x) ->
       m + x.price * x.ref.quantity # account for both price and quantity
     ), 0
+
+  # using the speicified item, calculate the lowest possible price
+  # using the user's stores
+  $scope.get_lowest_price = (item) -> calculateTotal item
 
   ###
   # Create new item
