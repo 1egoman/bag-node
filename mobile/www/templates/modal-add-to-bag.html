@@ -23,8 +23,13 @@
     <div class="list">
 
       <!-- show the matches -->
-      <a class="item item-icon-left" ng-repeat="item in add_items track by $index"
-        ng-click="add_item_to_bag(item)">
+      <a
+        class="item item-icon-left"
+        collection-repeat="item in add_items track by $index"
+        item-height="55px"
+        item-width="100%"
+        ng-click="add_item_to_bag(item)"
+      >
         <i class="icon ion-ios-plus-outline"></i>
         <p>
           {{item.name}}
