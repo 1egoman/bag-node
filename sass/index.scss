@@ -13,7 +13,7 @@ body {
   margin-bottom: 50px;
 
   .wrapper {
-    @include make-md-column(2);
+    @include make-sm-column(2);
 
     img {
       width: 100%;
@@ -22,6 +22,6 @@ body {
   }
 
   .offset {
-    @include make-md-column(1);
+    @include make-sm-column(1);
   }
 }

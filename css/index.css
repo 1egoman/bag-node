@@ -5873,7 +5873,7 @@ button.close {
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px; }
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       .screens .wrapper {
         float: left;
         width: 16.6666666667%; } }
@@ -5885,7 +5885,7 @@ button.close {
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px; }
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       .screens .offset {
         float: left;
         width: 8.3333333333%; } }
