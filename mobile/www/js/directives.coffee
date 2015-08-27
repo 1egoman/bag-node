@@ -21,3 +21,18 @@ angular.module 'starter.directives', []
     sortOpts: '='
     deleteItem: '&'
     moreInfo: '&'
+
+.directive "loadingSpinner", ->
+  restrict: 'E'
+  templateUrl: '/templates/spinner.html'
+  scope:
+    complete: '='
+  controller: ($scope) ->
+
+    # get a motivational message to display.
+    $scope.motivationalMessage = _.sample([
+      "Just a little bit longer"
+      "It's worth the wait"
+      "Pardon us"
+      "We're a little slow today"
+    ]) + '.'

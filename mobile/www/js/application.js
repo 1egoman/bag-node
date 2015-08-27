@@ -226,6 +226,17 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
       moreInfo: '&'
     }
   };
+}).directive("loadingSpinner", function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/templates/spinner.html',
+    scope: {
+      complete: '='
+    },
+    controller: function($scope) {
+      return $scope.motivationalMessage = _.sample(["Just a little bit longer", "It's worth the wait", "Pardon us", "We're a little slow today"]) + '.';
+    }
+  };
 });
 
 angular.module('starter.services', []).factory('AllItems', function(socket) {

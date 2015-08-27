@@ -7986,3 +7986,10 @@ tags-input .autocomplete .suggestion-item em {
     display: none;
     top: 52%;
     left: 75px; }
+
+.spinner-loading {
+  text-align: center;
+  margin-top: 10px; }
+  .spinner-loading h3 {
+    font-size: 24px;
+    margin-bottom: 10px; }
