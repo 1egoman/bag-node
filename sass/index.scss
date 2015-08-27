@@ -25,3 +25,9 @@ body {
     @include make-sm-column(1);
   }
 }
+
+.center {
+  margin: 20px auto;
+  display: block;
+  width: 64px;
+}
