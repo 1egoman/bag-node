@@ -296,6 +296,31 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     socket.on('foodstuff:index:callback', responseFoodstuff);
     return socket.on('list:index:callback', responseList);
   };
+  root.search = function(sc, search_str, cb) {
+    var responseFoodstuff, responseList;
+    socket.emit('foodstuff:search', {
+      foodstuff: search_str
+    });
+    socket.emit('list:search', {
+      list: search_str
+    });
+    sc.id_calls = 0;
+    responseFoodstuff = function(evt) {
+      root.id[id] = evt.data || root.id[id];
+      sc.id_calls++;
+      return socket.removeListener('foodstuff:search:callback');
+    };
+    responseList = function(evt) {
+      root.id[id] = evt.data || root.id[id];
+      sc.id_calls++;
+      return socket.removeListener('list:search:callback');
+    };
+    sc.$watch('id_calls', function() {
+      return sc.id_calls === 2 && cb(root.id[id]);
+    });
+    socket.on('foodstuff:show:callback', responseFoodstuff);
+    return socket.on('list:show:callback', responseList);
+  };
   return root;
 }).factory('persistant', function() {
   return {

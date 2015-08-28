@@ -111,3 +111,20 @@ exports.destroy = (req, res) ->
       res.send
         status: "bag.success.list.delete"
 
+
+
+# search for a foodstuff using the given search query (req.params.foodstuff)
+exports.search = (req, res) ->
+  List.findOne
+    name:
+      $contains: req.params.list
+  , (err, data) ->
+    if err
+      res.send
+        status: "bag.error.list.search"
+        error: err
+    else
+      res.send
+        status: "bag.success.list.search"
+        data: data
+

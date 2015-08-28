@@ -57,6 +57,30 @@ angular.module('starter.services', [])
     socket.on 'foodstuff:index:callback', responseFoodstuff
     socket.on 'list:index:callback', responseList
 
+
+  # given a search string, find all matching lists and foodstuffs
+  root.search = (sc, search_str, cb) ->
+    socket.emit 'foodstuff:search', foodstuff: search_str
+    socket.emit 'list:search', list: search_str
+    sc.id_calls = 0
+
+    responseFoodstuff = (evt) ->
+      root.id[id] = evt.data or root.id[id]
+      sc.id_calls++
+      socket.removeListener 'foodstuff:search:callback'
+
+    responseList = (evt) ->
+      root.id[id] = evt.data or root.id[id]
+      sc.id_calls++
+      socket.removeListener 'list:search:callback'
+
+    sc.$watch 'id_calls', ->
+      sc.id_calls == 2 and cb root.id[id]
+    socket.on 'foodstuff:show:callback', responseFoodstuff
+    socket.on 'list:show:callback', responseList
+
+
+
   # return factory reference
   root
 
