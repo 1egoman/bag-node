@@ -7785,7 +7785,10 @@ a.button {
   margin-top: 10px;
   width: 100%; }
 .list.recipe .item-name, .card .item-name {
-  width: 100%; }
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 .list.recipe .title, .card .title {
   position: relative; }
   .list.recipe .title.strike .line, .card .title.strike .line {
