@@ -891,37 +891,51 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   $scope.go_back_to_bag = function() {
     return $state.go('tab.bag');
   };
+  $scope.set_item_quantity = function(item, quant) {
+    item.quantity = quant;
+    $scope.find_in_bag(item._id, function(item) {
+      return item.quantity = quant;
+    });
+    return socket.emit('bag:update', {
+      bag: window.strip_$$($scope.bag)
+    });
+  };
+  $scope.find_in_bag = function(id, cb) {
+    var to_level;
+    to_level = function(haystack) {
+      var j, len, list_contents, needle, ref, results;
+      if (haystack == null) {
+        haystack = $scope.bag;
+      }
+      list_contents = (haystack.contentsLists || []).map(function(i) {
+        return i.contents;
+      });
+      ref = list_contents.concat(haystack.contents);
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        needle = ref[j];
+        if (needle && needle._id === id) {
+          cb(needle);
+          break;
+        } else if (needle) {
+          results.push(to_level(needle));
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
+    };
+    return to_level();
+  };
   $scope.open_store_chooser = function() {
     return storePicker($scope).then(function(store) {
       return store.choose().then(function(resp) {
-        var to_level;
         if (resp) {
           $scope.item.store = resp._id;
           $scope.get_store_details();
-          to_level = function(haystack) {
-            var j, len, list_contents, needle, ref, results;
-            if (haystack == null) {
-              haystack = $scope.bag;
-            }
-            list_contents = (haystack.contentsLists || []).map(function(i) {
-              return i.contents;
-            });
-            ref = list_contents.concat(haystack.contents);
-            results = [];
-            for (j = 0, len = ref.length; j < len; j++) {
-              needle = ref[j];
-              if (needle && needle._id === $scope.item._id) {
-                needle.store = $scope.item.store;
-                break;
-              } else if (needle) {
-                results.push(to_level(needle));
-              } else {
-                results.push(void 0);
-              }
-            }
-            return results;
-          };
-          to_level();
+          $scope.find_in_bag($scope.item._id, function(item) {
+            return item.store = resp._id;
+          });
           return socket.emit('bag:update', {
             bag: window.strip_$$($scope.bag)
           });

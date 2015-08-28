@@ -7976,6 +7976,17 @@ tags-input .autocomplete .suggestion-item em {
     margin-bottom: 64px;
     min-height: 200px;
     background: #fff; }
+  .item-bag .root .quantity-count {
+    text-align: center; }
+    .item-bag .root .quantity-count span.num {
+      position: relative;
+      font-size: 32px;
+      top: 18px; }
+    .item-bag .root .quantity-count span.desc {
+      position: absolute;
+      top: 0px;
+      margin-left: -15px;
+      font-size: 12px; }
 
 .arrow-container {
   position: relative;

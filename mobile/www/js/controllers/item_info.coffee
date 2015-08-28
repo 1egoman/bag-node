@@ -101,6 +101,34 @@ angular.module('starter.controllers.item_info', [])
   $scope.go_back_to_bag = ->
     $state.go 'tab.bag'
 
+  # change the quantity, used by the big + and - buttons
+  $scope.set_item_quantity = (item, quant) ->
+    item.quantity = quant
+
+    # also, find the correct item and update the bag
+    $scope.find_in_bag item._id, (item) -> item.quantity = quant
+    socket.emit 'bag:update', bag: window.strip_$$($scope.bag)
+
+
+  # find an item in the bag, and run a function passing in the item.
+  $scope.find_in_bag = (id, cb) ->
+
+    # for each matching item (recipe's don't have stores), update the
+    # store to the specified one
+    # this is done by traversing the bag's tree recursively
+    to_level = (haystack=$scope.bag) ->
+
+      # concat together the lists and the foodstuffs into one big array
+      list_contents = (haystack.contentsLists or []).map (i) -> i.contents
+      for needle in list_contents.concat(haystack.contents)
+        if needle and needle._id is id
+          cb needle
+          break
+        else if needle
+          to_level needle
+    to_level()
+
+
 
   # open the store chooser so the user can pick a store for our item
   $scope.open_store_chooser = ->
@@ -110,21 +138,8 @@ angular.module('starter.controllers.item_info', [])
         $scope.item.store = resp._id
         $scope.get_store_details()
 
-        # for each matching item (recipe's don't have stores), update the
-        # store to the specified one
-        # this is done by traversing the bag's tree recursively
-        to_level = (haystack=$scope.bag) ->
-
-          # concat together the lists and the foodstuffs into one big array
-          list_contents = (haystack.contentsLists or []).map (i) -> i.contents
-          for needle in list_contents.concat(haystack.contents)
-            if needle and needle._id is $scope.item._id
-              needle.store = $scope.item.store
-              break
-            else if needle
-              to_level needle
-        to_level()
-
+        # find the item in the bag, and set the store information
+        $scope.find_in_bag $scope.item._id, (item) -> item.store = resp._id
 
         # and propagate the change
         socket.emit 'bag:update', bag: window.strip_$$($scope.bag)

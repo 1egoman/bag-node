@@ -20,5 +20,22 @@
     min-height: 200px;
     background: #fff;
   }
+
+  .quantity-count {
+    text-align: center;
+
+    span.num {
+      position: relative;
+      font-size: 32px;
+      top: 18px;
+    }
+
+    span.desc {
+      position: absolute;
+      top: 0px;
+      margin-left: -15px;
+      font-size: 12px;
+    }
+  }
 }
 
