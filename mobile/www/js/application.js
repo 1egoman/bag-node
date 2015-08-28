@@ -956,7 +956,7 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
     return $ionicLoading.show({
       template: 'Favorited "' + item.name + '"!',
       noBackdrop: true,
-      duration: 2000
+      duration: 750
     });
   };
   $scope.un_fav_item = function(item) {
@@ -964,10 +964,10 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       item: item._id
     });
     $scope.favs = _.without($scope.favs, item._id);
-    $ionicLoading.show({
+    return $ionicLoading.show({
       template: 'Un-Favorited "' + item.name + '"!',
       noBackdrop: true,
-      duration: 2000
+      duration: 750
     });
   };
   $scope.is_fav = function() {

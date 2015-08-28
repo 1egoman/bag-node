@@ -158,19 +158,19 @@ angular.module('starter.controllers.item_info', [])
     $ionicLoading.show
       template: 'Favorited "' + item.name + '"!'
       noBackdrop: true
-      duration: 2000
+      duration: 750
 
 
   # un-"like" an item
   $scope.un_fav_item = (item) ->
     socket.emit 'user:un_fav', item: item._id
     $scope.favs = _.without($scope.favs, item._id)
+
     # give the user a little "notification" about it
     $ionicLoading.show
       template: 'Un-Favorited "' + item.name + '"!'
       noBackdrop: true
-      duration: 2000
-    return
+      duration: 750
 
   # is this a favorite item?
   $scope.is_fav = ->
