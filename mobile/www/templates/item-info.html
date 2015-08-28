@@ -60,7 +60,7 @@
         </ion-item>
 
         <!-- quantity -->
-        <ion-item class="row">
+        <ion-item class="row" ng-if="item.quantity !== undefined">
           <button
             class="button button-positive col-25"
             ng-click="set_item_quantity(item, item.quantity-1)"

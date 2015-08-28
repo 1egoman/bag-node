@@ -7985,7 +7985,8 @@ tags-input .autocomplete .suggestion-item em {
     .item-bag .root .quantity-count span.desc {
       position: absolute;
       top: 0px;
-      margin-left: -15px;
+      left: 50%;
+      margin-left: -22.5px;
       font-size: 12px; }
 
 .arrow-container {

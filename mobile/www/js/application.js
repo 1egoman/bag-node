@@ -820,50 +820,47 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
     }
   };
   if ($scope.get_item_or_recipe() === 'recipeinfo') {
-    AllItems.by_id($scope, $stateParams.id, function(val) {
-      $scope.item = val;
-      $scope.get_store_details = function() {};
-      return socket.emit("user:click", {
-        recipe: $scope.item._id
-      });
+    socket.emit("user:click", {
+      recipe: $scope.item._id
     });
-  } else {
-    user.then(function(usr) {
-      socket.emit("bag:index", {
-        user: usr._id
-      });
-      return socket.on("bag:index:callback", function(bag) {
-        var to_level;
-        $scope.bag = bag.data;
-        to_level = function(haystack) {
-          var j, len, list_contents, needle, ref, results;
-          if (haystack == null) {
-            haystack = $scope.bag;
-          }
-          list_contents = (haystack.contentsLists || []).map(function(i) {
-            return i.contents;
-          });
-          ref = list_contents.concat(haystack.contents);
-          results = [];
-          for (j = 0, len = ref.length; j < len; j++) {
-            needle = ref[j];
-            if (needle && needle._id === $stateParams.id) {
-              $scope.item = needle;
-              break;
-            } else if (needle) {
-              results.push(to_level(needle));
-            } else {
-              results.push(void 0);
-            }
-          }
-          return results;
-        };
-        to_level();
-        if (!$scope.item) {
-          AllItems.by_id($scope, $stateParams.id, function(val) {
-            return $scope.item = val;
-          });
+  }
+  user.then(function(usr) {
+    socket.emit("bag:index", {
+      user: usr._id
+    });
+    return socket.on("bag:index:callback", function(bag) {
+      var to_level;
+      $scope.bag = bag.data;
+      to_level = function(haystack) {
+        var flattened, j, len, list_contents, needle, results;
+        if (haystack == null) {
+          haystack = $scope.bag;
         }
+        list_contents = (haystack.contentsLists || []).map(function(i) {
+          return i.contents;
+        });
+        flattened = list_contents.concat(haystack.contents).concat(haystack.contentsLists || []);
+        results = [];
+        for (j = 0, len = flattened.length; j < len; j++) {
+          needle = flattened[j];
+          console.log(needle);
+          if (needle && needle._id === $stateParams.id) {
+            $scope.item = needle;
+            break;
+          } else if (needle) {
+            results.push(to_level(needle));
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
+      };
+      to_level();
+      if (!$scope.item) {
+        AllItems.by_id($scope, $stateParams.id, function(val) {
+          $scope.item = val;
+          return $scope.get_store_details = function() {};
+        });
         $scope.get_store_details = function() {
           var ref, ref1;
           if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
@@ -885,9 +882,9 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
           }
         };
         return $scope.get_store_details();
-      });
+      }
     });
-  }
+  });
   $scope.go_back_to_bag = function() {
     return $state.go('tab.bag');
   };

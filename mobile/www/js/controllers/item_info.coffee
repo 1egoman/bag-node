@@ -25,50 +25,42 @@ angular.module('starter.controllers.item_info', [])
 
 
   if $scope.get_item_or_recipe() is 'recipeinfo'
+    # since we are a recipe, log a "click" to the backend
+    socket.emit "user:click", recipe: $scope.item._id
 
-    # a recipe, so lets just find the item
-    AllItems.by_id $scope, $stateParams.id, (val) ->
-      $scope.item = val
 
-      # methods that will be called below that don't acctually do anything in
-      # this mode.
-      $scope.get_store_details = ->
+  # an item in the bag, so lets find it within the bag
+  user.then (usr) ->
+    socket.emit "bag:index", user: usr._id
+    socket.on "bag:index:callback", (bag) ->
+      $scope.bag = bag.data
 
-      # since we are a recipe, log a "click" to the backend
-      socket.emit "user:click", recipe: $scope.item._id
+      # for each matching item (recipe's don't have stores), find the
+      # most likely store to match the specified item id
+      # this is done by traversing the bag's tree recursively
+      to_level = (haystack=$scope.bag) ->
 
-  else
+        # concat together the lists and the foodstuffs into one big array
+        list_contents = (haystack.contentsLists or []).map (i) -> i.contents
+        flattened = list_contents.concat(haystack.contents).concat(haystack.contentsLists or [])
+        for needle in flattened
+          console.log needle
+          if needle and needle._id is $stateParams.id
+            $scope.item = needle
+            break
+          else if needle
+            to_level needle
+      to_level()
 
-    # an item in the bag, so lets find it within the bag
-    user.then (usr) ->
-      socket.emit "bag:index", user: usr._id
-      socket.on "bag:index:callback", (bag) ->
-        $scope.bag = bag.data
+      # lastly, if we don't have anthing at this point it isn't an item. Let's
+      # just look it up.
+      if not $scope.item
+        AllItems.by_id $scope, $stateParams.id, (val) ->
+          $scope.item = val
 
-        # # get item from bag
-        # $scope.item = _($scope.get_all_content(bag.data)).find (i) ->
-        #   i._id is $stateParams.id
-
-        # for each matching item (recipe's don't have stores), find the
-        # most likely store to match the specified item id
-        # this is done by traversing the bag's tree recursively
-        to_level = (haystack=$scope.bag) ->
-
-          # concat together the lists and the foodstuffs into one big array
-          list_contents = (haystack.contentsLists or []).map (i) -> i.contents
-          for needle in list_contents.concat(haystack.contents)
-            if needle and needle._id is $stateParams.id
-              $scope.item = needle
-              break
-            else if needle
-              to_level needle
-        to_level()
-
-        # lastly, if we don't have anthing at this point it isn't an item. Let's
-        # just look it up.
-        if not $scope.item
-          AllItems.by_id $scope, $stateParams.id, (val) ->
-            $scope.item = val
+          # methods that will be called below that don't acctually do anything in
+          # this mode.
+          $scope.get_store_details = ->
 
 
         # what is our store?
