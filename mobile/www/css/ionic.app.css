@@ -7779,6 +7779,8 @@ a.button {
   margin-bottom: 10px; }
 .list.recipe .item.item-avatar, .card .item.item-avatar {
   padding-left: 16px; }
+.list.recipe.strike .item-content, .card.strike .item-content {
+  background: #ddd; }
 .list.recipe .title, .card .title {
   position: relative; }
   .list.recipe .title.strike .line, .card .title.strike .line {
