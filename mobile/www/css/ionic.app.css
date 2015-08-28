@@ -3229,7 +3229,7 @@ a.subdued {
   .bar .buttons-right span {
     margin-left: 5px;
     display: inherit; }
-  .bar .title + .button:last-child, .bar > .button + .button:last-child, .bar > .button.pull-right, .bar .buttons.pull-right, .bar .title + .buttons {
+  .bar .title + .button:last-child, .bar > .button + .button:last-child, .bar > .button.pull-right, .list.recipe .price-line .bar > .button.quantity-and-price, .card .price-line .bar > .button.quantity-and-price, .bar .buttons.pull-right, .bar .list.recipe .price-line .buttons.quantity-and-price, .list.recipe .price-line .bar .buttons.quantity-and-price, .bar .card .price-line .buttons.quantity-and-price, .card .price-line .bar .buttons.quantity-and-price, .bar .title + .buttons {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -7693,10 +7693,10 @@ a.button {
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
 
-.pull-left, .foodstuff-recipe-icon {
+.pull-left, .list.recipe .price-line, .card .price-line, .list.recipe .item-name, .card .item-name, .foodstuff-recipe-icon {
   float: left; }
 
-.pull-right {
+.pull-right, .list.recipe .price-line .quantity-and-price, .card .price-line .quantity-and-price {
   float: right; }
 
 .align-left {
@@ -7781,6 +7781,11 @@ a.button {
   padding-left: 16px; }
 .list.recipe.strike .item-content, .card.strike .item-content {
   background: #ddd; }
+.list.recipe .price-line, .card .price-line {
+  margin-top: 10px;
+  width: 100%; }
+.list.recipe .item-name, .card .item-name {
+  width: 100%; }
 .list.recipe .title, .card .title {
   position: relative; }
   .list.recipe .title.strike .line, .card .title.strike .line {

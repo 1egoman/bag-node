@@ -18,28 +18,19 @@
       <span class="title">
         <div class="line"></div>
 
-        {{item.name}}
+        <span class="item-name">{{item.name}}</span>
 
         <!-- rightmost icons -->
-        <span class="pull-right">
+        <span class="price-line">
           <span style="font-size: 12px; color: {{stores[item.store].color || '#444'}}">
             {{stores[item.store].name}}
           </span>
-          <input
-            type="number"
-            placeholder="Qty"
-            style="width: 2em; display: inline; margin-top: -4px; text-align: center;"
-            ng-hide="sortOpts.hide_quantity"
 
-            min="1"
-            max="99"
-            oninput="this.value=this.value.slice(0, 2)"
-
-            ng-model="item.quantity"
-            ng-change="change(item)"
-          />
-          <span ng-hide="sortOpts.hide_quantity">@</span>
-          <span>{{ (item.store && item.stores[item.store].price || item.price) | currency}}</span>
+          <span class="quantity-and-price">
+            <span ng-hide="sortOpts.hide_quantity">{{item.quantity}}</span>
+            <span ng-hide="sortOpts.hide_quantity">@</span>
+            <span>{{ (item.store && item.stores[item.store].price || item.price) | currency}}</span>
+          </span>
         </span>
       </span>
 
