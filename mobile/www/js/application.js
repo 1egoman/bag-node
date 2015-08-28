@@ -819,6 +819,26 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       return 'recipeinfo';
     }
   };
+  $scope.get_store_details = function() {
+    var ref, ref1;
+    if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
+      return $scope.store = {
+        _id: "custom",
+        name: "Custom Price",
+        desc: "User-created price",
+        image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
+      };
+    } else if ((ref1 = $scope.item) != null ? ref1.store : void 0) {
+      return stores.then(function(s) {
+        return $scope.store = s[$scope.item.store];
+      });
+    } else {
+      return $scope.store = {
+        name: "No Store",
+        desc: "Please choose a store."
+      };
+    }
+  };
   if ($scope.get_item_or_recipe() === 'recipeinfo') {
     socket.emit("user:click", {
       recipe: $scope.item._id
@@ -843,9 +863,9 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
         results = [];
         for (j = 0, len = flattened.length; j < len; j++) {
           needle = flattened[j];
-          console.log(needle);
           if (needle && needle._id === $stateParams.id) {
             $scope.item = needle;
+            $scope.get_store_details();
             break;
           } else if (needle) {
             results.push(to_level(needle));
@@ -857,31 +877,10 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       };
       to_level();
       if (!$scope.item) {
-        AllItems.by_id($scope, $stateParams.id, function(val) {
+        return AllItems.by_id($scope, $stateParams.id, function(val) {
           $scope.item = val;
           return $scope.get_store_details = function() {};
         });
-        $scope.get_store_details = function() {
-          var ref, ref1;
-          if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
-            return $scope.store = {
-              _id: "custom",
-              name: "Custom Price",
-              desc: "User-created price",
-              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
-            };
-          } else if ((ref1 = $scope.item) != null ? ref1.store : void 0) {
-            return stores.then(function(s) {
-              return $scope.store = s[$scope.item.store];
-            });
-          } else {
-            return $scope.store = {
-              name: "No Store",
-              desc: "Please choose a store."
-            };
-          }
-        };
-        return $scope.get_store_details();
       }
     });
   });

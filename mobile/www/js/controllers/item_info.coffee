@@ -24,6 +24,32 @@ angular.module('starter.controllers.item_info', [])
       'recipeinfo'
 
 
+  # what is our store?
+  # once resolved, we'll use this to display the store next to the price
+  $scope.get_store_details = ->
+
+    # a custom price
+    if $scope.item?.store is "custom"
+      $scope.store =
+        _id: "custom"
+        name: "Custom Price"
+        desc: "User-created price"
+        image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
+
+    # a registered store
+    else if $scope.item?.store
+      stores.then (s) ->
+        $scope.store = s[$scope.item.store]
+
+    # no store
+    else
+      $scope.store =
+        name: "No Store"
+        desc: "Please choose a store."
+
+
+
+
   if $scope.get_item_or_recipe() is 'recipeinfo'
     # since we are a recipe, log a "click" to the backend
     socket.emit "user:click", recipe: $scope.item._id
@@ -44,9 +70,14 @@ angular.module('starter.controllers.item_info', [])
         list_contents = (haystack.contentsLists or []).map (i) -> i.contents
         flattened = list_contents.concat(haystack.contents).concat(haystack.contentsLists or [])
         for needle in flattened
-          console.log needle
           if needle and needle._id is $stateParams.id
+
+            # hey, we got it!
             $scope.item = needle
+            
+            # lets update the store info while we're at it
+            $scope.get_store_details()
+
             break
           else if needle
             to_level needle
@@ -63,30 +94,6 @@ angular.module('starter.controllers.item_info', [])
           $scope.get_store_details = ->
 
 
-        # what is our store?
-        # once resolved, we'll use this to display the store next to the price
-        $scope.get_store_details = ->
-
-          # a custom price
-          if $scope.item?.store is "custom"
-            $scope.store =
-              _id: "custom"
-              name: "Custom Price"
-              desc: "User-created price"
-              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
-
-          # a registered store
-          else if $scope.item?.store
-            stores.then (s) ->
-              $scope.store = s[$scope.item.store]
-
-          # no store
-          else
-            $scope.store =
-              name: "No Store"
-              desc: "Please choose a store."
-
-        $scope.get_store_details()
 
 
   # move back to the bag view
