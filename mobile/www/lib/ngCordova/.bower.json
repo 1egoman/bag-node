@@ -50,7 +50,6 @@
     "commit": "bb677e1848feaffbab8f93c0de216dc4cbea1f06"
   },
   "_source": "git://github.com/driftyco/ng-cordova.git",
-  "_target": "~0.1.20-alpha",
-  "_originalSource": "ngCordova",
-  "_direct": true
+  "_target": "~0.1.17-alpha",
+  "_originalSource": "ngCordova"
 }
