@@ -277,6 +277,25 @@ angular.module('starter.controllers.tab_bag', [])
           ) or 'No sort'
         )
 
+
+      # sort by sort tags, and by store
+      when 'tags_store'
+        persistant.sort_opts = $scope.sort_opts = checks: true
+        return _.groupBy($scope.flatten_bag(), (i) ->
+          tag_sort = _.find(i.tags, (x) ->
+            x.indexOf('sort-') != -1
+          ) or 'No sort'
+
+          if i.store
+            #TODO get store name and don't just use its id
+            i.store + ": "+ tag_sort
+          else
+            tag_sort
+
+        )
+
+
+
       # no sort
       else
         persistant.sort_opts = $scope.sort_opts = {}

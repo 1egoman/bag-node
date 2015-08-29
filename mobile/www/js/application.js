@@ -795,6 +795,21 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
             return x.indexOf('sort-') !== -1;
           }) || 'No sort';
         });
+      case 'tags_store':
+        persistant.sort_opts = $scope.sort_opts = {
+          checks: true
+        };
+        return _.groupBy($scope.flatten_bag(), function(i) {
+          var tag_sort;
+          tag_sort = _.find(i.tags, function(x) {
+            return x.indexOf('sort-') !== -1;
+          }) || 'No sort';
+          if (i.store) {
+            return i.store + ": " + tag_sort;
+          } else {
+            return tag_sort;
+          }
+        });
       default:
         persistant.sort_opts = $scope.sort_opts = {};
         return {
