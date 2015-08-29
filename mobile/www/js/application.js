@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
+angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -535,29 +535,29 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading) {
+angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading, $cordovaDialogs) {
+  socket.on("login:callback", function(data) {
+    if (data.err) {
+      return $cordovaDialogs.alert("Those login credentials don't match what we have on file. Give it another try?", "Incorrect Credentials", "OK");
+    } else {
+      localStorage.user = JSON.stringify({
+        id: data._id,
+        token: data.token
+      });
+      $ionicLoading.show({
+        template: 'Loading<br/><br/><ion-spinner></ion-spinner>'
+      });
+      return setTimeout(function() {
+        location.replace('#/tab/bag');
+        $ionicLoading.hide();
+        return location.reload();
+      }, 2000);
+    }
+  });
   $scope.login = function(user, pass) {
-    socket.emit("login", {
+    return socket.emit("login", {
       username: user,
       password: pass
-    });
-    return socket.on("login:callback", function(data) {
-      if (data.msg) {
-        return console.log(data);
-      } else {
-        localStorage.user = JSON.stringify({
-          id: data._id,
-          token: data.token
-        });
-        $ionicLoading.show({
-          template: 'Loading<br/><br/><ion-spinner></ion-spinner>'
-        });
-        return setTimeout(function() {
-          location.replace('#/tab/bag');
-          $ionicLoading.hide();
-          return location.reload();
-        }, 2000);
-      }
     });
   };
   return $scope.to_onboarding = function() {
