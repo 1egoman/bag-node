@@ -1372,7 +1372,7 @@ angular.module('starter.controllers.stores_picker', []).controller('StorePickerC
             $scope.toggle_store_in_user(item);
             break;
           case 1:
-            ref = window.open(item.website, '_blank', 'location=yes');
+            ref = window.open(item.website, '_system', 'location=yes');
         }
         return true;
       }

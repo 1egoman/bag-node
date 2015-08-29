@@ -60,7 +60,7 @@ angular.module 'starter.controllers.stores_picker', []
 
           # open store website
           when 1
-            ref = window.open item.website, '_blank', 'location=yes'
+            ref = window.open item.website, '_system', 'location=yes'
 
         return true
 
