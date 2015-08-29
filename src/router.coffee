@@ -13,6 +13,7 @@ user_ctrl = require "./controllers/user_controller"
 tags_ctrl = require "./controllers/tags_controller"
 auth_ctrl = require "./controllers/auth_controller"
 store_ctrl = require "./controllers/stores_controller"
+items_ctrl = require "./controllers/items_controller"
 chalk = require "chalk"
 pjson = require "../package.json"
 
@@ -42,11 +43,16 @@ exports.routes = routes =
 
   list:
     controller: list_ctrl
-    routes: ["index", "show", "create", "update", "delete"]
+    routes: ["index", "show", "create", "update", "delete", "search"]
 
   foodstuff:
     controller: foodstuff_ctrl
-    routes: ["index", "show", "create", "update", "delete"]
+    routes: ["index", "show", "create", "update", "delete", "search"]
+
+  # routes that touch both foodstuffs and lists
+  item:
+    controller: items_ctrl
+    routes: ["search"]
 
   store:
     controller: store_ctrl

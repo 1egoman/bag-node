@@ -88,14 +88,6 @@ angular.module('starter.controllers.tab_bag', [])
         $scope.add_items_done = true
       $scope.$broadcast 'scroll.infiniteScrollComplete'
 
-  # filter with ionic filter bar
-  $scope.open_search = ->
-    search = searchItem $scope.add_items, (filtered_items) ->
-      $scope.add_items = filtered_items
-
-    search.open()
-    $scope.hide_search = search.hide
-
   # close the add modal
   $scope.close_add_modal = ->
     $scope.modal.hide()
@@ -135,6 +127,13 @@ angular.module('starter.controllers.tab_bag', [])
     # update everything!
     $scope.update_bag()
     $scope.close_add_modal()
+
+  # search for a new item
+  $scope.on_search_change = (txt) -> socket.emit "item:search", item: txt
+  socket.on "item:search:callback", (payload) ->
+    if payload.data
+      $scope.add_items = payload.data
+
 
   ###
   # View mechanics
@@ -359,3 +358,4 @@ angular.module('starter.controllers.tab_bag', [])
   $scope.start_index = 0
   $scope.add_items_done = false
   $scope.amount_in_page = 25
+  $scope.add_search = ""

@@ -109,9 +109,9 @@ exports.destroy = (req, res) ->
 
 # search for a foodstuff using the given search query (req.params.foodstuff)
 exports.search = (req, res) ->
-  Foodstuff.findOne
+  Foodstuff.find
     name:
-      $contains: req.params.foodstuff
+      $regex: new RegExp req.params.foodstuff, 'i'
   , (err, data) ->
     if err
       res.send

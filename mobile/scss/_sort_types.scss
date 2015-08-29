@@ -1,0 +1,23 @@
+.item-avatar.sort-type {
+  @extend .item-avatar;
+  padding-left: 96px;
+
+  min-height: 95px;
+  &.dues { min-height: 75px; }
+
+  & > img:first-child {
+    border-radius: 0px;
+
+    top: 2.5px;
+    left: 2.5px;
+
+    max-width: 88px;
+    max-height: 88px;
+    width: auto;
+    height: auto;
+  }
+
+  .ion-help-circled {
+    @extend .pull-right;
+  }
+}

@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://api.getbag.io";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -623,14 +623,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
       return $scope.$broadcast('scroll.infiniteScrollComplete');
     });
   };
-  $scope.open_search = function() {
-    var search;
-    search = searchItem($scope.add_items, function(filtered_items) {
-      return $scope.add_items = filtered_items;
-    });
-    search.open();
-    return $scope.hide_search = search.hide;
-  };
   $scope.close_add_modal = function() {
     $scope.modal.hide();
     return $scope.hide_search && $scope.hide_search();
@@ -657,6 +649,16 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
     $scope.update_bag();
     return $scope.close_add_modal();
   };
+  $scope.on_search_change = function(txt) {
+    return socket.emit("item:search", {
+      item: txt
+    });
+  };
+  socket.on("item:search:callback", function(payload) {
+    if (payload.data) {
+      return $scope.add_items = payload.data;
+    }
+  });
 
   /*
    * View mechanics
@@ -856,7 +858,8 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.add_items = [];
   $scope.start_index = 0;
   $scope.add_items_done = false;
-  return $scope.amount_in_page = 25;
+  $scope.amount_in_page = 25;
+  return $scope.add_search = "";
 });
 
 angular.module('starter.controllers.checkableitem', []).controller('CheckableItemCtrl', function($scope, stores) {
