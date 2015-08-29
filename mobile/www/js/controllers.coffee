@@ -79,7 +79,6 @@ angular.module 'starter.controllers', [
 
   # recipe card controller for recipe-card directive
   'starter.controllers.recipe_card'
-  'starter.controllers.checkableitem'
 
   # login controller
   'starter.controllers.login'

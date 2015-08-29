@@ -192,7 +192,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.tab_picks', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.checkableitem', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.tab_picks', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -224,6 +224,12 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
       sortOpts: '=',
       deleteItem: '&',
       moreInfo: '&'
+    },
+    controller: function($scope, stores) {
+      stores.then(function(s) {
+        return $scope.stores = s;
+      });
+      return $scope.stores = {};
     }
   };
 }).directive("loadingSpinner", function() {
@@ -860,13 +866,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.add_items_done = false;
   $scope.amount_in_page = 25;
   return $scope.add_search = "";
-});
-
-angular.module('starter.controllers.checkableitem', []).controller('CheckableItemCtrl', function($scope, stores) {
-  stores.then(function(s) {
-    return $scope.stores = s;
-  });
-  return $scope.stores = {};
 });
 
 angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
