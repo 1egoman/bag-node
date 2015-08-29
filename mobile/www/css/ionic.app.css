@@ -7754,9 +7754,9 @@ a.button {
 
 .tabs.tab-nav {
   background-color: #222;
-  height: 75px; }
+  height: 64px; }
   .tabs.tab-nav .tab-item {
-    margin-top: 11px;
+    margin-top: 6px;
     color: #fff; }
     .tabs.tab-nav .tab-item .icon {
       font-size: 36px;
