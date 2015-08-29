@@ -175,10 +175,14 @@ angular.module('starter.services', [])
 
       # do an intersection (of objects!) between the item's stores and the
       # user's stores to try and find commonalities
-      pickable_stores = _(possible_stores).chain().map (ea) ->
-        return _.find(user.stores, (eb) -> ea.id == eb.id)
-      .compact().value()
-
+      # pickable_stores = _(possible_stores).chain().map (ea) ->
+      #   return _.find(user.stores, (eb) -> ea.id == eb or ea.id == eb.id)
+      # .compact().value()
+      
+      pickable_stores = _.mapObject possible_stores, (v, ea) ->
+        ea in user.stores
+      pickable_stores = _.keys pickable_stores
+      
       # which store to choose? How about the first one? Or if that doesn't work,
       # lets just go with the item's first store.
       price = _.min(pickable_stores.map (s) ->
