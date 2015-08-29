@@ -2,7 +2,7 @@ angular.module 'starter.directives', []
   
 .directive 'recipeCard', ->
   restrict: 'E'
-  templateUrl: '/templates/recipe-card.html'
+  templateUrl: 'templates/recipe-card.html'
   require: '^recipe'
   scope:
     recipe: '='
@@ -13,7 +13,7 @@ angular.module 'starter.directives', []
 
 .directive 'checkableItem', ->
   restrict: 'E'
-  templateUrl: '/templates/checkable-item.html'
+  templateUrl: 'templates/checkable-item.html'
   require: '^item'
   scope:
     item: '='
@@ -21,3 +21,18 @@ angular.module 'starter.directives', []
     sortOpts: '='
     deleteItem: '&'
     moreInfo: '&'
+
+.directive "loadingSpinner", ->
+  restrict: 'E'
+  templateUrl: '/templates/spinner.html'
+  scope:
+    complete: '='
+  controller: ($scope) ->
+
+    # get a motivational message to display.
+    $scope.motivationalMessage = _.sample([
+      "Just a little bit longer"
+      "It's worth the wait"
+      "Pardon us"
+      "We're a little slow today"
+    ]) + '.'

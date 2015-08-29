@@ -10,10 +10,18 @@
 
 
   <ion-content>
+
+    <!-- wait for the stuff to come in -->
+    <loading-spinner complete="picks.length"></loading-spinner>
+
     <ion-list>
 
       <ion-item>
-        <h2>Coming Soon!</h2>
+        <h2>Feature Coming Soon!</h2>
+        <p class="no-elipsis">
+          This screen will provide suggestions on what to eat for your next
+          meal.
+        </p>
       </ion-item>
 
       <!-- <ion&#45;item -->
@@ -34,16 +42,16 @@
       <!--  -->
 
 
-      <checkable-item
-        ng-repeat="item in picks"
-        item="item" 
-
-        change="update_bag"
-        delete-item="delete_item(item)"
-        more-info="more_info(item)"
-        sort-opts="{hide_quantity: true, }"
-      ></checkable-item>
-
+      <!-- <checkable&#45;item -->
+      <!--   ng&#45;repeat="item in picks" -->
+      <!--   item="item"  -->
+      <!--  -->
+      <!--   change="update_bag" -->
+      <!--   delete&#45;item="delete_item(item)" -->
+      <!--   more&#45;info="more_info(item)" -->
+      <!--   sort&#45;opts="{hide_quantity: true, }" -->
+      <!-- ></checkable&#45;item> -->
+      <!--  -->
     </ion-list>
   </ion-content>
 </ion-view>

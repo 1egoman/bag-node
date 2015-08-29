@@ -13,13 +13,15 @@ angular.module('starter.controllers.tab_bag', [])
   $rootScope,
   searchItem
   calculateTotal
+  pickPrice
+  stores
+  $cordovaDialogs
 ) ->
   # get all bags
   # this fires once at the load of the controller, but also repeadedly when
   # any function wants th reload the whole view.
   socket.emit 'bag:index'
   socket.on 'bag:index:callback', (evt) ->
-    # console.log("bag:index:callback", evt)
     $scope.bag = evt.data
 
     # force the slide-box to update and make
@@ -29,11 +31,13 @@ angular.module('starter.controllers.tab_bag', [])
     # updating the sorting for the bag
     $scope.sorted_bag = $scope.sort_items()
 
+    # if refreshing, let it know we're done.
+    $scope.$broadcast 'scroll.refreshComplete'
+
   # calculate total price for a whole bag
   # this takes into account any sub-recipes
   # through recursion.
   $scope.calculate_total = calculateTotal
-
 
   # for an entire section, calculate the total
   $scope.calculate_total_section = (items) ->
@@ -43,6 +47,18 @@ angular.module('starter.controllers.tab_bag', [])
     ).reduce ((m, x) ->
       m + x.price * x.ref.quantity # account for both price and quantity
     ), 0
+
+  # using the speicified item, calculate the lowest possible price
+  # using the user's stores
+  $scope.get_lowest_price = (item) -> calculateTotal item
+
+  # pull to refresh handler
+  $scope.do_refresh = -> socket.emit 'bag:index'
+
+  # listen for all stores
+  # once resolved, we'll use this to display the store next to the price
+  stores.then (s) -> $scope.stores = s
+  $scope.stores = {}
 
   ###
   # Create new item
@@ -71,14 +87,6 @@ angular.module('starter.controllers.tab_bag', [])
       if items.length < $scope.amount_in_page
         $scope.add_items_done = true
       $scope.$broadcast 'scroll.infiniteScrollComplete'
-
-  # filter with ionic filter bar
-  $scope.open_search = ->
-    search = searchItem $scope.add_items, (filtered_items) ->
-      $scope.add_items = filtered_items
-
-    search.open()
-    $scope.hide_search = search.hide
 
   # close the add modal
   $scope.close_add_modal = ->
@@ -119,6 +127,13 @@ angular.module('starter.controllers.tab_bag', [])
     # update everything!
     $scope.update_bag()
     $scope.close_add_modal()
+
+  # search for a new item
+  $scope.on_search_change = (txt) -> socket.emit "item:search", item: txt
+  socket.on "item:search:callback", (payload) ->
+    if payload.data
+      $scope.add_items = payload.data
+
 
   ###
   # View mechanics
@@ -268,12 +283,55 @@ angular.module('starter.controllers.tab_bag', [])
           ) or 'No sort'
         )
 
+
+      # sort by sort tags, and by store
+      when 'tags_store'
+        persistant.sort_opts = $scope.sort_opts = checks: true
+        return _.groupBy $scope.flatten_bag(), (i) ->
+          tag_sort = _.find(i.tags, (x) ->
+            x.indexOf('sort-') != -1
+          ) or 'No sort'
+
+          if i.store
+            # lookup store id and use that.
+            $scope.stores[i.store].name + ": "+ tag_sort
+          else
+            "No Store: #{tag_sort}"
+
+
+
+
       # no sort
       else
         persistant.sort_opts = $scope.sort_opts = {}
         return { 'All Items': items }
         break
     return
+
+  # show help for a specified filter
+  $scope.show_filter_help = (sort) ->
+    switch sort
+
+      when 'tags'
+        $cordovaDialogs.alert """
+        Category Filter
+        Each item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc.
+        """, "Filter Help", 'Ok'
+
+      when 'tags_store'
+        $cordovaDialogs.alert """
+        Category Filter
+        Each item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc. However, recipes are broken down into their elemental foodstuffs, so you can check off each item as you buy it.
+        """, "Filter Help", 'Ok'
+
+
+      when 'completion'
+        $cordovaDialogs.alert """
+        Checked Filter
+        Sort items depending on if an item is checked.
+        """, "Filter Help", 'Ok'
+
+
 
   # update the old sort to the specified one
   $scope.change_sort = (new_sort_name) ->
@@ -300,3 +358,4 @@ angular.module('starter.controllers.tab_bag', [])
   $scope.start_index = 0
   $scope.add_items_done = false
   $scope.amount_in_page = 25
+  $scope.add_search = ""

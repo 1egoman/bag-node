@@ -7,6 +7,7 @@ angular.module 'starter.controllers.new_recipe', []
   AllItems,
   searchItem,
   $q
+  getTagsForQuery
 ) ->
 
   # new item modal of adding items to the recipe
@@ -16,12 +17,7 @@ angular.module 'starter.controllers.new_recipe', []
     $scope.item_modal = modal
 
   # tags to search through
-  $scope.predefined_tags = (query) ->
-    defer = $q.defer()
-    socket.emit 'tags:index'
-    socket.once 'tags:index:callback', (evt) ->
-      defer.resolve evt.data
-    defer.promise
+  $scope.predefined_tags = getTagsForQuery
 
   # create a new foodstuff
   $scope.create_recipe = (name, tags, desc) ->

@@ -3229,7 +3229,7 @@ a.subdued {
   .bar .buttons-right span {
     margin-left: 5px;
     display: inherit; }
-  .bar .title + .button:last-child, .bar > .button + .button:last-child, .bar > .button.pull-right, .bar .buttons.pull-right, .bar .title + .buttons {
+  .bar .title + .button:last-child, .bar > .button + .button:last-child, .bar > .button.pull-right, .list.recipe .price-line .bar > .button.quantity-and-price, .card .price-line .bar > .button.quantity-and-price, .sort-type.item-avatar .bar > .button.ion-help-circled, .bar .buttons.pull-right, .bar .list.recipe .price-line .buttons.quantity-and-price, .list.recipe .price-line .bar .buttons.quantity-and-price, .bar .card .price-line .buttons.quantity-and-price, .card .price-line .bar .buttons.quantity-and-price, .bar .sort-type.item-avatar .buttons.ion-help-circled, .sort-type.item-avatar .bar .buttons.ion-help-circled, .bar .title + .buttons {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -5013,7 +5013,7 @@ a.item-content {
     font-size: 18px;
     line-height: 32px; }
 
-.item-avatar, .item-avatar .item-content, .item-avatar-left, .item-avatar-left .item-content {
+.item-avatar, .item-avatar.sort-type, .item-avatar .item-content, .item-avatar-left, .item-avatar-left .item-content {
   padding-left: 72px;
   min-height: 72px; }
   .item-avatar > img:first-child, .item-avatar .item-image, .item-avatar .item-content > img:first-child, .item-avatar .item-content .item-image, .item-avatar-left > img:first-child, .item-avatar-left .item-image, .item-avatar-left .item-content > img:first-child, .item-avatar-left .item-content .item-image {
@@ -7693,10 +7693,10 @@ a.button {
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
 
-.pull-left, .foodstuff-recipe-icon {
+.pull-left, .list.recipe .price-line, .card .price-line, .list.recipe .item-name, .card .item-name, .foodstuff-recipe-icon {
   float: left; }
 
-.pull-right {
+.pull-right, .list.recipe .price-line .quantity-and-price, .card .price-line .quantity-and-price, .sort-type.item-avatar .ion-help-circled {
   float: right; }
 
 .align-left {
@@ -7721,6 +7721,9 @@ a.button {
 .font-size-bigger {
   font-size: 120%; }
 
+.item .no-elipsis, .no-elipsis {
+  white-space: initial; }
+
 .fade.ng-enter {
   transition: 0.5s linear all;
   opacity: 0; }
@@ -7734,6 +7737,13 @@ a.button {
 
 .fade.ng-leave.ng-leave-active {
   opacity: 0; }
+
+.spinner-loading {
+  text-align: center;
+  margin-top: 20px; }
+  .spinner-loading h3 {
+    font-size: 24px;
+    margin-bottom: 10px; }
 
 .bar.bar-bag {
   border-color: #b2b2b2;
@@ -7751,9 +7761,9 @@ a.button {
 
 .tabs.tab-nav {
   background-color: #222;
-  height: 75px; }
+  height: 64px; }
   .tabs.tab-nav .tab-item {
-    margin-top: 11px;
+    margin-top: 6px;
     color: #fff; }
     .tabs.tab-nav .tab-item .icon {
       font-size: 36px;
@@ -7776,6 +7786,16 @@ a.button {
   margin-bottom: 10px; }
 .list.recipe .item.item-avatar, .card .item.item-avatar {
   padding-left: 16px; }
+.list.recipe.strike .item-content, .card.strike .item-content {
+  background: #ddd; }
+.list.recipe .price-line, .card .price-line {
+  margin-top: 10px;
+  width: 100%; }
+.list.recipe .item-name, .card .item-name {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 .list.recipe .title, .card .title {
   position: relative; }
   .list.recipe .title.strike .line, .card .title.strike .line {
@@ -7966,6 +7986,18 @@ tags-input .autocomplete .suggestion-item em {
     margin-bottom: 64px;
     min-height: 200px;
     background: #fff; }
+  .item-bag .root .quantity-count {
+    text-align: center; }
+    .item-bag .root .quantity-count span.num {
+      position: relative;
+      font-size: 32px;
+      top: 18px; }
+    .item-bag .root .quantity-count span.desc {
+      position: absolute;
+      top: 0px;
+      left: 50%;
+      margin-left: -22.5px;
+      font-size: 12px; }
 
 .arrow-container {
   position: relative;
@@ -7986,3 +8018,17 @@ tags-input .autocomplete .suggestion-item em {
     display: none;
     top: 52%;
     left: 75px; }
+
+.item-avatar.sort-type, .sort-type.item-avatar {
+  padding-left: 96px;
+  min-height: 95px; }
+  .item-avatar.sort-type.dues, .sort-type.dues.item-avatar {
+    min-height: 75px; }
+  .item-avatar.sort-type > img:first-child, .sort-type.item-avatar > img:first-child {
+    border-radius: 0px;
+    top: 2.5px;
+    left: 2.5px;
+    max-width: 88px;
+    max-height: 88px;
+    width: auto;
+    height: auto; }

@@ -57,6 +57,30 @@ angular.module('starter.services', [])
     socket.on 'foodstuff:index:callback', responseFoodstuff
     socket.on 'list:index:callback', responseList
 
+
+  # given a search string, find all matching lists and foodstuffs
+  root.search = (sc, search_str, cb) ->
+    socket.emit 'foodstuff:search', foodstuff: search_str
+    socket.emit 'list:search', list: search_str
+    sc.id_calls = 0
+
+    responseFoodstuff = (evt) ->
+      root.id[id] = evt.data or root.id[id]
+      sc.id_calls++
+      socket.removeListener 'foodstuff:search:callback'
+
+    responseList = (evt) ->
+      root.id[id] = evt.data or root.id[id]
+      sc.id_calls++
+      socket.removeListener 'list:search:callback'
+
+    sc.$watch 'id_calls', ->
+      sc.id_calls == 2 and cb root.id[id]
+    socket.on 'foodstuff:show:callback', responseFoodstuff
+    socket.on 'list:show:callback', responseList
+
+
+
   # return factory reference
   root
 
@@ -151,10 +175,14 @@ angular.module('starter.services', [])
 
       # do an intersection (of objects!) between the item's stores and the
       # user's stores to try and find commonalities
-      pickable_stores = _(possible_stores).chain().map (ea) ->
-        return _.find(user.stores, (eb) -> ea.id == eb.id)
-      .compact().value()
-
+      # pickable_stores = _(possible_stores).chain().map (ea) ->
+      #   return _.find(user.stores, (eb) -> ea.id == eb or ea.id == eb.id)
+      # .compact().value()
+      
+      pickable_stores = _.mapObject possible_stores, (v, ea) ->
+        ea in user.stores
+      pickable_stores = _.keys pickable_stores
+      
       # which store to choose? How about the first one? Or if that doesn't work,
       # lets just go with the item's first store.
       price = _.min(pickable_stores.map (s) ->
@@ -256,3 +284,14 @@ angular.module('starter.services', [])
       $scope.store_picker_modal.remove()
 
     initial_p.promise
+
+
+# given a partial tag name, return a promise that will resolve to all matching
+# tag names for that query.
+.factory "getTagsForQuery", (socket, $q) ->
+  (query) ->
+    defer = $q.defer()
+    socket.emit 'tag:show', tag: query
+    socket.once 'tag:show:callback', (evt) ->
+      defer.resolve evt.data
+    defer.promise

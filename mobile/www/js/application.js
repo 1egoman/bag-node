@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
+angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'sta
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagp.herokuapp.com";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -203,7 +203,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starte
 angular.module('starter.directives', []).directive('recipeCard', function() {
   return {
     restrict: 'E',
-    templateUrl: '/templates/recipe-card.html',
+    templateUrl: 'templates/recipe-card.html',
     require: '^recipe',
     scope: {
       recipe: '=',
@@ -216,7 +216,7 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
 }).directive('checkableItem', function() {
   return {
     restrict: 'E',
-    templateUrl: '/templates/checkable-item.html',
+    templateUrl: 'templates/checkable-item.html',
     require: '^item',
     scope: {
       item: '=',
@@ -226,7 +226,20 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
       moreInfo: '&'
     }
   };
+}).directive("loadingSpinner", function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/templates/spinner.html',
+    scope: {
+      complete: '='
+    },
+    controller: function($scope) {
+      return $scope.motivationalMessage = _.sample(["Just a little bit longer", "It's worth the wait", "Pardon us", "We're a little slow today"]) + '.';
+    }
+  };
 });
+
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 angular.module('starter.services', []).factory('AllItems', function(socket) {
   var root;
@@ -284,6 +297,31 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     });
     socket.on('foodstuff:index:callback', responseFoodstuff);
     return socket.on('list:index:callback', responseList);
+  };
+  root.search = function(sc, search_str, cb) {
+    var responseFoodstuff, responseList;
+    socket.emit('foodstuff:search', {
+      foodstuff: search_str
+    });
+    socket.emit('list:search', {
+      list: search_str
+    });
+    sc.id_calls = 0;
+    responseFoodstuff = function(evt) {
+      root.id[id] = evt.data || root.id[id];
+      sc.id_calls++;
+      return socket.removeListener('foodstuff:search:callback');
+    };
+    responseList = function(evt) {
+      root.id[id] = evt.data || root.id[id];
+      sc.id_calls++;
+      return socket.removeListener('list:search:callback');
+    };
+    sc.$watch('id_calls', function() {
+      return sc.id_calls === 2 && cb(root.id[id]);
+    });
+    socket.on('foodstuff:show:callback', responseFoodstuff);
+    return socket.on('list:show:callback', responseList);
   };
   return root;
 }).factory('persistant', function() {
@@ -368,11 +406,10 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       possible_stores = _.mapObject(item.stores, function(v, k) {
         return v.price;
       });
-      pickable_stores = _(possible_stores).chain().map(function(ea) {
-        return _.find(user.stores, function(eb) {
-          return ea.id === eb.id;
-        });
-      }).compact().value();
+      pickable_stores = _.mapObject(possible_stores, function(v, ea) {
+        return indexOf.call(user.stores, ea) >= 0;
+      });
+      pickable_stores = _.keys(pickable_stores);
       price = _.min(pickable_stores.map(function(s) {
         return item.stores[s].price;
       })) || _.min(_.mapObject(item.stores, function(v, k) {
@@ -472,6 +509,18 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     });
     return initial_p.promise;
   };
+}).factory("getTagsForQuery", function(socket, $q) {
+  return function(query) {
+    var defer;
+    defer = $q.defer();
+    socket.emit('tag:show', {
+      tag: query
+    });
+    socket.once('tag:show:callback', function(evt) {
+      return defer.resolve(evt.data);
+    });
+    return defer.promise;
+  };
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
@@ -487,29 +536,29 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading) {
+angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading, $cordovaDialogs) {
+  socket.on("login:callback", function(data) {
+    if (data.err) {
+      return $cordovaDialogs.alert("Those login credentials don't match what we have on file. Give it another try?", "Incorrect Credentials", "OK");
+    } else {
+      localStorage.user = JSON.stringify({
+        id: data._id,
+        token: data.token
+      });
+      $ionicLoading.show({
+        template: 'Loading<br/><br/><ion-spinner></ion-spinner>'
+      });
+      return setTimeout(function() {
+        location.replace('#/tab/bag');
+        $ionicLoading.hide();
+        return location.reload();
+      }, 2000);
+    }
+  });
   $scope.login = function(user, pass) {
-    socket.emit("login", {
+    return socket.emit("login", {
       username: user,
       password: pass
-    });
-    return socket.on("login:callback", function(data) {
-      if (data.msg) {
-        return console.log(data);
-      } else {
-        localStorage.user = JSON.stringify({
-          id: data._id,
-          token: data.token
-        });
-        $ionicLoading.show({
-          template: 'Loading<br/><br/><ion-spinner></ion-spinner>'
-        });
-        return setTimeout(function() {
-          location.replace('#/tab/bag');
-          $ionicLoading.hide();
-          return location.reload();
-        }, 2000);
-      }
     });
   };
   return $scope.to_onboarding = function() {
@@ -519,12 +568,13 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal) {
+angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs) {
   socket.emit('bag:index');
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
     $ionicSlideBoxDelegate.update();
-    return $scope.sorted_bag = $scope.sort_items();
+    $scope.sorted_bag = $scope.sort_items();
+    return $scope.$broadcast('scroll.refreshComplete');
   });
   $scope.calculate_total = calculateTotal;
   $scope.calculate_total_section = function(items) {
@@ -537,6 +587,16 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
       return m + x.price * x.ref.quantity;
     }), 0);
   };
+  $scope.get_lowest_price = function(item) {
+    return calculateTotal(item);
+  };
+  $scope.do_refresh = function() {
+    return socket.emit('bag:index');
+  };
+  stores.then(function(s) {
+    return $scope.stores = s;
+  });
+  $scope.stores = {};
 
   /*
    * Create new item
@@ -562,14 +622,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
       }
       return $scope.$broadcast('scroll.infiniteScrollComplete');
     });
-  };
-  $scope.open_search = function() {
-    var search;
-    search = searchItem($scope.add_items, function(filtered_items) {
-      return $scope.add_items = filtered_items;
-    });
-    search.open();
-    return $scope.hide_search = search.hide;
   };
   $scope.close_add_modal = function() {
     $scope.modal.hide();
@@ -597,6 +649,16 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
     $scope.update_bag();
     return $scope.close_add_modal();
   };
+  $scope.on_search_change = function(txt) {
+    return socket.emit("item:search", {
+      item: txt
+    });
+  };
+  socket.on("item:search:callback", function(payload) {
+    if (payload.data) {
+      return $scope.add_items = payload.data;
+    }
+  });
 
   /*
    * View mechanics
@@ -740,12 +802,37 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
             return x.indexOf('sort-') !== -1;
           }) || 'No sort';
         });
+      case 'tags_store':
+        persistant.sort_opts = $scope.sort_opts = {
+          checks: true
+        };
+        return _.groupBy($scope.flatten_bag(), function(i) {
+          var tag_sort;
+          tag_sort = _.find(i.tags, function(x) {
+            return x.indexOf('sort-') !== -1;
+          }) || 'No sort';
+          if (i.store) {
+            return $scope.stores[i.store].name + ": " + tag_sort;
+          } else {
+            return "No Store: " + tag_sort;
+          }
+        });
       default:
         persistant.sort_opts = $scope.sort_opts = {};
         return {
           'All Items': items
         };
         break;
+    }
+  };
+  $scope.show_filter_help = function(sort) {
+    switch (sort) {
+      case 'tags':
+        return $cordovaDialogs.alert("Category Filter\nEach item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc.", "Filter Help", 'Ok');
+      case 'tags_store':
+        return $cordovaDialogs.alert("Category Filter\nEach item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc. However, recipes are broken down into their elemental foodstuffs, so you can check off each item as you buy it.", "Filter Help", 'Ok');
+      case 'completion':
+        return $cordovaDialogs.alert("Checked Filter\nSort items depending on if an item is checked.", "Filter Help", 'Ok');
     }
   };
   $scope.change_sort = function(new_sort_name) {
@@ -771,7 +858,8 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.add_items = [];
   $scope.start_index = 0;
   $scope.add_items_done = false;
-  return $scope.amount_in_page = 25;
+  $scope.amount_in_page = 25;
+  return $scope.add_search = "";
 });
 
 angular.module('starter.controllers.checkableitem', []).controller('CheckableItemCtrl', function($scope, stores) {
@@ -789,109 +877,119 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       return 'recipeinfo';
     }
   };
+  $scope.get_store_details = function() {
+    var ref, ref1;
+    if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
+      return $scope.store = {
+        _id: "custom",
+        name: "Custom Price",
+        desc: "User-created price",
+        image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
+      };
+    } else if ((ref1 = $scope.item) != null ? ref1.store : void 0) {
+      return stores.then(function(s) {
+        return $scope.store = s[$scope.item.store];
+      });
+    } else {
+      return $scope.store = {
+        name: "No Store",
+        desc: "Please choose a store."
+      };
+    }
+  };
   if ($scope.get_item_or_recipe() === 'recipeinfo') {
-    AllItems.by_id($scope, $stateParams.id, function(val) {
-      $scope.item = val;
-      $scope.get_store_details = function() {};
-      return socket.emit("user:click", {
-        recipe: $scope.item._id
-      });
-    });
-  } else {
-    user.then(function(usr) {
-      socket.emit("bag:index", {
-        user: usr._id
-      });
-      return socket.on("bag:index:callback", function(bag) {
-        var to_level;
-        $scope.bag = bag.data;
-        to_level = function(haystack) {
-          var j, len, list_contents, needle, ref, results;
-          if (haystack == null) {
-            haystack = $scope.bag;
-          }
-          list_contents = (haystack.contentsLists || []).map(function(i) {
-            return i.contents;
-          });
-          ref = list_contents.concat(haystack.contents);
-          results = [];
-          for (j = 0, len = ref.length; j < len; j++) {
-            needle = ref[j];
-            if (needle && needle._id === $stateParams.id) {
-              $scope.item = needle;
-              break;
-            } else if (needle) {
-              results.push(to_level(needle));
-            } else {
-              results.push(void 0);
-            }
-          }
-          return results;
-        };
-        to_level();
-        if (!$scope.item) {
-          AllItems.by_id($scope, $stateParams.id, function(val) {
-            return $scope.item = val;
-          });
-        }
-        $scope.get_store_details = function() {
-          var ref, ref1;
-          if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
-            return $scope.store = {
-              _id: "custom",
-              name: "Custom Price",
-              desc: "User-created price",
-              image: "https://cdn1.iconfinder.com/data/icons/basic-ui-elements-round/700/06_ellipsis-512.png"
-            };
-          } else if ((ref1 = $scope.item) != null ? ref1.store : void 0) {
-            return stores.then(function(s) {
-              return $scope.store = s[$scope.item.store];
-            });
-          } else {
-            return $scope.store = {
-              name: "No Store",
-              desc: "Please choose a store."
-            };
-          }
-        };
-        return $scope.get_store_details();
-      });
+    socket.emit("user:click", {
+      recipe: $scope.item._id
     });
   }
+  user.then(function(usr) {
+    socket.emit("bag:index", {
+      user: usr._id
+    });
+    return socket.on("bag:index:callback", function(bag) {
+      var to_level;
+      $scope.bag = bag.data;
+      to_level = function(haystack) {
+        var flattened, j, len, list_contents, needle, results;
+        if (haystack == null) {
+          haystack = $scope.bag;
+        }
+        list_contents = (haystack.contentsLists || []).map(function(i) {
+          return i.contents;
+        });
+        flattened = list_contents.concat(haystack.contents).concat(haystack.contentsLists || []);
+        results = [];
+        for (j = 0, len = flattened.length; j < len; j++) {
+          needle = flattened[j];
+          if (needle && needle._id === $stateParams.id) {
+            $scope.item = needle;
+            $scope.get_store_details();
+            break;
+          } else if (needle) {
+            results.push(to_level(needle));
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
+      };
+      to_level();
+      if (!$scope.item) {
+        return AllItems.by_id($scope, $stateParams.id, function(val) {
+          $scope.item = val;
+          return $scope.get_store_details = function() {};
+        });
+      }
+    });
+  });
   $scope.go_back_to_bag = function() {
     return $state.go('tab.bag');
+  };
+  $scope.set_item_quantity = function(item, quant) {
+    item.quantity = quant;
+    $scope.find_in_bag(item._id, function(item) {
+      return item.quantity = quant;
+    });
+    return socket.emit('bag:update', {
+      bag: window.strip_$$($scope.bag)
+    });
+  };
+  $scope.find_in_bag = function(id, cb) {
+    var to_level;
+    to_level = function(haystack) {
+      var j, len, list_contents, needle, ref, results;
+      if (haystack == null) {
+        haystack = $scope.bag;
+      }
+      list_contents = (haystack.contentsLists || []).map(function(i) {
+        return i.contents;
+      });
+      ref = list_contents.concat(haystack.contents);
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        needle = ref[j];
+        if (needle && needle._id === id) {
+          cb(needle);
+          break;
+        } else if (needle) {
+          results.push(to_level(needle));
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
+    };
+    return to_level();
   };
   $scope.open_store_chooser = function() {
     return storePicker($scope).then(function(store) {
       return store.choose().then(function(resp) {
-        var to_level;
         if (resp) {
           $scope.item.store = resp._id;
           $scope.get_store_details();
-          to_level = function(haystack) {
-            var j, len, list_contents, needle, ref, results;
-            if (haystack == null) {
-              haystack = $scope.bag;
-            }
-            list_contents = (haystack.contentsLists || []).map(function(i) {
-              return i.contents;
-            });
-            ref = list_contents.concat(haystack.contents);
-            results = [];
-            for (j = 0, len = ref.length; j < len; j++) {
-              needle = ref[j];
-              if (needle && needle._id === $scope.item._id) {
-                needle.store = $scope.item.store;
-                break;
-              } else if (needle) {
-                results.push(to_level(needle));
-              } else {
-                results.push(void 0);
-              }
-            }
-            return results;
-          };
-          to_level();
+          $scope.find_in_bag($scope.item._id, function(item) {
+            return item.store = resp._id;
+          });
           return socket.emit('bag:update', {
             bag: window.strip_$$($scope.bag)
           });
@@ -915,7 +1013,7 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
     return $ionicLoading.show({
       template: 'Favorited "' + item.name + '"!',
       noBackdrop: true,
-      duration: 2000
+      duration: 750
     });
   };
   $scope.un_fav_item = function(item) {
@@ -923,10 +1021,10 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       item: item._id
     });
     $scope.favs = _.without($scope.favs, item._id);
-    $ionicLoading.show({
+    return $ionicLoading.show({
       template: 'Un-Favorited "' + item.name + '"!',
       noBackdrop: true,
-      duration: 2000
+      duration: 750
     });
   };
   $scope.is_fav = function() {
@@ -946,16 +1044,8 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   return $scope.store = {};
 });
 
-angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q) {
-  $scope.predefined_tags = function(query) {
-    var defer;
-    defer = $q.defer();
-    socket.emit('tags:index');
-    socket.once('tags:index:callback', function(evt) {
-      return defer.resolve(evt.data);
-    });
-    return defer.promise;
-  };
+angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery) {
+  $scope.predefined_tags = getTagsForQuery;
   $scope.create_foodstuff = function(name, price, tags, desc) {
     var foodstuff;
     foodstuff = {
@@ -983,22 +1073,14 @@ angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuff
   return $scope.init();
 });
 
-angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q) {
+angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery) {
   $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
     return $scope.item_modal = modal;
   });
-  $scope.predefined_tags = function(query) {
-    var defer;
-    defer = $q.defer();
-    socket.emit('tags:index');
-    socket.once('tags:index:callback', function(evt) {
-      return defer.resolve(evt.data);
-    });
-    return defer.promise;
-  };
+  $scope.predefined_tags = getTagsForQuery;
   $scope.create_recipe = function(name, tags, desc) {
     var r_contents, r_contentsLists, recipe;
     r_contents = [];
@@ -1302,31 +1384,45 @@ angular.module('starter.controllers.stores_picker', []).controller('StorePickerC
     return $scope.sort_stores($scope.stores);
   };
   return $scope.item_details = function(item) {
-    var hideSheet, ref1;
-    return hideSheet = $ionicActionSheet.show({
-      buttons: [
-        {
-          text: (ref1 = item._id, indexOf.call($scope.user.stores, ref1) < 0) && 'Add to My Stores' || 'Remove from My Stores'
-        }, {
-          text: 'Go to store website'
-        }
-      ],
-      titleText: 'Modify Store',
-      cancelText: 'Cancel',
-      cancel: function() {
-        return hideSheet();
-      },
-      buttonClicked: function(index) {
-        var ref;
-        switch (index) {
-          case 0:
-            $scope.toggle_store_in_user(item);
-            break;
-          case 1:
-            ref = window.open(item.website, '_blank', 'location=yes');
-        }
-        return true;
+    var actionsheet_cb, hideSheet, ref1, ref2, ref3;
+    actionsheet_cb = function(index) {
+      var ref;
+      switch (index) {
+        case 0:
+          $scope.toggle_store_in_user(item);
+          break;
+        case 1:
+          ref = window.open(item.website, '_system', 'location=yes');
       }
-    });
+      return true;
+    };
+    if ((ref1 = window.plugins) != null ? ref1.actionsheet : void 0) {
+      return window.plugins.actionsheet.show({
+        buttonLabels: [(ref2 = item._id, indexOf.call($scope.user.stores, ref2) < 0) && 'Add to My Stores' || 'Remove from My Stores', "Go to store website"],
+        title: "Modify store",
+        addCancelButtonWithLabel: "Cancel",
+        androidEnableCancelButton: true,
+        winphoneEnableCancelButton: true
+      }, function(index) {
+        actionsheet_cb(index - 1);
+        return $scope.$apply();
+      });
+    } else {
+      return hideSheet = $ionicActionSheet.show({
+        buttons: [
+          {
+            text: (ref3 = item._id, indexOf.call($scope.user.stores, ref3) < 0) && 'Add to My Stores' || 'Remove from My Stores'
+          }, {
+            text: 'Go to store website'
+          }
+        ],
+        titleText: 'Modify Store',
+        cancelText: 'Cancel',
+        cancel: function() {
+          return hideSheet();
+        },
+        buttonClicked: actionsheet_cb
+      });
+    }
   };
 });

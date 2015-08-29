@@ -8,6 +8,7 @@ angular.module 'starter', [
   'ionic'
   'jett.ionic.filter.bar'
   'ngTagsInput'
+  'ngCordova'
   'starter.controllers'
   'starter.services'
   'starter.directives'

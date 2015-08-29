@@ -1,7 +1,10 @@
 <ion-view view-title="Choose Stores">
   <ion-content>
 
-    <div class="item item-divider">My Stores</div>
+    <!-- wait for the stuff to come in -->
+    <loading-spinner complete="my_stores"></loading-spinner>
+
+    <div class="item item-divider" ng-show="my_stores">My Stores</div>
 
     <ion-item ng-if="my_stores.length === 0">
       <h2>Click on a store below to add it up here!</h2>
@@ -17,7 +20,7 @@
       <p>{{store.desc}}</p>
     </ion-item>
 
-    <div class="item item-divider">Other Stores</div>
+    <div class="item item-divider" ng-show="other_stores">Other Stores</div>
 
     <ion-item
       ng-repeat="store in other_stores"

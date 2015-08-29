@@ -3,10 +3,21 @@
 
   <ion-header-bar class="bar-new-item">
     <div class="title title-center header-item">Add New</div>
+
+    <label class="item-input-wrapper">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input
+        type="text"
+        placeholder="Search for a new item"
+        style="background: transparent;"
+        ng-model="add_search"
+        ng-change="on_search_change(add_search)"
+      />
+      {{add_search}}
+    </label>
+
     <div class="buttons buttons-right">
       <span class="right-buttons">
-        <button ng-click="open_search()" class="button button-icon icon
-          ion-search activated"></button>
         <button ng-click="close_add_modal()" class="button button-icon icon
           ion-close-round activated"></button>
       </span>
@@ -23,12 +34,17 @@
     <div class="list">
 
       <!-- show the matches -->
-      <a class="item item-icon-left" ng-repeat="item in add_items track by $index"
-        ng-click="add_item_to_bag(item)">
+      <a
+        class="item item-icon-left"
+        collection-repeat="item in add_items track by $index"
+        item-height="55px"
+        item-width="100%"
+        ng-click="add_item_to_bag(item)"
+      >
         <i class="icon ion-ios-plus-outline"></i>
         <p>
           {{item.name}}
-          <span class="pull-right">{{item.price | currency}}</span>
+          <span class="pull-right">{{get_lowest_price(item) | currency}}</span>
         </p>
       </a>
 
