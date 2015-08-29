@@ -239,6 +239,8 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
   };
 });
 
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
 angular.module('starter.services', []).factory('AllItems', function(socket) {
   var root;
   root = {};
@@ -404,11 +406,10 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       possible_stores = _.mapObject(item.stores, function(v, k) {
         return v.price;
       });
-      pickable_stores = _(possible_stores).chain().map(function(ea) {
-        return _.find(user.stores, function(eb) {
-          return ea.id === eb.id;
-        });
-      }).compact().value();
+      pickable_stores = _.mapObject(possible_stores, function(v, ea) {
+        return indexOf.call(user.stores, ea) >= 0;
+      });
+      pickable_stores = _.keys(pickable_stores);
       price = _.min(pickable_stores.map(function(s) {
         return item.stores[s].price;
       })) || _.min(_.mapObject(item.stores, function(v, k) {
@@ -1380,31 +1381,45 @@ angular.module('starter.controllers.stores_picker', []).controller('StorePickerC
     return $scope.sort_stores($scope.stores);
   };
   return $scope.item_details = function(item) {
-    var hideSheet, ref1;
-    return hideSheet = $ionicActionSheet.show({
-      buttons: [
-        {
-          text: (ref1 = item._id, indexOf.call($scope.user.stores, ref1) < 0) && 'Add to My Stores' || 'Remove from My Stores'
-        }, {
-          text: 'Go to store website'
-        }
-      ],
-      titleText: 'Modify Store',
-      cancelText: 'Cancel',
-      cancel: function() {
-        return hideSheet();
-      },
-      buttonClicked: function(index) {
-        var ref;
-        switch (index) {
-          case 0:
-            $scope.toggle_store_in_user(item);
-            break;
-          case 1:
-            ref = window.open(item.website, '_system', 'location=yes');
-        }
-        return true;
+    var actionsheet_cb, hideSheet, ref1, ref2, ref3;
+    actionsheet_cb = function(index) {
+      var ref;
+      switch (index) {
+        case 0:
+          $scope.toggle_store_in_user(item);
+          break;
+        case 1:
+          ref = window.open(item.website, '_system', 'location=yes');
       }
-    });
+      return true;
+    };
+    if ((ref1 = window.plugins) != null ? ref1.actionsheet : void 0) {
+      return window.plugins.actionsheet.show({
+        buttonLabels: [(ref2 = item._id, indexOf.call($scope.user.stores, ref2) < 0) && 'Add to My Stores' || 'Remove from My Stores', "Go to store website"],
+        title: "Modify store",
+        addCancelButtonWithLabel: "Cancel",
+        androidEnableCancelButton: true,
+        winphoneEnableCancelButton: true
+      }, function(index) {
+        actionsheet_cb(index - 1);
+        return $scope.$apply();
+      });
+    } else {
+      return hideSheet = $ionicActionSheet.show({
+        buttons: [
+          {
+            text: (ref3 = item._id, indexOf.call($scope.user.stores, ref3) < 0) && 'Add to My Stores' || 'Remove from My Stores'
+          }, {
+            text: 'Go to store website'
+          }
+        ],
+        titleText: 'Modify Store',
+        cancelText: 'Cancel',
+        cancel: function() {
+          return hideSheet();
+        },
+        buttonClicked: actionsheet_cb
+      });
+    }
   };
 });

@@ -42,27 +42,47 @@ angular.module 'starter.controllers.stores_picker', []
 
   # item detail "popup" from the bottom of the screen
   $scope.item_details = (item) ->
-    hideSheet = $ionicActionSheet.show
-      buttons: [
-        text: item._id not in $scope.user.stores and 'Add to My Stores' or 'Remove from My Stores'
-      ,
-        text: 'Go to store website'
-      ],
-      titleText: 'Modify Store',
-      cancelText: 'Cancel',
-      cancel: -> hideSheet()
-      buttonClicked: (index) ->
-        switch index
 
-          # toggle wether store is in the list of "my stores"
-          when 0
-            $scope.toggle_store_in_user item
+    actionsheet_cb = (index) ->
+      switch index
 
-          # open store website
-          when 1
-            ref = window.open item.website, '_system', 'location=yes'
+        # toggle wether store is in the list of "my stores"
+        when 0
+          $scope.toggle_store_in_user item
 
-        return true
+        # open store website
+        when 1
+          ref = window.open item.website, '_system', 'location=yes'
+
+      return true
+
+    # prefer the native action sheet.
+    if window.plugins?.actionsheet
+      window.plugins.actionsheet.show
+          buttonLabels: [
+            item._id not in $scope.user.stores and 'Add to My Stores' or 'Remove from My Stores'
+            "Go to store website"
+          ],
+          title: "Modify store",
+          addCancelButtonWithLabel: "Cancel",
+          androidEnableCancelButton: true,
+          winphoneEnableCancelButton: true
+      , (index) ->
+        actionsheet_cb index-1
+        $scope.$apply()
+    
+    # but fallback onto ionic's
+    else
+      hideSheet = $ionicActionSheet.show
+        buttons: [
+          text: item._id not in $scope.user.stores and 'Add to My Stores' or 'Remove from My Stores'
+        ,
+          text: 'Go to store website'
+        ],
+        titleText: 'Modify Store',
+        cancelText: 'Cancel',
+        cancel: -> hideSheet()
+        buttonClicked: actionsheet_cb
 
 
   # $scope.stores = [
