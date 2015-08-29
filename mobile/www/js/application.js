@@ -567,7 +567,7 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores) {
+angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs) {
   socket.emit('bag:index');
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
@@ -820,6 +820,16 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
           'All Items': items
         };
         break;
+    }
+  };
+  $scope.show_filter_help = function(sort) {
+    switch (sort) {
+      case 'tags':
+        return $cordovaDialogs.alert("Category Filter\nEach item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc.", "Filter Help", 'Ok');
+      case 'tags_store':
+        return $cordovaDialogs.alert("Category Filter\nEach item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc. However, recipes are broken down into their elemental foodstuffs, so you can check off each item as you buy it.", "Filter Help", 'Ok');
+      case 'completion':
+        return $cordovaDialogs.alert("Checked Filter\nSort items depending on if an item is checked.", "Filter Help", 'Ok');
     }
   };
   $scope.change_sort = function(new_sort_name) {

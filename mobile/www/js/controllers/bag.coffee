@@ -15,6 +15,7 @@ angular.module('starter.controllers.tab_bag', [])
   calculateTotal
   pickPrice
   stores
+  $cordovaDialogs
 ) ->
   # get all bags
   # this fires once at the load of the controller, but also repeadedly when
@@ -307,6 +308,31 @@ angular.module('starter.controllers.tab_bag', [])
         return { 'All Items': items }
         break
     return
+
+  # show help for a specified filter
+  $scope.show_filter_help = (sort) ->
+    switch sort
+
+      when 'tags'
+        $cordovaDialogs.alert """
+        Category Filter
+        Each item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc.
+        """, "Filter Help", 'Ok'
+
+      when 'tags_store'
+        $cordovaDialogs.alert """
+        Category Filter
+        Each item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc. However, recipes are broken down into their elemental foodstuffs, so you can check off each item as you buy it.
+        """, "Filter Help", 'Ok'
+
+
+      when 'completion'
+        $cordovaDialogs.alert """
+        Checked Filter
+        Sort items depending on if an item is checked.
+        """, "Filter Help", 'Ok'
+
+
 
   # update the old sort to the specified one
   $scope.change_sort = (new_sort_name) ->
