@@ -38,27 +38,11 @@
     on-refresh="do_refresh()">
   </ion-refresher>
 
-    <!-- slide boxes. Each one contains a bag. -->
-    <!-- <ion&#45;slide&#45;box on&#45;slide&#45;changed="change_active_bag($index)" show&#45;pager="false"> -->
-
-      <!-- 
-      the main "bag"
-      this shows all the individual items
-      -->
-      <!-- <ion&#45;slide> -->
-      <!--   <checkable&#45;item -->
-      <!--     item="item" -->
-      <!--     update="check_bag_item" -->
-      <!--   </checkable&#45;item> -->
-      <!-- </ion&#45;slide> -->
-
-      <!-- each recipe bag -->
-      <!-- <ion&#45;slide> -->
-        <!-- <div ng&#45;controller="RecipeListCtrl"> -->
-
+        <!-- wait for the stuff to come in -->
+        <loading-spinner complete="bag"></loading-spinner>
 
         <!-- Nothing in bag? -->
-        <div class="grayed item arrow-container" ng-if="get_all_content(bag).length === 0">
+        <div class="grayed item arrow-container" ng-if="bag && get_all_content(bag).length === 0">
 
           <img src="img/arrow_filter.png" class="arrow arrow-filter" />
           <img src="img/arrow_add.png" class="arrow arrow-add" />
