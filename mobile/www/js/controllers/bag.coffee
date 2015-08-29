@@ -14,6 +14,7 @@ angular.module('starter.controllers.tab_bag', [])
   searchItem
   calculateTotal
   pickPrice
+  stores
 ) ->
   # get all bags
   # this fires once at the load of the controller, but also repeadedly when
@@ -52,6 +53,11 @@ angular.module('starter.controllers.tab_bag', [])
 
   # pull to refresh handler
   $scope.do_refresh = -> socket.emit 'bag:index'
+
+  # listen for all stores
+  # once resolved, we'll use this to display the store next to the price
+  stores.then (s) -> $scope.stores = s
+  $scope.stores = {}
 
   ###
   # Create new item
@@ -281,18 +287,17 @@ angular.module('starter.controllers.tab_bag', [])
       # sort by sort tags, and by store
       when 'tags_store'
         persistant.sort_opts = $scope.sort_opts = checks: true
-        return _.groupBy($scope.flatten_bag(), (i) ->
+        return _.groupBy $scope.flatten_bag(), (i) ->
           tag_sort = _.find(i.tags, (x) ->
             x.indexOf('sort-') != -1
           ) or 'No sort'
 
           if i.store
-            #TODO get store name and don't just use its id
-            i.store + ": "+ tag_sort
+            # lookup store id and use that.
+            $scope.stores[i.store].name + ": "+ tag_sort
           else
-            tag_sort
+            "No Store: #{tag_sort}"
 
-        )
 
 
 

@@ -567,7 +567,7 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice) {
+angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores) {
   socket.emit('bag:index');
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
@@ -592,6 +592,10 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.do_refresh = function() {
     return socket.emit('bag:index');
   };
+  stores.then(function(s) {
+    return $scope.stores = s;
+  });
+  $scope.stores = {};
 
   /*
    * Create new item
@@ -805,9 +809,9 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
             return x.indexOf('sort-') !== -1;
           }) || 'No sort';
           if (i.store) {
-            return i.store + ": " + tag_sort;
+            return $scope.stores[i.store].name + ": " + tag_sort;
           } else {
-            return tag_sort;
+            return "No Store: " + tag_sort;
           }
         });
       default:
