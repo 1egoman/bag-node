@@ -16,19 +16,7 @@
 
           <!-- quantity box -->
           <span ng-hide="sortOpts.no_quantity">
-            <input
-              type="number"
-              placeholder="Qty"
-              style="width: 2em; display: inline; margin-top: -4px; direction: rtl;"
-
-              min="1"
-              max="99"
-              oninput="this.value=this.value.slice(0, 2)"
-
-              ng-model="recipe.quantity"
-              ng-change="change(recipe)"
-              ng-disabled="!change"
-            />
+            <span>{{recipe.quantity}}</span>
             @&nbsp;
           </span>
           <span>{{calculate_total(recipe) | currency}}</span>
