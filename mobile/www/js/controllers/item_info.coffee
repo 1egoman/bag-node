@@ -23,6 +23,12 @@ angular.module('starter.controllers.item_info', [])
     else
       'recipeinfo'
 
+  # if we are a recipe, log a "click" to the backend
+  $scope.click_if_recipe = ->
+    if $scope.get_item_or_recipe() is 'recipeinfo'
+      socket.emit "user:click", recipe: $scope.item._id
+
+
 
   # what is our store?
   # once resolved, we'll use this to display the store next to the price
@@ -50,11 +56,6 @@ angular.module('starter.controllers.item_info', [])
 
 
 
-  if $scope.get_item_or_recipe() is 'recipeinfo'
-    # since we are a recipe, log a "click" to the backend
-    socket.emit "user:click", recipe: $scope.item._id
-
-
   # an item in the bag, so lets find it within the bag
   user.then (usr) ->
     socket.emit "bag:index", user: usr._id
@@ -77,11 +78,13 @@ angular.module('starter.controllers.item_info', [])
             
             # lets update the store info while we're at it
             $scope.get_store_details()
+            $scope.click_if_recipe()
 
             break
           else if needle
             to_level needle
       to_level()
+
 
       # lastly, if we don't have anthing at this point it isn't an item. Let's
       # just look it up.
@@ -92,6 +95,7 @@ angular.module('starter.controllers.item_info', [])
           # methods that will be called below that don't acctually do anything in
           # this mode.
           $scope.get_store_details = ->
+          $scope.click_if_recipe()
 
 
 

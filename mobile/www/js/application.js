@@ -874,6 +874,13 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       return 'recipeinfo';
     }
   };
+  $scope.click_if_recipe = function() {
+    if ($scope.get_item_or_recipe() === 'recipeinfo') {
+      return socket.emit("user:click", {
+        recipe: $scope.item._id
+      });
+    }
+  };
   $scope.get_store_details = function() {
     var ref, ref1;
     if (((ref = $scope.item) != null ? ref.store : void 0) === "custom") {
@@ -894,11 +901,6 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       };
     }
   };
-  if ($scope.get_item_or_recipe() === 'recipeinfo') {
-    socket.emit("user:click", {
-      recipe: $scope.item._id
-    });
-  }
   user.then(function(usr) {
     socket.emit("bag:index", {
       user: usr._id
@@ -921,6 +923,7 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
           if (needle && needle._id === $stateParams.id) {
             $scope.item = needle;
             $scope.get_store_details();
+            $scope.click_if_recipe();
             break;
           } else if (needle) {
             results.push(to_level(needle));
@@ -934,7 +937,8 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
       if (!$scope.item) {
         return AllItems.by_id($scope, $stateParams.id, function(val) {
           $scope.item = val;
-          return $scope.get_store_details = function() {};
+          $scope.get_store_details = function() {};
+          return $scope.click_if_recipe();
         });
       }
     });
