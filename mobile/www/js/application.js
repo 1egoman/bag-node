@@ -1201,8 +1201,9 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
 angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
   socket.emit("pick:index");
   socket.on("pick:index:callback", function(payload) {
-    $scope.picks = payload.data.picks;
-    return console.log($scope.picks);
+    if (payload.data) {
+      return $scope.picks = payload.data.picks;
+    }
   });
   $scope.to_user_recipes = function() {
     return $state.go("tab.recipes");
