@@ -10,6 +10,7 @@ _ = require "underscore"
 bcrypt = require "bcrypt"
 async = require "async"
 User = require "../models/user_model"
+Pick = require "../models/pick_model"
 Bag = require "../models/bag_model"
 Store = require "../models/store_model"
 
@@ -119,9 +120,17 @@ exports.create = (req, res) ->
                     status: "bag.error.user.create"
                     error: err
                 else
-                  res.send
-                    status: "bag.success.user.create"
-                    data: user
+                  # and, generate a picks list....
+                  picks = new Pick user: user._id
+                  picks.save (err) ->
+                    if err
+                      res.send
+                        status: "bag.error.user.create"
+                        error: err
+                    else
+                      res.send
+                        status: "bag.success.user.create"
+                        data: user
       ], (err) ->
         if err
           res.send

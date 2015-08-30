@@ -6,6 +6,7 @@ angular.module('starter.controllers.tab_picks', [])
   persistant,
   $state,
   $ionicPopup
+  socket
 ) ->
   # With the new view caching in Ionic, Controllers are only called
   # when they are recreated or on app start, instead of every page change.
@@ -16,24 +17,29 @@ angular.module('starter.controllers.tab_picks', [])
   #});
   #
  
-  picks = [
-    {
-        "_id": "54c50a4a901b060c006372d4",
-        "name": "pumpkin seeds",
-        "desc": "raw seeds, lb.",
-        "price": 5.00,
-        "item_type": {
-            "wegmans": "bulk"
-        },
-        "contents": [],
-        "contentsLists": [],
-        "__v": 0
-    }
-  ]
+  # picks = [
+  #   {
+  #       "_id": "54c50a4a901b060c006372d4",
+  #       "name": "pumpkin seeds",
+  #       "desc": "raw seeds, lb.",
+  #       "price": 5.00,
+  #       "item_type": {
+  #           "wegmans": "bulk"
+  #       },
+  #       "contents": [],
+  #       "contentsLists": [],
+  #       "__v": 0
+  #   }
+  # ]
+
+  socket.emit "pick:index"
+  socket.on "pick:index:callback", (payload) ->
+    $scope.picks = payload.data.picks
+    console.log $scope.picks
 
   # add picks to controller
-  do (picks) ->
-    $scope.picks = _.sortBy picks, (p) -> p.name
+  # do (picks) ->
+  #   $scope.picks = _.sortBy picks, (p) -> p.name
 
   # go to "my recipes" view
   $scope.to_user_recipes = -> $state.go "tab.recipes"

@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://api.getbag.io";
+window.host = "http://192.168.1.15:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -1194,27 +1194,12 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
   return $scope.user = persistant.new_user || {};
 });
 
-angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {
-  var picks;
-  picks = [
-    {
-      "_id": "54c50a4a901b060c006372d4",
-      "name": "pumpkin seeds",
-      "desc": "raw seeds, lb.",
-      "price": 5.00,
-      "item_type": {
-        "wegmans": "bulk"
-      },
-      "contents": [],
-      "contentsLists": [],
-      "__v": 0
-    }
-  ];
-  (function(picks) {
-    return $scope.picks = _.sortBy(picks, function(p) {
-      return p.name;
-    });
-  })(picks);
+angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
+  socket.emit("pick:index");
+  socket.on("pick:index:callback", function(payload) {
+    $scope.picks = payload.data.picks;
+    return console.log($scope.picks);
+  });
   $scope.to_user_recipes = function() {
     return $state.go("tab.recipes");
   };

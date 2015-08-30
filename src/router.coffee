@@ -14,6 +14,8 @@ tags_ctrl = require "./controllers/tags_controller"
 auth_ctrl = require "./controllers/auth_controller"
 store_ctrl = require "./controllers/stores_controller"
 items_ctrl = require "./controllers/items_controller"
+picks_ctrl = require "./controllers/pick_controller"
+
 chalk = require "chalk"
 pjson = require "../package.json"
 
@@ -56,6 +58,10 @@ exports.routes = routes =
 
   store:
     controller: store_ctrl
+    routes: ["index"]
+
+  pick:
+    controller: picks_ctrl
     routes: ["index"]
 
 exports.websocket = (app) ->
