@@ -91,7 +91,6 @@ angular.module('starter.controllers.tab_bag', [])
   # close the add modal
   $scope.close_add_modal = ->
     $scope.modal.hide()
-    $scope.hide_search and $scope.hide_search()
 
   # cleanup the modal when we're done with it
   $scope.$on '$destroy', ->
@@ -358,4 +357,3 @@ angular.module('starter.controllers.tab_bag', [])
   $scope.start_index = 0
   $scope.add_items_done = false
   $scope.amount_in_page = 25
-  $scope.add_search = ""

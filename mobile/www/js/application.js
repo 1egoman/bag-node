@@ -630,8 +630,7 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
     });
   };
   $scope.close_add_modal = function() {
-    $scope.modal.hide();
-    return $scope.hide_search && $scope.hide_search();
+    return $scope.modal.hide();
   };
   $scope.$on('$destroy', function() {
     return $scope.modal.remove();
@@ -864,8 +863,7 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.add_items = [];
   $scope.start_index = 0;
   $scope.add_items_done = false;
-  $scope.amount_in_page = 25;
-  return $scope.add_search = "";
+  return $scope.amount_in_page = 25;
 });
 
 angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
