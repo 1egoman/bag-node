@@ -34,8 +34,9 @@ angular.module('starter.controllers.tab_picks', [])
 
   socket.emit "pick:index"
   socket.on "pick:index:callback", (payload) ->
-    $scope.picks = payload.data.picks
-    console.log $scope.picks
+    if payload.data
+      $scope.picks = payload.data.picks
+      console.log $scope.picks
 
   # add picks to controller
   # do (picks) ->
