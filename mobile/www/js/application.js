@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://192.168.1.15:8000";
+window.host = "http://api.getbag.io";
 
 auth_module = angular.module('starter.authorization', []);
 
