@@ -402,13 +402,13 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   return calculate_total;
 }).factory('pickPrice', function() {
   return function(item, user) {
-    var pickable_stores, possible_stores, price, store;
+    var pickable_stores, possible_stores, price, ref, store;
     if (user == null) {
       user = window.user;
     }
-    if (item.store && item.stores && item.stores[item.store]) {
+    if (item.store && item.stores && item.stores[item.store] && (ref = item.store, indexOf.call(user.stores, ref) >= 0)) {
       return item.stores[item.store].price;
-    } else if (item.stores && user) {
+    } else if (item.stores && user && user.stores.length) {
       possible_stores = _.mapObject(item.stores, function(v, k) {
         return v.price;
       });
@@ -426,9 +426,8 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         item.store = store;
       }
       return price;
-    } else if (item.price) {
-      return parseFloat(item.price);
     } else {
+      item.store = null;
       return 0;
     }
   };

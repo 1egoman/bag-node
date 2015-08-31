@@ -12,7 +12,7 @@
 
 
         <!-- price for the entire recipe -->
-        <span class="pull-right">
+        <span class="pull-right" ng-show="recipe.quantity && calculate_total(recipe) !== 0">
 
           <!-- quantity box -->
           <span ng-hide="sortOpts.no_quantity">
