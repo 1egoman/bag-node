@@ -92,6 +92,11 @@ exports.create = (req, res) ->
             .join ''
           cb null, user_params
 
+        # set plan = 0
+        (user_params, cb) ->
+          user_params.plan = 0
+          cb null, user_params
+
         # if no stores were saved, just inject one to start with.
         # new users start with whole foods, by default
         (user_params, cb) ->
