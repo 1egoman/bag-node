@@ -53,11 +53,11 @@ exports.create = (req, res) ->
       foodstuff_params.verified = false
 
       # private recipe
-      if foodstuff_params.private and user.plan > 0
+      if foodstuff_params.private and req.user.plan > 0
         foodstuff_params.private = true
 
       # unpaid users cannot make private recipes
-      else if foodstuff_params.private
+      else
         foodstuff_params.private = false
 
       # create the foodstuff
@@ -127,8 +127,14 @@ exports.destroy = (req, res) ->
 # search for a foodstuff using the given search query (req.params.foodstuff)
 exports.search = (req, res) ->
   Foodstuff.find
-    name:
-      $regex: new RegExp req.params.foodstuff, 'i'
+    $or: [
+      private: false
+      name: $regex: new RegExp req.params.foodstuff, 'i'
+    ,
+      user: req.user._id
+      private: true
+      name: $regex: new RegExp req.params.foodstuff, 'i'
+    ]
   , (err, data) ->
     if err
       res.send

@@ -14,6 +14,7 @@ exports.search = (req, res) ->
       params:
         list: item
         foodstuff: item
+      user: req.user
     ,
       send: (data) ->
         if data.status.indexOf('error') isnt -1

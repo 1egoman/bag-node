@@ -1046,12 +1046,13 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
 
 angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery) {
   $scope.predefined_tags = getTagsForQuery;
-  $scope.create_foodstuff = function(name, price, tags, desc) {
+  $scope.create_foodstuff = function(name, price, tags, desc, priv) {
     var foodstuff;
     foodstuff = {
       name: name,
       price: price,
       desc: desc,
+      "private": priv || false,
       tags: (tags || []).map(function(i) {
         return i.text;
       })
@@ -1214,7 +1215,7 @@ angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', func
   };
 });
 
-angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup) {
+angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, user) {
 
   /*
    * Choose to add a new foodstuff or a recipe
@@ -1290,9 +1291,12 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
   socket.emit('list:index', {
     user: 'me'
   });
-  return $scope.$on('$destroy', function() {
+  $scope.$on('$destroy', function() {
     $scope.foodstuff_or_recipe_modal.remove();
     return $scope.foodstuff_modal.remove();
+  });
+  return user.then(function(u) {
+    return $scope.user = u;
   });
 });
 

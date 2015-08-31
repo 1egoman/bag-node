@@ -11,11 +11,12 @@ angular.module('starter.controllers.new_foodstuff', [])
   $scope.predefined_tags = getTagsForQuery
 
   # create a new foodstuff
-  $scope.create_foodstuff = (name, price, tags, desc) ->
+  $scope.create_foodstuff = (name, price, tags, desc, priv) ->
     foodstuff =
       name: name
       price: price
       desc: desc
+      private: priv or false
       tags: (tags or []).map((i) ->
         i.text
       )

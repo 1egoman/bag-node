@@ -6,6 +6,7 @@ angular.module('starter.controllers.tab_recipe', [])
   persistant,
   $state,
   $ionicPopup
+  user
 ) ->
   # With the new view caching in Ionic, Controllers are only called
   # when they are recreated or on app start, instead of every page change.
@@ -92,3 +93,5 @@ angular.module('starter.controllers.tab_recipe', [])
   $scope.$on '$destroy', ->
     $scope.foodstuff_or_recipe_modal.remove()
     $scope.foodstuff_modal.remove()
+
+  user.then (u) -> $scope.user = u

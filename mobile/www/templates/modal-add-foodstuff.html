@@ -37,14 +37,21 @@
           class="no-resize"></textarea>
       </label>
 
+      <label ng-if="user.plan > 0">
+         <div class="track">
+           <div class="handle"></div>
+         </div>
+      </label>
+      <input type="checkbox" ng-model="new_foodstuff_priv" />
+
       <div class="padding">
         <button
           class="button button-block button-royal activated"
           ng-disabled="!( new_foodstuff_name && new_foodstuff_desc &&
           new_foodstuff_price.toString().length > 0 )"
           ng-click="create_foodstuff(new_foodstuff_name, new_foodstuff_price,
-          new_foodstuff_tags, new_foodstuff_desc)"
-        >Create Foodstuff request
+          new_foodstuff_tags, new_foodstuff_desc, new_foodstuff_priv || false)"
+          >Create Foodstuff request {{new_foodstuff_priv}}
         </button>
       </div>
     </div>
