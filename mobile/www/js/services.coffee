@@ -166,11 +166,11 @@ angular.module('starter.services', [])
     # a store was specified
     # if we don't have to calculate the store, we may as well use the one
     # specified.
-    if item.store and item.stores and item.stores[item.store]
+    if item.store and item.stores and item.stores[item.store] and item.store in user.stores
       item.stores[item.store].price
 
      # we'll pick the best store with the lowest price from a user's stores
-    else if item.stores and user
+    else if item.stores and user and user.stores.length
       possible_stores = _.mapObject item.stores, (v, k) -> v.price
 
       # do an intersection (of objects!) between the item's stores and the
@@ -195,12 +195,8 @@ angular.module('starter.services', [])
 
       price
 
-
-    # a price was specified, and in that case we don't care about any
-    # store-stuff
-    else if item.price
-      parseFloat item.price
     else
+      item.store = null
       0 # well, we give up?
 
 
