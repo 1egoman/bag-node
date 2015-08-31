@@ -62,6 +62,9 @@ exports.create = (req, res) ->
       # private recipe
       if foodstuff_params.private and req.user.plan > 0
         foodstuff_params.private = true
+        
+        # format the price with a custom store
+        foodstuff_params.stores = custom: price: foodstuff_params.price
 
       # unpaid users cannot make private recipes
       else
