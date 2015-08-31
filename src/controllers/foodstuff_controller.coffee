@@ -11,7 +11,14 @@ Foodstuff = require "../models/foodstuff_model"
 # get a foodstuff of all lists
 # GET /foodstuff
 exports.index = (req, res) ->
-  query = Foodstuff.find({}).sort date: -1
+  query = Foodstuff.find
+    $or: [
+      private: false
+    ,
+      user: req.user._id
+      private: true
+    ]
+  .sort date: -1
 
   # limit quantity and a start index
   query = query.skip parseInt req.body.start if req.body?.start
@@ -41,7 +48,17 @@ exports.create = (req, res) ->
     foodstuff_params.price? and \
     foodstuff_params.tags?
       foodstuff_params.user = req.user._id if req.user?._id
+
+      # if the foodstuff is public, make it unverified
       foodstuff_params.verified = false
+
+      # private recipe
+      if foodstuff_params.private and user.plan > 0
+        foodstuff_params.private = true
+
+      # unpaid users cannot make private recipes
+      else if foodstuff_params.private
+        foodstuff_params.private = false
 
       # create the foodstuff
       foodstuff = new Foodstuff foodstuff_params

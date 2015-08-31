@@ -21,5 +21,7 @@ foodstuff = mongoose.Schema
 
   stores: Object
 
+  private: Boolean
+
 
 module.exports = mongoose.model 'foodstuff', foodstuff
