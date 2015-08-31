@@ -9,14 +9,15 @@ exports.items = [list_ctrl, foodstuff_ctrl]
 
 
 # search for specified item attributes
-exports.show = (req, res) ->
+exports.index = (req, res) ->
   item = req.params.item
 
   async.map exports.items, (i, cb) ->
-    i.chow
+    i.index
       params:
         list: item
         foodstuff: item
+      body: req.body
       user: req.user
     ,
       send: (data) ->
@@ -25,6 +26,7 @@ exports.show = (req, res) ->
         else
           cb null, data.data
   , (err, data) ->
+    console.log err, data
     if err
       res.send
         status: "bag.error.item.show"

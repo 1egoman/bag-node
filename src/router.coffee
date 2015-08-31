@@ -54,7 +54,7 @@ exports.routes = routes =
   # routes that touch both foodstuffs and lists
   item:
     controller: items_ctrl
-    routes: ["show", "search"]
+    routes: ["index", "search"]
 
   store:
     controller: store_ctrl

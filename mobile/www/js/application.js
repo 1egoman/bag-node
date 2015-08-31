@@ -1275,7 +1275,7 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
       id: item._id
     });
   };
-  socket.on('list:index:callback', function(evt) {
+  socket.on('item:index:callback', function(evt) {
     return $scope.my_recipes = evt.data;
   });
 
@@ -1288,15 +1288,15 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
     no_delete: true
   };
   $scope.my_recipes = [];
-  socket.emit('list:index', {
-    user: 'me'
-  });
-  $scope.$on('$destroy', function() {
-    $scope.foodstuff_or_recipe_modal.remove();
-    return $scope.foodstuff_modal.remove();
-  });
   return user.then(function(u) {
-    return $scope.user = u;
+    $scope.user = u;
+    socket.emit('item:index', {
+      user: 'me'
+    });
+    return $scope.$on('$destroy', function() {
+      $scope.foodstuff_or_recipe_modal.remove();
+      return $scope.foodstuff_modal.remove();
+    });
   });
 });
 

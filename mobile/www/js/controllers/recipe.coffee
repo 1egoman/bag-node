@@ -78,7 +78,7 @@ angular.module('starter.controllers.tab_recipe', [])
   $scope.more_info = (item) ->
     $state.go 'tab.recipeinfo', id: item._id
 
-  socket.on 'list:index:callback', (evt) ->
+  socket.on 'item:index:callback', (evt) ->
     $scope.my_recipes = evt.data
 
   ###
@@ -89,9 +89,11 @@ angular.module('starter.controllers.tab_recipe', [])
     no_quantity: true
     no_delete: true
   $scope.my_recipes = []
-  socket.emit 'list:index', user: 'me'
-  $scope.$on '$destroy', ->
-    $scope.foodstuff_or_recipe_modal.remove()
-    $scope.foodstuff_modal.remove()
 
-  user.then (u) -> $scope.user = u
+  user.then (u) ->
+    $scope.user = u
+    socket.emit 'item:index', user: 'me'
+    $scope.$on '$destroy', ->
+      $scope.foodstuff_or_recipe_modal.remove()
+      $scope.foodstuff_modal.remove()
+

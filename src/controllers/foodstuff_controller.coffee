@@ -24,6 +24,13 @@ exports.index = (req, res) ->
   query = query.skip parseInt req.body.start if req.body?.start
   query = query.limit parseInt req.body.limit if req.body?.limit
   
+  # limit by user
+  if req.body?.user
+    if req.body.user is "me"
+      query = query.find user: req.user._id
+    else
+      query = query.find user: req.body.user
+
   query.exec (err, data) ->
     if err
       res.send
