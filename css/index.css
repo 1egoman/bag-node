@@ -2982,44 +2982,68 @@ select[multiple].input-lg, .input-group-lg > select[multiple].form-control,
     color: #5bc0de;
     background-color: #fff; }
 
-.btn-warning {
+.btn-warning, .paid-plans .plan .btn {
   color: #fff;
   background-color: #f0ad4e;
   border-color: #eea236; }
   .btn-warning:hover,
+  .paid-plans .plan .btn:hover,
   .btn-warning:focus,
+  .paid-plans .plan .btn:focus,
   .btn-warning.focus,
+  .paid-plans .plan .focus.btn,
   .btn-warning:active,
+  .paid-plans .plan .btn:active,
   .btn-warning.active,
-  .open > .btn-warning.dropdown-toggle {
+  .paid-plans .plan .active.btn,
+  .open > .btn-warning.dropdown-toggle, .paid-plans .plan .open > .dropdown-toggle.btn {
     color: #fff;
     background-color: #ec971f;
     border-color: #d58512; }
   .btn-warning:active,
+  .paid-plans .plan .btn:active,
   .btn-warning.active,
-  .open > .btn-warning.dropdown-toggle {
+  .paid-plans .plan .active.btn,
+  .open > .btn-warning.dropdown-toggle, .paid-plans .plan .open > .dropdown-toggle.btn {
     background-image: none; }
   .btn-warning.disabled,
+  .paid-plans .plan .disabled.btn,
   .btn-warning.disabled:hover,
+  .paid-plans .plan .disabled.btn:hover,
   .btn-warning.disabled:focus,
+  .paid-plans .plan .disabled.btn:focus,
   .btn-warning.disabled.focus,
+  .paid-plans .plan .disabled.focus.btn,
   .btn-warning.disabled:active,
+  .paid-plans .plan .disabled.btn:active,
   .btn-warning.disabled.active,
+  .paid-plans .plan .disabled.active.btn,
   .btn-warning[disabled],
+  .paid-plans .plan [disabled].btn,
   .btn-warning[disabled]:hover,
+  .paid-plans .plan [disabled].btn:hover,
   .btn-warning[disabled]:focus,
+  .paid-plans .plan [disabled].btn:focus,
   .btn-warning[disabled].focus,
+  .paid-plans .plan [disabled].focus.btn,
   .btn-warning[disabled]:active,
+  .paid-plans .plan [disabled].btn:active,
   .btn-warning[disabled].active,
+  .paid-plans .plan [disabled].active.btn,
   fieldset[disabled] .btn-warning,
-  fieldset[disabled] .btn-warning:hover,
-  fieldset[disabled] .btn-warning:focus,
-  fieldset[disabled] .btn-warning.focus,
-  fieldset[disabled] .btn-warning:active,
-  fieldset[disabled] .btn-warning.active {
+  fieldset[disabled] .paid-plans .plan .btn,
+  .paid-plans .plan fieldset[disabled] .btn, fieldset[disabled] .btn-warning:hover,
+  fieldset[disabled] .paid-plans .plan .btn:hover,
+  .paid-plans .plan fieldset[disabled] .btn:hover, fieldset[disabled] .btn-warning:focus,
+  fieldset[disabled] .paid-plans .plan .btn:focus,
+  .paid-plans .plan fieldset[disabled] .btn:focus, fieldset[disabled] .btn-warning.focus,
+  fieldset[disabled] .paid-plans .plan .focus.btn,
+  .paid-plans .plan fieldset[disabled] .focus.btn, fieldset[disabled] .btn-warning:active,
+  fieldset[disabled] .paid-plans .plan .btn:active,
+  .paid-plans .plan fieldset[disabled] .btn:active, fieldset[disabled] .btn-warning.active, fieldset[disabled] .paid-plans .plan .active.btn, .paid-plans .plan fieldset[disabled] .active.btn {
     background-color: #f0ad4e;
     border-color: #eea236; }
-  .btn-warning .badge {
+  .btn-warning .badge, .paid-plans .plan .btn .badge {
     color: #f0ad4e;
     background-color: #fff; }
 
@@ -3093,7 +3117,7 @@ select[multiple].input-lg, .input-group-lg > select[multiple].form-control,
     color: #777777;
     text-decoration: none; }
 
-.btn-lg, .btn-group-lg > .btn {
+.btn-lg, .btn-group-lg > .btn, .paid-plans .plan .btn {
   padding: 10px 16px;
   font-size: 23px;
   line-height: 1.3333333;
@@ -3366,7 +3390,7 @@ tbody.collapse.in {
   padding-left: 8px;
   padding-right: 8px; }
 
-.btn-group > .btn-lg + .dropdown-toggle, .btn-group-lg.btn-group > .btn + .dropdown-toggle {
+.btn-group > .btn-lg + .dropdown-toggle, .btn-group-lg.btn-group > .btn + .dropdown-toggle, .paid-plans .plan .btn-group > .btn + .dropdown-toggle {
   padding-left: 12px;
   padding-right: 12px; }
 
@@ -3380,11 +3404,11 @@ tbody.collapse.in {
 .btn .caret {
   margin-left: 0; }
 
-.btn-lg .caret, .btn-group-lg > .btn .caret {
+.btn-lg .caret, .btn-group-lg > .btn .caret, .paid-plans .plan .btn .caret {
   border-width: 5px 5px 0;
   border-bottom-width: 0; }
 
-.dropup .btn-lg .caret, .dropup .btn-group-lg > .btn .caret {
+.dropup .btn-lg .caret, .dropup .btn-group-lg > .btn .caret, .dropup .paid-plans .plan .btn .caret, .paid-plans .plan .dropup .btn .caret {
   border-width: 0 5px 5px; }
 
 .btn-group-vertical > .btn,
@@ -5861,6 +5885,34 @@ button.close {
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active
 > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   background-color: transparent; }
+
+.paid-plans .plan {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 20px 0px; }
+  @media (min-width: 992px) {
+    .paid-plans .plan {
+      float: left;
+      width: 33.3333333333%; } }
+  .paid-plans .plan > div {
+    background: #ddd;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #CCC;
+    border-bottom: 0px; }
+    .paid-plans .plan > div p {
+      white-space: nowrap;
+      font-size: 14.4px; }
+    .paid-plans .plan > div ul {
+      list-style: none;
+      padding-left: 0px; }
+  .paid-plans .plan .btn {
+    background-color: #FFC000;
+    border-radius: 0px; }
+    .paid-plans .plan .btn:active, .paid-plans .plan .btn:hover {
+      background-color: #e6ad00; }
 
 .screens {
   margin-bottom: 50px; }

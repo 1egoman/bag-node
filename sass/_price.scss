@@ -1,0 +1,38 @@
+.paid-plans {
+  .plan {
+    @include make-md-column(4);
+    margin: 20px 0px;
+
+    &>div {
+      background: #ddd;
+      padding: 10px;
+      text-align: center;
+
+      border: 2px solid #CCC;
+      border-bottom: 0px;
+
+      p {
+        white-space: nowrap;
+        font-size: $font-size-base * 0.8;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0px;
+      }
+
+    }
+
+
+    .btn {
+      @extend .btn-warning;
+      @extend .btn-lg;
+      background-color: $bag-yellow;
+      border-radius: 0px;
+
+      &:active, &:hover {
+        background-color: darken($bag-yellow, 5);
+      }
+    }
+  }
+}
