@@ -17,7 +17,7 @@ module.exports = (grunt) ->
 
     htmlbuild:
       dist:
-        src: "pages/*.html"
+        src: "pages/**/*.html"
         dest: ""
         options:
           relative: true
