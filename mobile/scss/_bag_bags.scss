@@ -15,6 +15,10 @@
     margin-bottom: 10px;
   }
 
+  &.private .item-content {
+    background: lighten(desaturate($energized, 50%), 40%);
+  }
+
   .item.item-avatar {
     padding-left: 16px;
   }

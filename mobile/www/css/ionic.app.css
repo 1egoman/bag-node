@@ -7784,6 +7784,8 @@ a.button {
 .list.recipe, .list.recipe:last-child, .card, .card:last-child {
   margin-top: 10px;
   margin-bottom: 10px; }
+.list.recipe.private .item-content, .card.private .item-content {
+  background: #f2ecd9; }
 .list.recipe .item.item-avatar, .card .item.item-avatar {
   padding-left: 16px; }
 .list.recipe.strike .item-content, .card.strike .item-content {
