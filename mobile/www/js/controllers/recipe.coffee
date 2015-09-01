@@ -80,6 +80,7 @@ angular.module('starter.controllers.tab_recipe', [])
 
   socket.on 'item:index:callback', (evt) ->
     $scope.my_recipes = evt.data
+    $scope.$apply()
 
   ###
   # Initialization

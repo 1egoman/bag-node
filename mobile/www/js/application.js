@@ -1044,7 +1044,7 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   return $scope.store = {};
 });
 
-angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery) {
+angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery, $timeout) {
   $scope.predefined_tags = getTagsForQuery;
   $scope.create_foodstuff = function(name, price, tags, desc, priv) {
     var foodstuff;
@@ -1057,9 +1057,14 @@ angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuff
         return i.text;
       })
     };
-    return socket.emit('foodstuff:create', {
+    socket.emit('foodstuff:create', {
       foodstuff: foodstuff
     });
+    return $timeout(function() {
+      return socket.emit('item:index', {
+        user: 'me'
+      });
+    }, 100);
   };
   socket.on('foodstuff:create:callback', function(evt) {
     return $scope.confirmed = evt.data;
@@ -1074,7 +1079,7 @@ angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuff
   return $scope.init();
 });
 
-angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery) {
+angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
   $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -1103,9 +1108,14 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
       contents: window.strip_$$(r_contents),
       contentsLists: strip_$$(r_contentsLists)
     };
-    return socket.emit('list:create', {
+    socket.emit('list:create', {
       list: recipe
     });
+    return $timeout(function() {
+      return socket.emit('item:index', {
+        user: 'me'
+      });
+    }, 100);
   };
   socket.on('list:create:callback', function(evt) {
     return $scope.confirmed = evt.data;
@@ -1276,7 +1286,8 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
     });
   };
   socket.on('item:index:callback', function(evt) {
-    return $scope.my_recipes = evt.data;
+    $scope.my_recipes = evt.data;
+    return $scope.$apply();
   });
 
   /*

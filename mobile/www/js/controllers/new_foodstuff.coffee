@@ -5,6 +5,7 @@ angular.module('starter.controllers.new_foodstuff', [])
   socket
   $q
   getTagsForQuery
+  $timeout
 ) ->
 
   # tags to search through
@@ -21,6 +22,11 @@ angular.module('starter.controllers.new_foodstuff', [])
         i.text
       )
     socket.emit 'foodstuff:create', foodstuff: foodstuff
+
+    # pull it in from the server
+    $timeout ->
+      socket.emit 'item:index', user: 'me'
+    , 100
 
   # we got a callback!
   socket.on 'foodstuff:create:callback', (evt) ->

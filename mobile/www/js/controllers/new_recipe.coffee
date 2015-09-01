@@ -8,6 +8,7 @@ angular.module 'starter.controllers.new_recipe', []
   searchItem,
   $q
   getTagsForQuery
+  $timeout
 ) ->
 
   # new item modal of adding items to the recipe
@@ -42,6 +43,11 @@ angular.module 'starter.controllers.new_recipe', []
 
     # make the request
     socket.emit 'list:create', list: recipe
+
+    # pull it in from the server
+    $timeout ->
+      socket.emit 'item:index', user: 'me'
+    , 100
 
   # we got a callback!
   socket.on 'list:create:callback', (evt) ->
