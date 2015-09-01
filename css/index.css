@@ -5893,9 +5893,6 @@ button.close {
 > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   background-color: transparent; }
 
-.navbar-default {
-  background-image: url(../img/tab_bag.jpg); }
-
 .nav-colors, .navbar-hero .container-hero {
   color: #fff; }
 
@@ -5903,39 +5900,49 @@ button.close {
   width: 24px; }
 
 .navbar-hero {
-  min-height: 512px; }
+  min-height: 512px;
+  height: 512px;
+  background-image: url(../img/tab_bag.jpg);
+  background-position: top center;
+  background-size: 100%; }
   .navbar-hero > div {
     background-color: rgba(85, 85, 85, 0.8);
-    height: 100%; }
+    height: 512px; }
   .navbar-hero .container-hero {
     margin-top: 50px; }
     .navbar-hero .container-hero h5 {
-      text-align: center; }
+      text-align: center;
+      margin-top: 42px; }
       @media (max-width: 768px) {
         .navbar-hero .container-hero h5 {
           font-size: 7.2px; } }
     .navbar-hero .container-hero h4 {
-      text-align: center; }
+      text-align: center;
+      margin-top: 42px; }
       @media (max-width: 768px) {
         .navbar-hero .container-hero h4 {
           font-size: 14.4px; } }
     .navbar-hero .container-hero h3 {
-      text-align: center; }
+      text-align: center;
+      margin-top: 42px; }
       @media (max-width: 768px) {
         .navbar-hero .container-hero h3 {
           font-size: 21.6px; } }
     .navbar-hero .container-hero h2 {
-      text-align: center; }
+      text-align: center;
+      margin-top: 42px; }
       @media (max-width: 768px) {
         .navbar-hero .container-hero h2 {
           font-size: 28.8px; } }
     .navbar-hero .container-hero h1 {
-      text-align: center; }
+      text-align: center;
+      margin-top: 42px; }
       @media (max-width: 768px) {
         .navbar-hero .container-hero h1 {
           font-size: 36px; } }
     .navbar-hero .container-hero h0 {
-      text-align: center; }
+      text-align: center;
+      margin-top: 42px; }
       @media (max-width: 768px) {
         .navbar-hero .container-hero h0 {
           font-size: 43.2px; } }

@@ -3,11 +3,6 @@
   background-color: transparent;
 }
 
-// put image behind the navbar
-.navbar-default {
-  background-image: url(../img/tab_bag.jpg);
-}
-
 // when coloring the iside of the nav we should make it this color
 .nav-colors {
   color: $navbar-default-link-color;
@@ -21,12 +16,19 @@
 // Big navbar
 // this is the hero nav that is shown on index.html, and has the cool image
 // behind it. It's really tall!
+$nav-hero-height: 512px;
 .navbar-hero {
-  min-height: 512px;
+  min-height: $nav-hero-height;
+  height: $nav-hero-height;
 
+  background-image: url(../img/tab_bag.jpg);
+  background-position: top center;
+  background-size: 100%;
+
+  // put a transparent "shade" over the background image
   &>div {
     background-color: $navbar-default-bg;
-    height: 100%;
+    height: $nav-hero-height;
   }
 
   .container-hero {
@@ -40,6 +42,8 @@
         @media (max-width: $screen-sm) {
           font-size: $font-size-base * $i/2.5;
         }
+
+        margin-top: 42px;
       }
     }
 
