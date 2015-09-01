@@ -480,6 +480,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       });
     });
     $scope.store_picker = {
+      user: null,
       pick_store: function(item) {
         p.resolve(item);
         return $scope.store_picker_modal.hide();
@@ -509,6 +510,9 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         });
       }
     };
+    user.then(function(u) {
+      return $scope.store_picker.user = u;
+    });
     $scope.$on('$destroy', function() {
       return $scope.store_picker_modal.remove();
     });

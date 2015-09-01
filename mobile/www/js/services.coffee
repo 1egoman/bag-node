@@ -249,6 +249,9 @@ angular.module('starter.services', [])
  
     # these methods are called within the view to choose a store or dismiss one.
     $scope.store_picker =
+
+      user: null
+
       pick_store: (item) ->
         p.resolve item
         $scope.store_picker_modal.hide()
@@ -275,6 +278,8 @@ angular.module('starter.services', [])
         $scope.item.stores["custom"] =
           price: parseFloat price
         @pick_store _id: "custom"
+
+    user.then (u) -> $scope.store_picker.user = u
 
     $scope.$on '$destroy', ->
       $scope.store_picker_modal.remove()

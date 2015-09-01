@@ -46,14 +46,14 @@
 
 
       <!-- what is a user wants to add one of their own? -->
-      <ion-item ng-click="store_picker.to_custom_price()">
+      <ion-item ng-click="store_picker.to_custom_price()" ng-show="store_picker.user.plan > 0">
         <h2>Add a custom price</h2>
         <p>If your store isn't here...</p>
       </ion-item>
     </section>
 
     <!-- add a custom price to the specified item -->
-    <section ng-if="store_picker.do_custom_price" class="padding">
+    <section ng-if="store_picker.do_custom_price && store_picker.user.plan > 0" class="padding">
       <h1>Add custom price</h1>
       <p>
         Is your store not in our list? If not, you can add a custom price here.
