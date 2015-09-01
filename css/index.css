@@ -3725,7 +3725,7 @@ tbody.collapse.in {
     clear: both; }
   @media (min-width: 768px) {
     .navbar {
-      border-radius: 4px; } }
+      border-radius: 0; } }
 
 .navbar-header:before,
 .navbar-header:after {
@@ -3969,8 +3969,8 @@ tbody.collapse.in {
 
 .navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {
   margin-bottom: 0;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0; }
 
@@ -4003,8 +4003,8 @@ tbody.collapse.in {
       margin-right: 0; } }
 
 .navbar-default {
-  background-color: #555;
-  border-color: #444444; }
+  background-color: rgba(85, 85, 85, 0.8);
+  border-color: rgba(85, 85, 85, 0.8); }
   .navbar-default .navbar-brand {
     color: #fff; }
     .navbar-default .navbar-brand:hover,
@@ -4023,7 +4023,7 @@ tbody.collapse.in {
   .navbar-default .navbar-nav > .active > a:hover,
   .navbar-default .navbar-nav > .active > a:focus {
     color: #fff;
-    background-color: #444444; }
+    background-color: rgba(68, 68, 68, 0.8); }
   .navbar-default .navbar-nav > .disabled > a,
   .navbar-default .navbar-nav > .disabled > a:hover,
   .navbar-default .navbar-nav > .disabled > a:focus {
@@ -4038,11 +4038,11 @@ tbody.collapse.in {
       background-color: #888; }
   .navbar-default .navbar-collapse,
   .navbar-default .navbar-form {
-    border-color: #444444; }
+    border-color: rgba(85, 85, 85, 0.8); }
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
   .navbar-default .navbar-nav > .open > a:focus {
-    background-color: #444444;
+    background-color: rgba(68, 68, 68, 0.8);
     color: #fff; }
   @media (max-width: 767px) {
     .navbar-default .navbar-nav .open .dropdown-menu > li > a {
@@ -4055,7 +4055,7 @@ tbody.collapse.in {
     .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
     .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
       color: #fff;
-      background-color: #444444; }
+      background-color: rgba(68, 68, 68, 0.8); }
     .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,
     .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover,
     .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {
@@ -5893,6 +5893,9 @@ button.close {
 > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   background-color: transparent; }
 
+.navbar-default {
+  background-image: url(../img/tab_bag.jpg); }
+
 .nav-colors, .navbar-hero .container-hero {
   color: #fff; }
 
@@ -5901,6 +5904,9 @@ button.close {
 
 .navbar-hero {
   min-height: 512px; }
+  .navbar-hero > div {
+    background-color: rgba(85, 85, 85, 0.8);
+    height: 100%; }
   .navbar-hero .container-hero {
     margin-top: 50px; }
     .navbar-hero .container-hero h5 {

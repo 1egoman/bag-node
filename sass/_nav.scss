@@ -3,6 +3,11 @@
   background-color: transparent;
 }
 
+// put image behind the navbar
+.navbar-default {
+  background-image: url(../img/tab_bag.jpg);
+}
+
 // when coloring the iside of the nav we should make it this color
 .nav-colors {
   color: $navbar-default-link-color;
@@ -18,6 +23,11 @@
 // behind it. It's really tall!
 .navbar-hero {
   min-height: 512px;
+
+  &>div {
+    background-color: $navbar-default-bg;
+    height: 100%;
+  }
 
   .container-hero {
     @extend .container;
