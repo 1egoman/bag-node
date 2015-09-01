@@ -5,58 +5,105 @@
   </head>
 
   <body>
-    <img src="img/bag.svg" class="center" />
+    <nav class="navbar navbar-default">
+      <div class="container">
 
-    <h1>Bag: grocery shopping of the future</h1>
-    <p>
-      Hey, you've stumbled across Bag, a side project by Ryan Gaus. I'm
-      trying to make grocery shopping dare I say, fun. Well, at least not
-      something that you hate every week.
-    </p>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="//getbag.io">Bag</a>
+        </div>
 
-    <h2>How does it work?</h2>
-    <p>
-      Each user has a central "bag" that food items can be put into. Users can
-      search for recipes created within the app and put those in their bag for
-      centralized access. Bag will do all the magic of pulling in the price for
-      each item and recipe, and with a few taps, will convert your bag's contents
-      into a grocery list, sorted to match your grocery store's layout. To
-      automate recipe discovery further, Bag will recommend recipes it thinks
-      you'd like and give you a chance to decrease grocery-planning further.
-      ("My Picks")
-    </p>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
 
-    <div class="screens">
-      <div class="offset"></div>
-      <div class="wrapper"><img src="img/tab_bag.jpg" /></div>
-      <div class="wrapper"><img src="img/add_new.jpg" /></div>
-      <div class="wrapper"><img src="img/tacos.png" /></div>
-      <div class="wrapper"><img src="img/pump_seeds.png" /></div>
-      <div class="wrapper"><img src="img/stores.jpg" /></div>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Link</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <!-- bade body content -->
+    <div class="container">
+
+      <img src="img/bag.svg" class="center" />
+
+      <h1>Bag: grocery shopping of the future</h1>
+      <p>
+        Hey, you've stumbled across Bag, a side project by Ryan Gaus. I'm
+        trying to make grocery shopping dare I say, fun. Well, at least not
+        something that you hate every week.
+      </p>
+
+      <h2>How does it work?</h2>
+      <p>
+        Each user has a central "bag" that food items can be put into. Users can
+        search for recipes created within the app and put those in their bag for
+        centralized access. Bag will do all the magic of pulling in the price for
+        each item and recipe, and with a few taps, will convert your bag's contents
+        into a grocery list, sorted to match your grocery store's layout. To
+        automate recipe discovery further, Bag will recommend recipes it thinks
+        you'd like and give you a chance to decrease grocery-planning further.
+        ("My Picks")
+      </p>
+
+      <div class="screens">
+        <div class="offset"></div>
+        <div class="wrapper"><img src="img/tab_bag.jpg" /></div>
+        <div class="wrapper"><img src="img/add_new.jpg" /></div>
+        <div class="wrapper"><img src="img/tacos.png" /></div>
+        <div class="wrapper"><img src="img/pump_seeds.png" /></div>
+        <div class="wrapper"><img src="img/stores.jpg" /></div>
+      </div>
+
+
+      <small>(Some of those images above are just renders, as I don't have images for
+        each item yet.)</small>
+
+      <h2>Whoa! I want to try that! Where can I get the app?</h2>
+      <p>
+        I'm glad you like it! Though its almost feature-complete, Bag is still quite
+        buggy. I haven't gotten around to compiling it for iOS but I have for
+        android. <a href="/builds/Bag-0.4.0.apk">Here's the latest android
+          build</a>. If you think you can help me build it for ios then
+        <a
+          target="_blank"
+          href="mailto:rsg1egoman@gmail.com?subject=I <3 Bag! Lemme test it!"
+        >shoot me an email</a>.
+      </p>
+
+      <h2>Who is the man behind all of this nonsense?</h2>
+      <p>
+        I'm a student in Central New York that occasionally has some free time,
+        and too many projects. This is one of them. <a href="//rgaus.net">Check
+          out my website</a>.
+      </p>
+
     </div>
 
-
-    <small>(Some of those images above are just renders, as I don't have images for
-      each item yet.)</small>
-
-    <h2>Whoa! I want to try that! Where can I get the app?</h2>
-    <p>
-      I'm glad you like it! Though its almost feature-complete, Bag is still quite
-      buggy. I haven't gotten around to compiling it for iOS but I have for
-      android. <a href="/builds/Bag-0.4.0.apk">Here's the latest android
-        build</a>. If you think you can help me build it for ios then
-      <a
-        target="_blank"
-        href="mailto:rsg1egoman@gmail.com?subject=I <3 Bag! Lemme test it!"
-      >shoot me an email</a>.
-    </p>
-
-    <h2>Who is the man behind all of this nonsense?</h2>
-    <p>
-      I'm a student in Central New York that occasionally has some free time,
-      and too many projects. This is one of them. <a href="//rgaus.net">Check
-        out my website</a>.
-    </p>
+    <script src="/jquery.min.js"></script>
+    <script src="/bootstrap.min.js"></script>
     
   </body>
 </html>

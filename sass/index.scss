@@ -3,9 +3,8 @@
 
 $bag-blue: #5090F1;
 
-body {
-  @extend .container;
-}
+
+@import "_nav";
 
 // screenshots
 .screens {
