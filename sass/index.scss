@@ -32,3 +32,14 @@ $bag-yellow: #FFC000;
   display: block;
   width: 64px;
 }
+
+.image-seperator {
+  @extend .center;
+  width: 16px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+}

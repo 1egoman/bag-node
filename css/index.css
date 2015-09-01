@@ -5986,7 +5986,14 @@ button.close {
         float: left;
         width: 8.3333333333%; } }
 
-.center {
+.center, .image-seperator {
   margin: 20px auto;
   display: block;
   width: 64px; }
+
+.image-seperator {
+  width: 16px;
+  margin-top: 50px;
+  margin-bottom: 50px; }
+  .image-seperator:first-child {
+    margin-top: 0px; }
