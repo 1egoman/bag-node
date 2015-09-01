@@ -2,3 +2,36 @@
 > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   background-color: transparent;
 }
+
+// when coloring the iside of the nav we should make it this color
+.nav-colors {
+  color: $navbar-default-link-color;
+}
+
+// Small navbar
+.navbar-brand img {
+  width: 24px;
+}
+
+// Big navbar
+// this is the hero nav that is shown on index.html, and has the cool image
+// behind it. It's really tall!
+.navbar-hero {
+  min-height: 512px;
+
+  .container-hero {
+    @extend .container;
+    @extend .nav-colors;
+    margin-top: 50px;
+
+    @for $i from 1 through 6 {
+      h#{6-$i} {
+        text-align: center;
+        @media (max-width: $screen-sm) {
+          font-size: $font-size-base * $i/2.5;
+        }
+      }
+    }
+
+  }
+}
