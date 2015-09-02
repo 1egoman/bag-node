@@ -95,7 +95,12 @@ angular.module('starter.services', [])
 .factory 'userFactory', ($q, socket) ->
   (user_id) ->
     defer = $q.defer()
-    socket.emit 'user:show', user: user_id
+
+    # promise "clearing"
+    # this way, it allows us to "clear" the stored user to refresh them
+    defer.promise.clear = -> socket.emit 'user:show', user: user_id
+    defer.promise.clear()
+
     socket.on 'user:show:callback', (evt) ->
       window.user = evt.data # hack so we can use user in sync stuff (yea, I know, there are a lot of issues with this, but it works for now. Used in pickPrice.)
       defer.resolve evt.data

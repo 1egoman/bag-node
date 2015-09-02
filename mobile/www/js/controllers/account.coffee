@@ -7,8 +7,17 @@ angular.module 'starter.controllers.account', []
 ) ->
 
   # store user info
-  user.then (user) ->
-    $scope.username = user.name
+  $scope.refresh_user = ->
+    user.clear()
+    user.then (user) ->
+      $scope.username = user.name
+      $scope.user_plan = do (plan=user.plan) ->
+        switch plan
+          when 0 then "Bag Free"
+          when 1 then "Bag Pro"
+          when 2 then "Bag Executive"
+          else "Unknown"
+  $scope.refresh_user()
 
   # logout a user
   $scope.logout = ->

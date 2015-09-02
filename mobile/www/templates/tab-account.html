@@ -10,6 +10,13 @@
         ></i>
       </ion-item>
 
+      <ion-item class="item-divider">My Account</ion-item>
+
+      <ion-item>
+        Current Plan: <strong>{{user_plan}}</strong>
+        <span class="pull-right" ng-click="refresh_user()">Refresh</span>
+      </ion-item>
+
       <ion-item ng-click="logout()">
         Logout {{username}}
       </ion-item>
