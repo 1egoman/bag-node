@@ -16,8 +16,11 @@ store_ctrl = require "./controllers/stores_controller"
 items_ctrl = require "./controllers/items_controller"
 picks_ctrl = require "./controllers/pick_controller"
 
+account = require "./account"
+
 chalk = require "chalk"
 pjson = require "../package.json"
+body_parser = require "body-parser"
 
 
 # this object maps all routes to their respective methods
@@ -63,6 +66,34 @@ exports.routes = routes =
   pick:
     controller: picks_ctrl
     routes: ["index"]
+
+
+
+# TODO un half-ass this....
+exports.http = (app) ->
+  app.resource "lists", list_ctrl
+  app.resource "foodstuffs", foodstuff_ctrl
+
+  app.get "/", (req, res) ->
+    res.send """
+    <style>code {padding:2px 4px;font-size:90%;white-space:nowrap;background-color:#f9f2f4;border-radius:4px;color:#c7254e;}</style>
+    <h1>Hello World!</h1>
+    <p>This is the root of bag's server. (version <code>#{pjson.version}</code>)</p>
+    <p>Nothing to see here, why not take a look at
+    <a href="http://getbag.io">bag's website</a>?</p>
+    """
+
+
+  # managing account and paying for plans
+  app.get "/manage", account.manage
+
+  app.get "/login", account.login_get
+  app.post "/login", body_parser.urlencoded(), account.login_post
+
+  app.get "/checkout/:plan", account.checkout
+
+
+
 
 exports.websocket = (app) ->
 
@@ -178,17 +209,3 @@ initialize_user_socket = (io, user) ->
                   socket.broadcast.emit "#{k}:#{method}:callback", data
                 socket.emit "#{k}:#{method}:callback", data
 
-
-# TODO un half-ass this....
-exports.http = (app) ->
-  app.resource "lists", list_ctrl
-  app.resource "foodstuffs", foodstuff_ctrl
-
-  app.get "/", (req, res) ->
-    res.send """
-    <style>code {padding:2px 4px;font-size:90%;white-space:nowrap;background-color:#f9f2f4;border-radius:4px;color:#c7254e;}</style>
-    <h1>Hello World!</h1>
-    <p>This is the root of bag's server. (version <code>#{pjson.version}</code>)</p>
-    <p>Nothing to see here, why not take a look at
-    <a href="http://getbag.io">bag's website</a>?</p>
-    """
