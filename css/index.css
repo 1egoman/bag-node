@@ -2901,44 +2901,68 @@ select[multiple].input-lg, .input-group-lg > select[multiple].form-control,
     color: #337ab7;
     background-color: #fff; }
 
-.btn-success {
+.btn-success, .paid-plans .plan .btn.current {
   color: #fff;
   background-color: #5cb85c;
   border-color: #4cae4c; }
   .btn-success:hover,
+  .paid-plans .plan .btn.current:hover,
   .btn-success:focus,
+  .paid-plans .plan .btn.current:focus,
   .btn-success.focus,
+  .paid-plans .plan .focus.btn.current,
   .btn-success:active,
+  .paid-plans .plan .btn.current:active,
   .btn-success.active,
-  .open > .btn-success.dropdown-toggle {
+  .paid-plans .plan .active.btn.current,
+  .open > .btn-success.dropdown-toggle, .paid-plans .plan .open > .dropdown-toggle.btn.current {
     color: #fff;
     background-color: #449d44;
     border-color: #398439; }
   .btn-success:active,
+  .paid-plans .plan .btn.current:active,
   .btn-success.active,
-  .open > .btn-success.dropdown-toggle {
+  .paid-plans .plan .active.btn.current,
+  .open > .btn-success.dropdown-toggle, .paid-plans .plan .open > .dropdown-toggle.btn.current {
     background-image: none; }
   .btn-success.disabled,
+  .paid-plans .plan .disabled.btn.current,
   .btn-success.disabled:hover,
+  .paid-plans .plan .disabled.btn.current:hover,
   .btn-success.disabled:focus,
+  .paid-plans .plan .disabled.btn.current:focus,
   .btn-success.disabled.focus,
+  .paid-plans .plan .disabled.focus.btn.current,
   .btn-success.disabled:active,
+  .paid-plans .plan .disabled.btn.current:active,
   .btn-success.disabled.active,
+  .paid-plans .plan .disabled.active.btn.current,
   .btn-success[disabled],
+  .paid-plans .plan [disabled].btn.current,
   .btn-success[disabled]:hover,
+  .paid-plans .plan [disabled].btn.current:hover,
   .btn-success[disabled]:focus,
+  .paid-plans .plan [disabled].btn.current:focus,
   .btn-success[disabled].focus,
+  .paid-plans .plan [disabled].focus.btn.current,
   .btn-success[disabled]:active,
+  .paid-plans .plan [disabled].btn.current:active,
   .btn-success[disabled].active,
+  .paid-plans .plan [disabled].active.btn.current,
   fieldset[disabled] .btn-success,
-  fieldset[disabled] .btn-success:hover,
-  fieldset[disabled] .btn-success:focus,
-  fieldset[disabled] .btn-success.focus,
-  fieldset[disabled] .btn-success:active,
-  fieldset[disabled] .btn-success.active {
+  fieldset[disabled] .paid-plans .plan .btn.current,
+  .paid-plans .plan fieldset[disabled] .btn.current, fieldset[disabled] .btn-success:hover,
+  fieldset[disabled] .paid-plans .plan .btn.current:hover,
+  .paid-plans .plan fieldset[disabled] .btn.current:hover, fieldset[disabled] .btn-success:focus,
+  fieldset[disabled] .paid-plans .plan .btn.current:focus,
+  .paid-plans .plan fieldset[disabled] .btn.current:focus, fieldset[disabled] .btn-success.focus,
+  fieldset[disabled] .paid-plans .plan .focus.btn.current,
+  .paid-plans .plan fieldset[disabled] .focus.btn.current, fieldset[disabled] .btn-success:active,
+  fieldset[disabled] .paid-plans .plan .btn.current:active,
+  .paid-plans .plan fieldset[disabled] .btn.current:active, fieldset[disabled] .btn-success.active, fieldset[disabled] .paid-plans .plan .active.btn.current, .paid-plans .plan fieldset[disabled] .active.btn.current {
     background-color: #5cb85c;
     border-color: #4cae4c; }
-  .btn-success .badge {
+  .btn-success .badge, .paid-plans .plan .btn.current .badge {
     color: #5cb85c;
     background-color: #fff; }
 

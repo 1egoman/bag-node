@@ -33,6 +33,10 @@
       &:active, &:hover {
         background-color: darken($bag-yellow, 5);
       }
+      
+      &.current {
+        @extend .btn-success;
+      }
     }
   }
 }
