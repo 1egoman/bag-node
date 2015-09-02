@@ -24,6 +24,7 @@ user = mongoose.Schema
 
 
   plan: Number
+  plan_expire: Number
   stripe_id: String
 
 module.exports = mongoose.model 'user', user

@@ -1,5 +1,6 @@
 User = require "../models/user_model"
 auth_ctrl = require "../controllers/auth_controller"
+stripe = require("stripe") "sk_test_lRsLtNDZ9EBsX2NrFx07H5mO"
 pending_charges = {}
 
 format_page = (data) ->
@@ -71,11 +72,13 @@ exports.checkout = (req, res) ->
     when "pro", "p", "professional"
       price = 500
       desc = "Bag Professional ($5.00)"
+      type = "pro"
 
 
     when "exec", "e", "executive"
       price = 1000
       desc = "Bag Executive ($10.00)"
+      type = "exec"
 
     # downgrade back to a free account.
     #TODO
@@ -86,6 +89,7 @@ exports.checkout = (req, res) ->
   res.send """
   <!-- stripe checkout -->
   <form action="/checkout_complete" method="POST">
+    <input type="hidden" name="type" value="#{type}" />
     <script
       src="https://checkout.stripe.com/checkout.js" class="stripe-button"
       data-key="pk_test_k280ghlxr7GrqGF9lxBhy1Uj"
@@ -101,34 +105,91 @@ exports.checkout = (req, res) ->
 # this callback fires when the user finishes checking out with stripe
 exports.checkout_complete = (req, res) ->
   console.log req.body
-  User.findOne _id: req.session.user._id, (err, user) ->
-    if err
-      res.send "Couldn't access database: #{err}"
-    else
-      user.stripe_id = req.body.stripeToken # this is injected via stripe
-      user.save (err) ->
+  if req.body.stripeToken and req.body.stripeEmail
+
+    # sign user up for the subscription
+    if req.body.type in ["pro", "exec"]
+      stripe.customers.create
+        source: req.body.stripeToken
+        plan: "bag_#{req.body.type}"
+        email: req.body.stripeEmail
+      , (err, customer) ->
         if err
-          res.send "Couldn't save user: #{err}"
+          res.send "Error creating customer: #{err}"
         else
-          # store into the pending transactions
-          pending_charges[user.stripe_id] =
-            req: req
-            res: res
-          # we'll wait for stripe to respond.
+
+          # save customer data to database
+          User.findOne _id: req.session.user._id, (err, user) ->
+            if err
+              res.send "Couldn't access database: #{err}"
+            else
+              user.stripe_id = customer.id
+              user.save (err) ->
+                if err
+                  res.send "Couldn't save user: #{err}"
+                else
+                  # wait for the charge to go through...
+                  pending_charges[customer.id] =
+                    req: req
+                    res: res
+
+    else
+      res.send "Invalid type to get - needs to be 'pro' or 'exec'."
+
+  else
+    res.send "No stripe info was sent in the transaction."
 
 
 # after a card has been used, stripe will respond with a webhook. 
 exports.stripe_webhook = (req, res) ->
-  card_id = req.body.data?.object?.id
+  customer = req.body.data?.object?.customer
   console.log req.body
   switch req.body.type
 
-    when "charge.succeeded"
+    # a successful card charge. We'll use this to increase the end date of a
+    # user's subscription.
+    when "invoice.payment_succeeded"
       if card_id of pending_charges
-        pending_charges[card_id].res.send "Card was charged successfully!"
-        res.send "Cool, thanks stripe!"
+        
+        # update the users length of payment by a month.
+        User.findOne stripe_id: customer, (err, user) ->
+          if err
+            res.send "Couldn't access user: #{err}"
+
+            # uhoh - the user should contact us for help.
+            pending_charges[customer].res.send """
+            Hey! Something went wrong with your payment!
+            
+            Contact support@getbag.io with this token: #{customer}
+            """
+          else
+            # add one more month, in milliseconds
+            user.plan_expire += do ->
+              date = new Date
+              month_days = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+              month_days * 60 * 60 * 24 * 1000
+
+            user.save (err) ->
+              if err
+                res.send "Couldn't save user: #{err}"
+
+                # uhoh - the user should contact us for help.
+                pending_charges[customer].res.send """
+                Hey! Something went wrong with your payment!
+                
+                Contact support@getbag.io with this token: #{customer}
+                """
+              else
+                res.send "Cool, thanks stripe!"
+
+                # respond to the pending request
+                pending_charges[customer].res.send """
+                You have successfully signed up for Bag!
+                
+                You should receive a receipt by email soon. In the meantime, enjoy!
+                """
       else
-        1 # uhh, what??? That card was never used????
+        # uhh, what??? That card was never used????
         res.send "Uh, that card was never used. What are you talking about stripe???"
 
 
