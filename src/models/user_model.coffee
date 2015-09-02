@@ -21,6 +21,10 @@ user = mongoose.Schema
   stores: Array
 
   clicks: Array
+
+
   plan: Number
+  plan_expire: Number
+  stripe_id: String
 
 module.exports = mongoose.model 'user', user

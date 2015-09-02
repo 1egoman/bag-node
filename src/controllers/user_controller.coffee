@@ -101,11 +101,12 @@ exports.create = (req, res) ->
         # new users start with whole foods, by default
         (user_params, cb) ->
           if user_params.stores
-            cb user_params
+            cb null, user_params
           else
             Store.findOne name: "Whole Foods", (err, item) ->
-              user_params.stores = [ item._id ]
-              cb user_params
+              if not err and item
+                user_params.stores = [ item._id ]
+              cb null, user_params
 
         # create user model and save it
         (user_params, cb) ->

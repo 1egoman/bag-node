@@ -56,6 +56,12 @@ exports.update = (req, res) ->
         error: err
     else
       data[k] = v for k, v of req.body?.bag
+
+      # make sure custom prices have only been used if we can.
+      for i in data.contents
+        i.stores.custom = {} if i.store is "custom" and req.user.plan isnt 2
+        i.store = "nope" if i.store is "custom" and req.user.plan isnt 2
+
       data.save (err) ->
         if err
           res.send
