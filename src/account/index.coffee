@@ -14,6 +14,38 @@ format_page = (data) ->
       <link rel="stylesheet" href="//getbag.io/css/index.css">
     </head>
     <body>
+
+      <nav class="navbar navbar-default">
+        <div>
+          <div class="container">
+
+        <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header"><a name="top">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              </a><a class="navbar-brand" href="//getbag.io">
+                <img src="//getbag.io/img/bag.svg">
+              </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  #{if data.indexOf("Login") is -1 then '<a href="/logout">Logout</a>' else ''}
+                </li>
+              </ul>
+
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </div>
+      </nav>
+
       <div class="container">
         #{data}
       </div>
@@ -98,9 +130,6 @@ exports.manage = (req, res) ->
       </a>
     </div>
   </div>
-
-  <br/>
-  <a href="/logout" class="btn btn-primary">Logout</a>
   """
 
 # the login page
@@ -202,14 +231,26 @@ exports.checkout = (req, res) ->
                               if err
                                 res.send "Couldn't save to database: #{err}"
                               else
-                                res.send "Your plan has been cancelled. You have been downgraded to our free plan."
+                                res.send format_page """
+                                Your plan has been cancelled.
+                                You have been downgraded to our free plan.
+                                
+                                For all changes to take effect, please restart bag on your phone.
+                                """
       else
         res.send "It seems you aren't signed up for any plan right now."
 
       return
 
   # checkout with the payment info specified.
-  res.send """
+  res.send format_page """
+  <h1>Bag Payment</h1>
+  <p>
+    To continue, please click on the "Pay with Card" button below. Once you've clicked 'OK', we'll
+    try to charge your card for the payment specified. Once we've verified that
+    the charge was successful, we'll activate your account. If you refresh the page before the charge is accepted,
+    we will still activate your account, though you won't receive a confirmation.
+  </p>
   <!-- stripe checkout -->
   <form action="/checkout_complete" method="POST">
     <input type="hidden" name="type" value="#{type}" />
@@ -286,7 +327,7 @@ exports.stripe_webhook = (req, res) ->
             res.send "Couldn't access user: #{err}"
 
             # uhoh - the user should contact us for help.
-            pending_charges[customer].res.send """
+            pending_charges[customer].res.send format_page """
             Hey! Something went wrong with your payment! (NOACCUSER)
             Contact support@getbag.io with this token: #{customer}
             """
@@ -309,7 +350,7 @@ exports.stripe_webhook = (req, res) ->
                 res.send "Couldn't save user: #{err}"
 
                 # uhoh - the user should contact us for help.
-                pending_charges[customer].res.send """
+                pending_charges[customer].res.send format_page """
                 Hey! Something went wrong with your payment! (NOSAVEUSER)
                 Contact support@getbag.io with this token: #{customer}
                 """
@@ -318,10 +359,13 @@ exports.stripe_webhook = (req, res) ->
 
                 # respond to the pending request
                 if customer of pending_charges
-                  pending_charges[customer].res.send """
-                  You have successfully signed up for Bag!
+                  pending_charges[customer].res.send format_page """
+                  <h2>You have successfully signed up for Bag!</h2>
                   
-                  You should receive a receipt by email soon. In the meantime, enjoy!
+                  <p>
+                    You should receive a receipt by email soon. In the meantime, enjoy!
+                    For all features to work properly, you should restart the bag app on your phone.
+                  </p>
                   """
       else
         # uhh, what??? That card was never used????
