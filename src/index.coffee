@@ -16,6 +16,12 @@ path = require "path"
 bodyParser = require "body-parser"
 router = require "./router"
 
+session = require "express-session"
+app.use session
+  secret: 'keyboard cat'
+  resave: false
+  saveUninitialized: false
+
 
 exports.main = ->
 

@@ -84,13 +84,16 @@ exports.http = (app) ->
     """
 
 
-  # managing account and paying for plans
-  app.get "/manage", account.manage
-
+  # login to manage portal
   app.get "/login", account.login_get
-  app.post "/login", body_parser.urlencoded(), account.login_post
+  app.post "/login",
+    body_parser.urlencoded(extended: true),
+    account.login_post
+  app.get "/logout", account.logout
 
-  app.get "/checkout/:plan", account.checkout
+  # managing account and paying for plans
+  app.get "/manage", account.protect, account.manage
+  app.get "/checkout/:plan", account.protect, account.checkout
 
 
 
