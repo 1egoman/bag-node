@@ -16,7 +16,9 @@
   <!-- Choose a store -->
   <ion-content>
 
-    <section ng-if="!store_picker.do_custom_price">
+    <section
+      ng-if="!store_picker.do_custom_price && !store_picker.do_suggest_store"
+    >
       <ion-item ng-if="store_picker.stores.length === 0">
         <h2>There are no stores available for this item.</h2>
         <p>Either you haven't picked any stores, or there are no stores
@@ -51,6 +53,14 @@
         <h2>Add a custom price</h2>
         <p>If your store isn't here...</p>
       </ion-item>
+
+      <!-- users can suggest stores -->
+      <ion-item ng-click="store_picker.to_suggest_store()">
+        <h2>Suggest another store for this item</h2>
+        <p>Help us expand Bag!</p>
+      </ion-item>
+
+
     </section>
 
     <!-- add a custom price to the specified item -->
@@ -70,6 +80,29 @@
       <button class="button button-royal button-block"
         ng-click="store_picker.custom_price(custom_price)">Add Custom Price</button>
     </section>
+
+
+    <section ng-if="store_picker.do_suggest_store" class="padding">
+      <h1>Suggest Store</h1>
+      <p>
+        Are we missing your favorite store? Let us know, and we'll try to add it
+        to our database.
+      </p>
+      <div class="item item-input">
+        <input type="text" placeholder="Store Name" ng-model="store_name" />
+      </div>
+      <div class="item item-input">
+        <input type="text" placeholder="Item Brand" ng-model="store_brand" />
+      </div>
+      <div class="item item-input">
+        <input type="number" placeholder="Item Price" ng-model="store_price" />
+      </div>
+
+      <button
+        class="button button-balanced button-block"
+        ng-click="store_picker.suggest_store({name: store_name, brand:
+        store_brand, price: store_price})"
+      >Suggest Custom Store</button>
 
   </ion-content>
 

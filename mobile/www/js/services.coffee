@@ -279,6 +279,18 @@ angular.module('starter.services', [])
           price: parseFloat price
         @pick_store _id: "custom"
 
+      # switch to the suggest store view
+      to_suggest_store: ->
+        @do_suggest_store = true
+
+      suggest_store: (store) ->
+        socket.emit "store:suggest", store: store
+        socket.on "store:suggest:callback", (evt) ->
+          if evt.resolves_to
+            @pick_store evt.resolves_to
+          else
+            $cordovaDialogs "We'll take a look at this and add it soon", "Thanks", "OK"
+
     user.then (u) -> $scope.store_picker.user = u
 
     $scope.$on '$destroy', ->

@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagd.herokuapp.com";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -507,6 +507,21 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         };
         return this.pick_store({
           _id: "custom"
+        });
+      },
+      to_suggest_store: function() {
+        return this.do_suggest_store = true;
+      },
+      suggest_store: function(store) {
+        socket.emit("store:suggest", {
+          store: store
+        });
+        return socket.on("store:suggest:callback", function(evt) {
+          if (evt.resolves_to) {
+            return this.pick_store(evt.resolves_to);
+          } else {
+            return $cordovaDialogs("We'll take a look at this and add it soon", "Thanks", "OK");
+          }
         });
       }
     };
