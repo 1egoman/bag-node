@@ -18,17 +18,33 @@ format_page = (data) ->
 # the login page.
 exports.protect = (req, res, next) ->
   if req.session.user
-    next()
+    User.findOne _id: req.session.user._id, (err, user) ->
+      req.session.user = user if not err
+      next()
   else
     res.redirect "/login?redirect=#{req.url}"
 
 # the basic admin management page. THis is the "hub" that everything else comes
 # off of.
 exports.manage = (req, res) ->
+  exec = if req.session.user.plan is 2 then "You have " else "Upgrade to "
+  pro = if req.session.user.plan is 1
+    "You have "
+  else if req.session.user.plan is 2
+    "Downgrade to "
+  else
+    "Upgrade to "
+  free = if req.session.user.plan is 0 then "You have " else "Downgrade to "
+
   res.send format_page """
   <h1>Welcome, #{req.session.user.realname}</h1>
-  <a href="/checkout/pro">Get Bag Pro</a>
-  <a href="/checkout/exec">Get Bag Exec</a>
+
+  <div class="payments">
+    <a href="/checkout/free">#{free}Bag Free</a>
+    <a href="/checkout/pro">#{pro}Bag Pro</a>
+    <a href="/checkout/exec">#{exec}Bag Exec</a>
+  </div>
+
   <br/>
   <a href="/logout">Logout</a>
   """
@@ -81,11 +97,35 @@ exports.checkout = (req, res) ->
       type = "exec"
 
     # downgrade back to a free account.
-    #TODO
     else
-      res.send "Lets cancel thet."
+      if req.session.user.stripe_id
+
+        # delete the stripe customer
+        stripe.customers.del req.session.user.stripe_id, (err, confirm) ->
+          if err
+            res.send "Error deleting stripe user: #{err}"
+          else
+            res.send "Your plan has been cancelled. You have been downgraded to our free plan."
+
+        # remove all payment info and subscription stuff.
+        User.findOne _id: req.session.user._id, (err, user) ->
+          if err
+            res.send "Couldn't get user: #{err}"
+          else
+            user.stripe_id = null
+            user.plan = 0
+            user.plan_expire = null
+            user.save (err) ->
+              if err
+                res.send "Couldn't save to database: #{err}"
+              else
+                # res.send "Canceled bag plan."
+      else
+        res.send "It seems you aren't signed up for any plan right now."
+
       return
 
+  # checkout with the payment info specified.
   res.send """
   <!-- stripe checkout -->
   <form action="/checkout_complete" method="POST">
@@ -104,34 +144,39 @@ exports.checkout = (req, res) ->
 
 # this callback fires when the user finishes checking out with stripe
 exports.checkout_complete = (req, res) ->
-  console.log req.body
   if req.body.stripeToken and req.body.stripeEmail
 
     # sign user up for the subscription
     if req.body.type in ["pro", "exec"]
-      stripe.customers.create
-        source: req.body.stripeToken
-        plan: "bag_#{req.body.type}"
-        email: req.body.stripeEmail
-      , (err, customer) ->
-        if err
-          res.send "Error creating customer: #{err}"
-        else
 
-          # save customer data to database
-          User.findOne _id: req.session.user._id, (err, user) ->
-            if err
-              res.send "Couldn't access database: #{err}"
-            else
-              user.stripe_id = customer.id
-              user.save (err) ->
-                if err
-                  res.send "Couldn't save user: #{err}"
-                else
-                  # wait for the charge to go through...
-                  pending_charges[customer.id] =
-                    req: req
-                    res: res
+      # delete any old customers with a specified token
+      # we don't care about any errors, because we are injecting a fake token
+      # after all. This really should be made better, but for now it is probably
+      # fine.
+      stripe.customers.del req.session.user.stripe_id or "something_else", (err, confirm) ->
+        stripe.customers.create
+          source: req.body.stripeToken
+          plan: "bag_#{req.body.type}"
+          email: req.body.stripeEmail
+        , (err, customer) ->
+          if err
+            res.send "Error creating customer: #{err}"
+          else
+
+            # save customer data to database
+            User.findOne _id: req.session.user._id, (err, user) ->
+              if err
+                res.send "Couldn't access database: #{err}"
+              else
+                user.stripe_id = customer.id
+                user.save (err) ->
+                  if err
+                    res.send "Couldn't save user: #{err}"
+                  else
+                    # wait for the charge to go through...
+                    pending_charges[customer.id] =
+                      req: req
+                      res: res
 
     else
       res.send "Invalid type to get - needs to be 'pro' or 'exec'."
@@ -165,8 +210,8 @@ exports.stripe_webhook = (req, res) ->
           else
             # set up the plan
             user.plan = 0
-            user.plan = 1 if req.body.data?.object?.amount is 500
-            user.plan = 2 if req.body.data?.object?.amount is 1000
+            user.plan = 1 if req.body.data?.object?.subtotal is 500
+            user.plan = 2 if req.body.data?.object?.subtotal is 1000
 
             # add one more month, in milliseconds
             user.plan_expire or= new Date().getTime() # by default, this is the current time.
