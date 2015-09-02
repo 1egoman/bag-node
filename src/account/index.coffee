@@ -8,8 +8,13 @@ format_page = (data) ->
   <html>
     <head>
       <title>Manage Bag Account</title>
+      <link rel="stylesheet" href="//getbag.io/css/index.css">
     </head>
-    <body>#{data}</body>
+    <body>
+      <div class="container">
+        #{data}
+      </div>
+    </body>
   </html>
   """
 
@@ -41,23 +46,72 @@ exports.manage = (req, res) ->
   res.send format_page """
   <h1>Welcome, #{req.session.user.realname}</h1>
 
-  <div class="payments">
-    <a href="/checkout/free">#{free}Bag Free</a>
-    <a href="/checkout/pro">#{pro}Bag Pro</a>
-    <a href="/checkout/exec">#{exec}Bag Exec</a>
+  <div class="paid-plans">
+    <div class="plan plan-0 plan-free">
+      <div>
+        <h3>Bag Free</h3>
+        <p>Food is just a hobby.</p>
+        <ul>
+          <li>No Private Items
+          </li><li>No Additional features
+          </li><li>Free</li>
+        </ul>
+      </div>
+      <a
+        class="btn btn-block #{req.session.user.plan is 0 and "current"}"
+        "#{req.session.user.plan isnt 0 and "href='/checkout/free'" or ''}"
+      >
+        #{free}Bag Free
+      </a>
+    </div>
+
+    <div class="plan plan-5 plan-pro">
+      <div>
+        <h3>Bag Pro</h3>
+        <p>Grocery shopping has become serious.</p>
+        <ul>
+          <li>10 Private Items
+          </li><li>No Additional features
+          </li><li>$5.00/month</li>
+        </ul>
+      </div>
+      <a class="btn btn-block #{req.session.user.plan is 1 and "current"}" href="/checkout/pro">
+        #{pro}Bag Pro
+      </a>
+    </div>
+
+    <div class="plan plan-10 plan-exec">
+      <div>
+        <h3>Bag Exectutive</h3>
+        <p>You never joke about groceries.</p>
+        <ul>
+          <li>Unlimited Private Items
+          </li><li>Custom prices for items
+          </li><li>$10.00/month</li>
+        </ul>
+      </div>
+      <a class="btn btn-block #{req.session.user.plan is 2 and "current"}" href="/checkout/exec">
+        #{exec}Bag Executive
+      </a>
+    </div>
   </div>
 
   <br/>
-  <a href="/logout">Logout</a>
+  <a href="/logout" class="btn btn-primary">Logout</a>
   """
 
 # the login page
 exports.login_get = (req, res) ->
   res.send format_page """
   <form method="POST">
-    <input type="text" name="username" placeholder="Username" />
-    <input type="text" name="password" placeholder="Password" />
-    <input type="submit" />
+    <h1>Login to Bag</h1>
+    <div class="form-group">
+      <input type="text" name="username" placeholder="Username" class="form-control" />
+    </div>
+    <div class="form-group">
+      <input type="text" name="password" placeholder="Password" class="form-control" />
+    </div>
+    <input type="submit" class="btn btn-primary" value="Login" />
   </form>
   """
 
