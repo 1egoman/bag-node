@@ -104,7 +104,8 @@ exports.create = (req, res) ->
             cb user_params
           else
             Store.findOne name: "Whole Foods", (err, item) ->
-              user_params.stores = [ item._id ]
+              if not err
+                user_params.stores = [ item._id ]
               cb user_params
 
         # create user model and save it

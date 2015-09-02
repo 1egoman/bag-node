@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://api.getbag.io";
+window.host = "http://bagd.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
