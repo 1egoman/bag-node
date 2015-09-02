@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://192.168.1.13:8000";
+window.host = "http://bagd.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -608,7 +608,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   socket.emit('bag:index');
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
-    console.log($scope.bag);
     $ionicSlideBoxDelegate.update();
     $scope.sorted_bag = $scope.sort_items();
     return $scope.$broadcast('scroll.refreshComplete');
