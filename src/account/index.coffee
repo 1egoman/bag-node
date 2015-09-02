@@ -141,7 +141,7 @@ exports.login_get = (req, res) ->
       <input type="text" name="username" placeholder="Username" class="form-control" />
     </div>
     <div class="form-group">
-      <input type="text" name="password" placeholder="Password" class="form-control" />
+      <input type="password" name="password" placeholder="Password" class="form-control" />
     </div>
     <input type="submit" class="btn btn-primary" value="Login" />
   </form>
