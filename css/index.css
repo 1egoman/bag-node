@@ -6085,6 +6085,9 @@ button.close {
       float: left;
       width: 50%; } }
 
+body {
+  padding-bottom: 50px; }
+
 @media (max-width: 768px) {
   .tooltip {
     width: 100%;

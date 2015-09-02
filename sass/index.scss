@@ -10,6 +10,10 @@ $bag-yellow: #FFC000;
 @import "_home_threes";
 @import "_get_app_btns";
 
+// padding on bottom of body
+body {
+  padding-bottom: 50px;
+}
 
 
 // make tooltips be full width on mobile
