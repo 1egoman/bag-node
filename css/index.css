@@ -1524,15 +1524,16 @@ pre {
   .container-fluid:after {
     clear: both; }
 
-.row, .threes {
+.row, .threes, .get-app-btns {
   margin-left: -15px;
   margin-right: -15px; }
   .row:before,
   .threes:before,
-  .row:after, .threes:after {
+  .get-app-btns:before,
+  .row:after, .threes:after, .get-app-btns:after {
     content: " ";
     display: table; }
-  .row:after, .threes:after {
+  .row:after, .threes:after, .get-app-btns:after {
     clear: both; }
 
 .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
@@ -2820,44 +2821,92 @@ select[multiple].input-lg, .input-group-lg > select[multiple].form-control,
     -webkit-box-shadow: none;
     box-shadow: none; }
 
-.btn-default {
+.btn-default, .get-app-btns > div button, .get-app-btns > div a {
   color: #333;
   background-color: #fff;
   border-color: #ccc; }
   .btn-default:hover,
+  .get-app-btns > div button:hover,
+  .get-app-btns > div a:hover,
   .btn-default:focus,
+  .get-app-btns > div button:focus,
+  .get-app-btns > div a:focus,
   .btn-default.focus,
+  .get-app-btns > div button.focus,
+  .get-app-btns > div a.focus,
   .btn-default:active,
+  .get-app-btns > div button:active,
+  .get-app-btns > div a:active,
   .btn-default.active,
-  .open > .btn-default.dropdown-toggle {
+  .get-app-btns > div button.active,
+  .get-app-btns > div a.active,
+  .open > .btn-default.dropdown-toggle, .get-app-btns > div .open > button.dropdown-toggle, .get-app-btns > div .open > a.dropdown-toggle {
     color: #333;
     background-color: #e6e6e6;
     border-color: #adadad; }
   .btn-default:active,
+  .get-app-btns > div button:active,
+  .get-app-btns > div a:active,
   .btn-default.active,
-  .open > .btn-default.dropdown-toggle {
+  .get-app-btns > div button.active,
+  .get-app-btns > div a.active,
+  .open > .btn-default.dropdown-toggle, .get-app-btns > div .open > button.dropdown-toggle, .get-app-btns > div .open > a.dropdown-toggle {
     background-image: none; }
   .btn-default.disabled,
+  .get-app-btns > div button.disabled,
+  .get-app-btns > div a.disabled,
   .btn-default.disabled:hover,
+  .get-app-btns > div button.disabled:hover,
+  .get-app-btns > div a.disabled:hover,
   .btn-default.disabled:focus,
+  .get-app-btns > div button.disabled:focus,
+  .get-app-btns > div a.disabled:focus,
   .btn-default.disabled.focus,
+  .get-app-btns > div button.disabled.focus,
+  .get-app-btns > div a.disabled.focus,
   .btn-default.disabled:active,
+  .get-app-btns > div button.disabled:active,
+  .get-app-btns > div a.disabled:active,
   .btn-default.disabled.active,
+  .get-app-btns > div button.disabled.active,
+  .get-app-btns > div a.disabled.active,
   .btn-default[disabled],
+  .get-app-btns > div button[disabled],
+  .get-app-btns > div a[disabled],
   .btn-default[disabled]:hover,
+  .get-app-btns > div button[disabled]:hover,
+  .get-app-btns > div a[disabled]:hover,
   .btn-default[disabled]:focus,
+  .get-app-btns > div button[disabled]:focus,
+  .get-app-btns > div a[disabled]:focus,
   .btn-default[disabled].focus,
+  .get-app-btns > div button[disabled].focus,
+  .get-app-btns > div a[disabled].focus,
   .btn-default[disabled]:active,
+  .get-app-btns > div button[disabled]:active,
+  .get-app-btns > div a[disabled]:active,
   .btn-default[disabled].active,
+  .get-app-btns > div button[disabled].active,
+  .get-app-btns > div a[disabled].active,
   fieldset[disabled] .btn-default,
-  fieldset[disabled] .btn-default:hover,
-  fieldset[disabled] .btn-default:focus,
-  fieldset[disabled] .btn-default.focus,
-  fieldset[disabled] .btn-default:active,
-  fieldset[disabled] .btn-default.active {
+  fieldset[disabled] .get-app-btns > div button,
+  .get-app-btns > div fieldset[disabled] button, fieldset[disabled] .get-app-btns > div a,
+  .get-app-btns > div fieldset[disabled] a, fieldset[disabled] .btn-default:hover,
+  fieldset[disabled] .get-app-btns > div button:hover,
+  .get-app-btns > div fieldset[disabled] button:hover, fieldset[disabled] .get-app-btns > div a:hover,
+  .get-app-btns > div fieldset[disabled] a:hover, fieldset[disabled] .btn-default:focus,
+  fieldset[disabled] .get-app-btns > div button:focus,
+  .get-app-btns > div fieldset[disabled] button:focus, fieldset[disabled] .get-app-btns > div a:focus,
+  .get-app-btns > div fieldset[disabled] a:focus, fieldset[disabled] .btn-default.focus,
+  fieldset[disabled] .get-app-btns > div button.focus,
+  .get-app-btns > div fieldset[disabled] button.focus, fieldset[disabled] .get-app-btns > div a.focus,
+  .get-app-btns > div fieldset[disabled] a.focus, fieldset[disabled] .btn-default:active,
+  fieldset[disabled] .get-app-btns > div button:active,
+  .get-app-btns > div fieldset[disabled] button:active, fieldset[disabled] .get-app-btns > div a:active,
+  .get-app-btns > div fieldset[disabled] a:active, fieldset[disabled] .btn-default.active, fieldset[disabled] .get-app-btns > div button.active, .get-app-btns > div fieldset[disabled] button.active, fieldset[disabled] .get-app-btns > div a.active, .get-app-btns > div fieldset[disabled] a.active {
     background-color: #fff;
     border-color: #ccc; }
-  .btn-default .badge {
+  .btn-default .badge, .get-app-btns > div button .badge, .get-app-btns > div a .badge {
     color: #fff;
     background-color: #333; }
 
@@ -6026,10 +6075,33 @@ button.close {
     .threes .threes-cell h3 {
       text-align: center; }
 
+.get-app-btns > div {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px; }
+  @media (min-width: 992px) {
+    .get-app-btns > div {
+      float: left;
+      width: 50%; } }
+
+@media (max-width: 768px) {
+  .tooltip {
+    width: 100%;
+    margin: 20px 0px; }
+  .tooltip-inner {
+    max-width: 100%; } }
+
 .screens {
   margin: 50px 0px; }
   .screens .wrapper {
     position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    position: relative;
+    float: left;
+    width: 16.6666666667%;
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px; }
@@ -6042,6 +6114,12 @@ button.close {
       border: 3px solid #DDD; }
   .screens .offset {
     position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    position: relative;
+    float: left;
+    width: 8.3333333333%;
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px; }

@@ -79,6 +79,21 @@
         </div>
       </div>
 
+      <div class="get-app-btns">
+        <div>
+          <button
+            class="btn btn-block btn-ios"
+            rel="tooltip"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Unavailable right now. Let us know if you are interested!"
+          >Get the app for iOS</button>
+        </div>
+        <div>
+          <a class="btn btn-block btn-android" href="/builds/Bag-0.4.0.apk">Get the app for Android</a>
+        </div>
+      </div>
+
       <h2>How does it work?</h2>
       <p>
         Each user has a central "bag" that food items can be put into. Users can
@@ -119,6 +134,7 @@
       <!-- jquery and bootstrap -->
       <script src="/jquery.min.js"></script>
       <script src="/bootstrap.min.js"></script>
+      <script type="text/javascript">$(function(){$("[rel='tooltip']").tooltip();});</script>
 
     </body>
   </html>

@@ -8,6 +8,20 @@ $bag-yellow: #FFC000;
 @import "_nav";
 @import "_price";
 @import "_home_threes";
+@import "_get_app_btns";
+
+
+
+// make tooltips be full width on mobile
+@media (max-width: $screen-sm) {
+  .tooltip {
+    width: 100%;
+    margin: 20px 0px;
+  }
+  .tooltip-inner {
+    max-width: 100%
+  }
+}
 
 // screenshots
 .screens {
@@ -16,6 +30,7 @@ $bag-yellow: #FFC000;
 
   .wrapper {
     @include make-sm-column(1);
+    @include make-xs-column(2);
 
     img {
       width: 100%;
@@ -25,6 +40,7 @@ $bag-yellow: #FFC000;
 
   .offset {
     @include make-sm-column(3);
+    @include make-xs-column(1);
   }
 }
 
