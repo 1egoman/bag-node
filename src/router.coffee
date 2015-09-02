@@ -94,6 +94,15 @@ exports.http = (app) ->
   # managing account and paying for plans
   app.get "/manage", account.protect, account.manage
   app.get "/checkout/:plan", account.protect, account.checkout
+  app.post "/checkout_complete",
+    body_parser.urlencoded(extended: true),
+    account.protect,
+    account.checkout_complete
+
+  # get webhooks from stripe
+  app.post "/webhooks/stripe",
+    body_parser.json(),
+    account.stripe_webhook
 
 
 
