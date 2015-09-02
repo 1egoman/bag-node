@@ -27,9 +27,11 @@ exports.protect = (req, res, next) ->
 # the basic admin management page. THis is the "hub" that everything else comes
 # off of.
 exports.manage = (req, res) ->
-  exec = if req.session.user.plan is 2 then "You have " else "Upgrade to "
+
+  # make each item read the correct thing.
+  exec = if req.session.user.plan is 2 then "Update settings for " else "Upgrade to "
   pro = if req.session.user.plan is 1
-    "You have "
+    "Update settings for "
   else if req.session.user.plan is 2
     "Downgrade to "
   else
