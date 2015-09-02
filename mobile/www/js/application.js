@@ -532,13 +532,16 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   };
 });
 
-angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
+angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state, $cordovaDialogs) {
   user.then(function(user) {
     return $scope.username = user.name;
   });
   socket.on('user:show:callback', function(evt) {
+    var old_plan;
     user = evt.data;
-    return $scope.user_plan = (function(plan) {
+    $scope.user_plan || ($scope.user_plan = "");
+    old_plan = $scope.user_plan.slice(0);
+    $scope.user_plan = (function(plan) {
       switch (plan) {
         case 0:
           return "Bag Free";
@@ -550,6 +553,9 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
           return "Unknown";
       }
     })(user.plan);
+    if (old_plan.length && old_plan !== $scope.user_plan) {
+      return $cordovaDialogs.alert("FYI, because of your new plan, some features may not be available until you restart the application.", "Reload App", 'Ok');
+    }
   });
   $scope.refresh_user = function() {
     return socket.emit('user:show', {
