@@ -189,19 +189,24 @@ exports.stripe_webhook = (req, res) ->
                 res.send "Cool, thanks stripe!"
 
                 # respond to the pending request
-                pending_charges[customer].res.send """
-                You have successfully signed up for Bag!
-                
-                You should receive a receipt by email soon. In the meantime, enjoy!
-                """
+                if customer of pending_charges
+                  pending_charges[customer].res.send """
+                  You have successfully signed up for Bag!
+                  
+                  You should receive a receipt by email soon. In the meantime, enjoy!
+                  """
       else
         # uhh, what??? That card was never used????
         res.send "Uh, that card was never used. What are you talking about stripe???"
 
 
     when "charge.failed"
-      if card_id of pending_charges
-        pending_charges[card_id].res.send "Card didn't charge. Any idea why this would happen?"
+      if consumer of pending_charges
+        pending_charges[consumer].res.send """
+        Your card didn't charge.
+        
+        If you think this is in error, contact us at support@getbag.io and provide this token: #{consumer}
+        """
         res.send "Cool, thanks stripe!"
       else
         1 # uhh, what??? That card was never used????
