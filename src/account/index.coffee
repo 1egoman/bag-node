@@ -1,6 +1,6 @@
 User = require "../models/user_model"
 auth_ctrl = require "../controllers/auth_controller"
-stripe = require("stripe") "sk_test_lRsLtNDZ9EBsX2NrFx07H5mO"
+stripe = require("stripe") process.env.STRIPE_TOKEN or "sk_test_lRsLtNDZ9EBsX2NrFx07H5mO"
 pending_charges = {}
 
 format_page = (data) ->
