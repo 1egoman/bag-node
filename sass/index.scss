@@ -7,14 +7,15 @@ $bag-yellow: #FFC000;
 
 @import "_nav";
 @import "_price";
+@import "_home_threes";
 
 // screenshots
 .screens {
   @extend .pull-left;
-  margin-bottom: 50px;
+  margin: 50px 0px;
 
   .wrapper {
-    @include make-sm-column(2);
+    @include make-sm-column(1);
 
     img {
       width: 100%;
@@ -23,7 +24,7 @@ $bag-yellow: #FFC000;
   }
 
   .offset {
-    @include make-sm-column(1);
+    @include make-sm-column(3);
   }
 }
 
