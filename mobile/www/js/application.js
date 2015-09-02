@@ -446,7 +446,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     defer.resolve(stores);
   });
   return defer.promise;
-}).factory("storePicker", function($ionicModal, $q, stores, user, $state, $timeout) {
+}).factory("storePicker", function($ionicModal, $q, stores, user, $state, $timeout, $cordovaDialogs) {
   return function($scope, item) {
     var initial_p, p;
     initial_p = $q.defer();
@@ -513,14 +513,13 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return this.do_suggest_store = true;
       },
       suggest_store: function(store) {
-        socket.emit("store:suggest", {
-          store: store
-        });
+        socket.emit("store:suggest", store);
         return socket.on("store:suggest:callback", function(evt) {
           if (evt.resolves_to) {
             return this.pick_store(evt.resolves_to);
           } else {
-            return $cordovaDialogs("We'll take a look at this and add it soon", "Thanks", "OK");
+            $cordovaDialogs.alert("We'll take a look at this and add it soon.", "Thanks", "OK");
+            return $scope.store_picker_modal.hide();
           }
         });
       }

@@ -14,6 +14,14 @@ store = mongoose.Schema
   tags: Array
   website: String
 
+  verified: Boolean
+
+  # when a new item is being considered, it is stored directly into the store
+  # model.
+  item: String
+  item_price: Number
+  item_brand: String
+
 store.set 'versionKey', false
 
 module.exports = mongoose.model 'Store', store

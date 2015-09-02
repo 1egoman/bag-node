@@ -63,7 +63,7 @@ exports.routes = routes =
 
   store:
     controller: store_ctrl
-    routes: ["index"]
+    routes: ["index", "suggest"]
 
   pick:
     controller: picks_ctrl

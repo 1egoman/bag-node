@@ -92,7 +92,7 @@
         <input type="text" placeholder="Store Name" ng-model="store_name" />
       </div>
       <div class="item item-input">
-        <input type="text" placeholder="Item Brand" ng-model="store_brand" />
+        <input type="text" placeholder="Item brand and other information" ng-model="store_brand" />
       </div>
       <div class="item item-input">
         <input type="number" placeholder="Item Price" ng-model="store_price" />
@@ -100,8 +100,9 @@
 
       <button
         class="button button-balanced button-block"
-        ng-click="store_picker.suggest_store({name: store_name, brand:
-        store_brand, price: store_price})"
+        ng-click="store_picker.suggest_store({name: store_name, item: item, item_brand:
+        store_brand, item_price: store_price})"
+        ng-disabled="!(store_name && store_brand && store_price)"
       >Suggest Custom Store</button>
 
   </ion-content>

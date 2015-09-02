@@ -213,7 +213,7 @@ angular.module('starter.services', [])
     defer.promise
 
 # store chooser
-.factory "storePicker", ($ionicModal, $q, stores, user, $state, $timeout) ->
+.factory "storePicker", ($ionicModal, $q, stores, user, $state, $timeout, $cordovaDialogs) ->
   ($scope, item) ->
 
     initial_p = $q.defer()
@@ -284,12 +284,14 @@ angular.module('starter.services', [])
         @do_suggest_store = true
 
       suggest_store: (store) ->
-        socket.emit "store:suggest", store: store
+        socket.emit "store:suggest", store
         socket.on "store:suggest:callback", (evt) ->
           if evt.resolves_to
             @pick_store evt.resolves_to
           else
-            $cordovaDialogs "We'll take a look at this and add it soon", "Thanks", "OK"
+            $cordovaDialogs.alert "We'll take a look at this and add it soon.", "Thanks", "OK"
+            $scope.store_picker_modal.hide()
+
 
     user.then (u) -> $scope.store_picker.user = u
 
