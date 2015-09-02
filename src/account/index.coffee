@@ -59,7 +59,7 @@ exports.manage = (req, res) ->
       </div>
       <a
         class="btn btn-block #{req.session.user.plan is 0 and "current"}"
-        "#{req.session.user.plan isnt 0 and "href='/checkout/free'" or ''}"
+        #{req.session.user.plan isnt 0 and "href='/checkout/free'" or ''}
       >
         #{free}Bag Free
       </a>

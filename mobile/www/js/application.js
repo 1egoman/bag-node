@@ -131,7 +131,7 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://192.168.1.13:8000";
+window.host = "http://bagd.herokuapp.com";
 
 auth_module = angular.module('starter.authorization', []);
 
@@ -339,12 +339,9 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   return function(user_id) {
     var defer;
     defer = $q.defer();
-    defer.promise.clear = function() {
-      return socket.emit('user:show', {
-        user: user_id
-      });
-    };
-    defer.promise.clear();
+    socket.emit('user:show', {
+      user: user_id
+    });
     socket.on('user:show:callback', function(evt) {
       window.user = evt.data;
       defer.resolve(evt.data);
@@ -536,22 +533,27 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
 });
 
 angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
+  user.then(function(user) {
+    return $scope.username = user.name;
+  });
+  socket.on('user:show:callback', function(evt) {
+    user = evt.data;
+    return $scope.user_plan = (function(plan) {
+      switch (plan) {
+        case 0:
+          return "Bag Free";
+        case 1:
+          return "Bag Pro";
+        case 2:
+          return "Bag Executive";
+        default:
+          return "Unknown";
+      }
+    })(user.plan);
+  });
   $scope.refresh_user = function() {
-    user.clear();
-    return user.then(function(user) {
-      $scope.username = user.name;
-      return $scope.user_plan = (function(plan) {
-        switch (plan) {
-          case 0:
-            return "Bag Free";
-          case 1:
-            return "Bag Pro";
-          case 2:
-            return "Bag Executive";
-          default:
-            return "Unknown";
-        }
-      })(user.plan);
+    return socket.emit('user:show', {
+      user: user_id
     });
   };
   $scope.refresh_user();
