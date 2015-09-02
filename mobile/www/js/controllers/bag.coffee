@@ -23,6 +23,7 @@ angular.module('starter.controllers.tab_bag', [])
   socket.emit 'bag:index'
   socket.on 'bag:index:callback', (evt) ->
     $scope.bag = evt.data
+    console.log $scope.bag
 
     # force the slide-box to update and make
     # each "page" > 0px (stupid bugfix)

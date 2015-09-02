@@ -1,4 +1,7 @@
 User = require "../models/user_model"
+Foodstuffs = require "../models/foodstuff_model"
+Bag = require "../models/bag_model"
+
 auth_ctrl = require "../controllers/auth_controller"
 stripe = require("stripe") process.env.STRIPE_TOKEN or "sk_test_lRsLtNDZ9EBsX2NrFx07H5mO"
 pending_charges = {}
@@ -161,21 +164,45 @@ exports.checkout = (req, res) ->
           if err
             res.send "Error deleting stripe user: #{err}"
           else
-            res.send "Your plan has been cancelled. You have been downgraded to our free plan."
 
-        # remove all payment info and subscription stuff.
-        User.findOne _id: req.session.user._id, (err, user) ->
-          if err
-            res.send "Couldn't get user: #{err}"
-          else
-            user.stripe_id = null
-            user.plan = 0
-            user.plan_expire = null
-            user.save (err) ->
+            # remove all payment info and subscription stuff.
+            User.findOne _id: req.session.user._id, (err, user) ->
               if err
-                res.send "Couldn't save to database: #{err}"
+                res.send "Couldn't get user: #{err}"
               else
-                # res.send "Canceled bag plan."
+                user.stripe_id = null
+                user.plan = 0
+                user.plan_expire = null
+
+                # remove all private foodstuffs
+                Foodstuffs.remove
+                  user: req.session.user._id
+                  private: true
+                , (err, foodstuffs) ->
+                  if err
+                    res.send "Couldn't delete private foodstuffs: #{err}"
+                  else
+
+                    # remove all custom prices
+                    Bag.findOne user: req.session.user._id, (err, bag) ->
+                      if err
+                        res.send "Couldn't retreive user bag: #{err}"
+                      else
+                        for b in bag.contents
+                          b.stores.custom = undefined if "custom" of b.stores
+                          b.store = "" if b.store is "custom"
+                        bag.save (err) ->
+                          console.log bag, err
+                          if err
+                            res.send "Couldn't save bag: #{err}"
+                          else
+
+                            # save user with new plan
+                            user.save (err) ->
+                              if err
+                                res.send "Couldn't save to database: #{err}"
+                              else
+                                res.send "Your plan has been cancelled. You have been downgraded to our free plan."
       else
         res.send "It seems you aren't signed up for any plan right now."
 
