@@ -3,6 +3,19 @@
   background-color: transparent;
 }
 
+// the nav background image
+.navbar {
+  background-image: url(http://us.123rf.com/450wm/afhunta/afhunta1009/afhunta100900069/7740515-shelves-with-goods-inside-a-large-supermarket.jpg);
+
+  background-position: top center;
+  background-size: 100%;
+
+  // put a transparent "shade" over the background image
+  &>div {
+    background-color: $navbar-default-bg;
+  }
+}
+
 // when coloring the iside of the nav we should make it this color
 .nav-colors {
   color: $navbar-default-link-color;
@@ -21,13 +34,8 @@ $nav-hero-height: 512px;
   min-height: $nav-hero-height;
   height: $nav-hero-height;
 
-  background-image: url(http://us.123rf.com/450wm/afhunta/afhunta1009/afhunta100900069/7740515-shelves-with-goods-inside-a-large-supermarket.jpg);
-  background-position: top center;
-  background-size: 100%;
-
   // put a transparent "shade" over the background image
   &>div {
-    background-color: $navbar-default-bg;
     height: $nav-hero-height;
   }
 

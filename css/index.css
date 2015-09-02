@@ -5918,6 +5918,13 @@ button.close {
 > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   background-color: transparent; }
 
+.navbar {
+  background-image: url(http://us.123rf.com/450wm/afhunta/afhunta1009/afhunta100900069/7740515-shelves-with-goods-inside-a-large-supermarket.jpg);
+  background-position: top center;
+  background-size: 100%; }
+  .navbar > div {
+    background-color: rgba(85, 85, 85, 0.8); }
+
 .nav-colors, .navbar-hero .container-hero {
   color: #fff; }
 
@@ -5926,12 +5933,8 @@ button.close {
 
 .navbar-hero {
   min-height: 512px;
-  height: 512px;
-  background-image: url(http://us.123rf.com/450wm/afhunta/afhunta1009/afhunta100900069/7740515-shelves-with-goods-inside-a-large-supermarket.jpg);
-  background-position: top center;
-  background-size: 100%; }
+  height: 512px; }
   .navbar-hero > div {
-    background-color: rgba(85, 85, 85, 0.8);
     height: 512px; }
   .navbar-hero .container-hero {
     margin-top: 50px; }
