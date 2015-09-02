@@ -16,6 +16,8 @@ store_ctrl = require "./controllers/stores_controller"
 items_ctrl = require "./controllers/items_controller"
 picks_ctrl = require "./controllers/pick_controller"
 
+User = require "./models/user_model"
+
 account = require "./account"
 
 chalk = require "chalk"
@@ -186,38 +188,45 @@ initialize_user_socket = (io, user) ->
     if socket.has_perms is false
       return socket.emit "permissiondenied"
 
+    User.findOne _id: user._id, (err, u) ->
+      if not err
+        user = u
+      else
+        console.log "warning: wasn't able to reload user: #{err}"
 
-    # iterate through routes
-    for k, v of exports.routes
-      for method in v.routes
 
-        # wrap in closure so loop doesn't "outpace" the current scope
-        do (k, v, method) ->
-          socket.on "#{k}:#{method}", (data) ->
-            data or= {}
 
-            # log the request happening
-            console.log chalk.green("--> ws"), "#{k}:#{method}", data
+      # iterate through routes
+      for k, v of exports.routes
+        for method in v.routes
 
-            # extract params
-            params = {}
-            params[k] = data[k]
+          # wrap in closure so loop doesn't "outpace" the current scope
+          do (k, v, method) ->
+            socket.on "#{k}:#{method}", (data) ->
+              data or= {}
 
-            v.controller[method]
-              body: data
-              type: 'ws'
-              params: params
-              user: user
-            ,
-              send: (data) ->
-                # log the event response
-                console.log \
-                  chalk.green("<-- ws"), \
-                  "#{k}:#{method}:callback", \
-                  JSON.stringify data, null, 2
+              # log the request happening
+              console.log chalk.green("--> ws"), "#{k}:#{method}", data
 
-                # let everyone know
-                if method in ["create", "update", "destroy"]
-                  socket.broadcast.emit "#{k}:#{method}:callback", data
-                socket.emit "#{k}:#{method}:callback", data
+              # extract params
+              params = {}
+              params[k] = data[k]
+
+              v.controller[method]
+                body: data
+                type: 'ws'
+                params: params
+                user: user
+              ,
+                send: (data) ->
+                  # log the event response
+                  console.log \
+                    chalk.green("<-- ws"), \
+                    "#{k}:#{method}:callback", \
+                    JSON.stringify data, null, 2
+
+                  # let everyone know
+                  if method in ["create", "update", "destroy"]
+                    socket.broadcast.emit "#{k}:#{method}:callback", data
+                  socket.emit "#{k}:#{method}:callback", data
 
