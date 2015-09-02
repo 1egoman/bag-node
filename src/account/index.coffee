@@ -143,13 +143,14 @@ exports.checkout_complete = (req, res) ->
 # after a card has been used, stripe will respond with a webhook. 
 exports.stripe_webhook = (req, res) ->
   customer = req.body.data?.object?.customer
-  console.log req.body
+  return res.send "Bad customer." if not customer
+
   switch req.body.type
 
     # a successful card charge. We'll use this to increase the end date of a
     # user's subscription.
     when "invoice.payment_succeeded"
-      if card_id of pending_charges
+      if customer of pending_charges
         
         # update the users length of payment by a month.
         User.findOne stripe_id: customer, (err, user) ->
@@ -158,25 +159,30 @@ exports.stripe_webhook = (req, res) ->
 
             # uhoh - the user should contact us for help.
             pending_charges[customer].res.send """
-            Hey! Something went wrong with your payment!
-            
+            Hey! Something went wrong with your payment! (NOACCUSER)
             Contact support@getbag.io with this token: #{customer}
             """
           else
+            # set up the plan
+            user.plan = 0
+            user.plan = 1 if req.body.data?.object?.amount is 500
+            user.plan = 2 if req.body.data?.object?.amount is 1000
+
             # add one more month, in milliseconds
+            user.plan_expire or= new Date().getTime() # by default, this is the current time.
             user.plan_expire += do ->
               date = new Date
               month_days = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
               month_days * 60 * 60 * 24 * 1000
 
+            # save the new user token stuff
             user.save (err) ->
               if err
                 res.send "Couldn't save user: #{err}"
 
                 # uhoh - the user should contact us for help.
                 pending_charges[customer].res.send """
-                Hey! Something went wrong with your payment!
-                
+                Hey! Something went wrong with your payment! (NOSAVEUSER)
                 Contact support@getbag.io with this token: #{customer}
                 """
               else
