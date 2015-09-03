@@ -44,16 +44,16 @@ exports.suggest = (req, res) ->
     console.log 3, Store
 
     new Store store
-    .save (err) ->
-      console.log 4
-      if err
-        res.send
-          name: "bag.error.store.suggest"
-          err: err
-
-      else
-        res.send
-          name: "bag.success.store.suggest"
+    # .save (err) ->
+    #   console.log 4
+    #   if err
+    #     res.send
+    #       name: "bag.error.store.suggest"
+    #       err: err
+    #
+    #   else
+    #     res.send
+    #       name: "bag.success.store.suggest"
 
   else
     res.send
