@@ -41,19 +41,19 @@ exports.suggest = (req, res) ->
 
     store.verified = false
     store.tags = []
-    console.log 3, Store
+    console.log 3
 
-    new Store store
-    # .save (err) ->
-    #   console.log 4
-    #   if err
-    #     res.send
-    #       name: "bag.error.store.suggest"
-    #       err: err
-    #
-    #   else
-    #     res.send
-    #       name: "bag.success.store.suggest"
+    new_store = new Store store
+    new_store.save (err) ->
+      # console.log 4
+      # if err
+      #   res.send
+      #     name: "bag.error.store.suggest"
+      #     err: err
+      #
+      # else
+      #   res.send
+      #     name: "bag.success.store.suggest"
 
   else
     res.send
