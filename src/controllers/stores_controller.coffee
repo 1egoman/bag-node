@@ -41,7 +41,7 @@ exports.suggest = (req, res) ->
 
     store.verified = false
     store.tags = []
-    console.log 3
+    console.log 3, Store
 
     new Store store
     .save (err) ->
