@@ -34,18 +34,14 @@ exports.edit = (req, res) -> res.send "Not supported."
 # suggest a new store to be created.
 exports.suggest = (req, res) ->
   store = req.body
-  console.log 1, store
 
   if store.name and store.item and store.item_price and store.item_brand
-    console.log 2
 
     store.verified = false
     store.tags = []
-    console.log 3
 
     new_store = new Store store
     new_store.save (err) ->
-      console.log 4
       if err
         res.send
           name: "bag.error.store.suggest"
