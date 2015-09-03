@@ -60,27 +60,45 @@ exports.create = (req, res) ->
       foodstuff_params.verified = false
 
       # private recipe
-      if foodstuff_params.private and req.user.plan > 0
-        foodstuff_params.private = true
-        
-        # format the price with a custom store
-        foodstuff_params.stores = custom: price: foodstuff_params.price
+      check_priv = (foodstuff_params, done) ->
+        if foodstuff_params.private and req.user.plan > 0
+          foodstuff_params.private = true
+          
+          # format the price with a custom store
+          foodstuff_params.stores = custom: price: foodstuff_params.price
 
-      # unpaid users cannot make private recipes
-      else
-        foodstuff_params.private = false
+          # are we on a plan with a fixed amount of foodstuffs?
+          if req.user.plan is 1
+            Foodstuff.find
+              user: req.user._id
+              private: true
+            , (err, total, n) ->
+              if err or total.length >= 10
+                res.send
+                  status: "bag.error.foodstuff.create"
+                  error: err or "Reached max private foodstuffs."
+              else
+                done foodstuff_params
 
-      # create the foodstuff
-      foodstuff = new Foodstuff foodstuff_params
-      foodstuff.save (err) ->
-        if err
-          res.send
-            status: "bag.error.foodstuff.create"
-            error: err
+        # unpaid users cannot make private recipes
         else
-          res.send
-            status: "bag.success.foodstuff.create"
-            data: foodstuff
+          foodstuff_params.private = false
+          done foodstuff_params
+
+      # check to be sure that we can create a private foodstuff
+      check_priv foodstuff_params, (foodstuff_params) ->
+
+        # create the foodstuff
+        foodstuff = new Foodstuff foodstuff_params
+        foodstuff.save (err) ->
+          if err
+            res.send
+              status: "bag.error.foodstuff.create"
+              error: err
+          else
+            res.send
+              status: "bag.success.foodstuff.create"
+              data: foodstuff
   else
     res.send
       status: "bag.error.foodstuff.create"
