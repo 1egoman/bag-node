@@ -295,8 +295,34 @@ Store.find verified: false
                 when answers.resp.indexOf('duplicate') isnt -1
 
                   do_fds = (fds_name) ->
-                    #TODO replace within a user's bag
-                    1
+                    Foodstuff.findOne name: fds_name, (err, new_item) ->
+                      return cb err if err
+
+                      # update bag to reflect duplicate
+                      Bag.findOne user: f.user, (err, bag) ->
+                        return cb err if err
+
+                        # replace in the user's bag with the new item
+                        bag.contents = bag.contents.map (c) ->
+                          if c._id.toString() is f._id.toString()
+                            new_item = new_item.toObject()
+                            new_item.quantity or= 1
+                            new_item
+                          else
+                            c
+                        bag.markModified "contents"
+
+                        bag.save (err) ->
+                          return cb err if err
+
+
+                          # delete the physical item, too
+                          Foodstuff.remove _id: f._id, (err) ->
+                            return cb err if err
+
+                            console.log "Fixed dupes: #{chalk.red f.name} -> #{chalk.red new_item.name}"
+                            cb null
+
 
 
 
@@ -307,7 +333,7 @@ Store.find verified: false
                   else
                     inq.prompt [
                       type: "input"
-                      message: "Enter the store name of the duplicate store"
+                      message: "Enter the name of the duplicate item"
                       name: "store_id"
                     ]
                     , (out) ->
