@@ -334,7 +334,7 @@ angular.module('bag.controllers.tab_bag', [])
 
   # update the old sort to the specified one
   $scope.change_sort = (new_sort_name) ->
-    persistant.sort = new_sort_name
+    persistant.sort = $scope.sort_type = new_sort_name
     $scope.sort_opts = persistant.sort_opts
     $scope.sorted_bag = $scope.sort_items()
 

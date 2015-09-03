@@ -887,7 +887,7 @@ angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($s
     }
   };
   $scope.change_sort = function(new_sort_name) {
-    persistant.sort = new_sort_name;
+    persistant.sort = $scope.sort_type = new_sort_name;
     $scope.sort_opts = persistant.sort_opts;
     return $scope.sorted_bag = $scope.sort_items();
   };

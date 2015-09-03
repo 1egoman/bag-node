@@ -8026,6 +8026,8 @@ tags-input .autocomplete .suggestion-item em {
 .item-avatar.sort-type, .sort-type.item-avatar {
   padding-left: 96px;
   min-height: 95px; }
+  .item-avatar.sort-type.on, .sort-type.on.item-avatar {
+    background: #efefef; }
   .item-avatar.sort-type.dues, .sort-type.dues.item-avatar {
     min-height: 75px; }
   .item-avatar.sort-type > img:first-child, .sort-type.item-avatar > img:first-child {

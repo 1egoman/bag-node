@@ -2,6 +2,10 @@
   @extend .item-avatar;
   padding-left: 96px;
 
+  &.on {
+    background: #efefef;
+  }
+
   min-height: 95px;
   &.dues { min-height: 75px; }
 
