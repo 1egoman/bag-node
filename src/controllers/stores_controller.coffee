@@ -37,7 +37,7 @@ exports.suggest = (req, res) ->
   console.log 1
 
   if store.name and store.item and store.item_price and store.item_brand
-  console.log 2
+    console.log 2
 
     store.verified = false
     store.tags = []
