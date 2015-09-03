@@ -80,6 +80,11 @@ angular.module('bag.controllers.tab_recipe', [])
 
   socket.on 'item:index:callback', (evt) ->
     $scope.my_recipes = evt.data
+
+    # create sort opts
+    for i in $scope.my_recipes
+      $scope.sort_opts[i._id] = $scope.make_sort_opts i
+
     $scope.$apply()
 
   # check to make sure a new user can create more private recipes
@@ -95,14 +100,27 @@ angular.module('bag.controllers.tab_recipe', [])
     else
       false
 
+  # using an item, create its sorting settings
+  $scope.make_sort_opts = (item) ->
+    if item.private
+      checks: false
+      no_quantity: true
+    else
+      checks: false
+      no_quantity: true
+      no_delete: true
+
+  # delete a private recipe
+  $scope.delete_item = (item) ->
+    socket.emit "foodstuff:destroy", foodstuff: item._id
+    $scope.my_recipes = _.without $scope.my_recipes, item
+
+
   ###
   # Initialization
   ###
-  $scope.sort_opts =
-    checks: false
-    no_quantity: true
-    no_delete: true
   $scope.my_recipes = []
+  $scope.sort_opts = {}
 
   user.then (u) ->
     $scope.user = u

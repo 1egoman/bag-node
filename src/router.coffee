@@ -54,7 +54,7 @@ exports.routes = routes =
 
   foodstuff:
     controller: foodstuff_ctrl
-    routes: ["index", "show", "create", "update", "delete", "search"]
+    routes: ["index", "show", "create", "update", "destroy", "search"]
 
   # routes that touch both foodstuffs and lists
   item:
@@ -212,6 +212,7 @@ initialize_user_socket = (io, user) ->
               params = {}
               params[k] = data[k]
 
+              method = "destroy" if method is "delete"
               v.controller[method]
                 body: data
                 type: 'ws'

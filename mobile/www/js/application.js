@@ -131,7 +131,7 @@ angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordo
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagd.herokuapp.com";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('bag.authorization', []);
 
@@ -1333,7 +1333,13 @@ angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', funct
     });
   };
   socket.on('item:index:callback', function(evt) {
+    var i, j, len, ref;
     $scope.my_recipes = evt.data;
+    ref = $scope.my_recipes;
+    for (j = 0, len = ref.length; j < len; j++) {
+      i = ref[j];
+      $scope.sort_opts[i._id] = $scope.make_sort_opts(i);
+    }
     return $scope.$apply();
   });
   $scope.user_more_private = function(user) {
@@ -1349,16 +1355,32 @@ angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', funct
       return false;
     }
   };
+  $scope.make_sort_opts = function(item) {
+    if (item["private"]) {
+      return {
+        checks: false,
+        no_quantity: true
+      };
+    } else {
+      return {
+        checks: false,
+        no_quantity: true,
+        no_delete: true
+      };
+    }
+  };
+  $scope.delete_item = function(item) {
+    socket.emit("foodstuff:destroy", {
+      foodstuff: item._id
+    });
+    return $scope.my_recipes = _.without($scope.my_recipes, item);
+  };
 
   /*
    * Initialization
    */
-  $scope.sort_opts = {
-    checks: false,
-    no_quantity: true,
-    no_delete: true
-  };
   $scope.my_recipes = [];
+  $scope.sort_opts = {};
   return user.then(function(u) {
     $scope.user = u;
     socket.emit('item:index', {

@@ -41,7 +41,8 @@
           change="update_bag"
           ng-if="!(item.contents || item.contentsLists)"
           more-info="more_info(item)"
-          sort-opts="sort_opts"
+          sort-opts="sort_opts[item._id]"
+          delete-item="delete_item(item)"
         ></checkable-item>
       </div>
       <br/>

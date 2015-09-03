@@ -142,7 +142,11 @@ exports.update = (req, res) ->
 # delete a foodstuff
 # DELETE /foodstuff/:list
 exports.destroy = (req, res) ->
-  Foodstuff.remove _id: req.params.foodstuff, (err, data) ->
+  Foodstuff.remove
+    _id: req.params.foodstuff
+    private: true
+  , (err, data) ->
+    console.log data
     if err
       res.send
         status: "bag.error.foodstuff.delete"
