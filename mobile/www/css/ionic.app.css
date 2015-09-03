@@ -8036,3 +8036,6 @@ tags-input .autocomplete .suggestion-item em {
     max-height: 88px;
     width: auto;
     height: auto; }
+  .item-avatar.sort-type .ion-help-circled, .sort-type.item-avatar .ion-help-circled {
+    padding-left: 30px;
+    padding-bottom: 40px; }
