@@ -513,6 +513,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return this.do_suggest_store = true;
       },
       suggest_store: function(store) {
+        console.log(store);
         socket.emit("store:suggest", store);
         return socket.on("store:suggest:callback", function(evt) {
           console.log(evt);

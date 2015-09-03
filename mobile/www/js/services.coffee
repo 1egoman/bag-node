@@ -284,6 +284,7 @@ angular.module('starter.services', [])
         @do_suggest_store = true
 
       suggest_store: (store) ->
+        console.log store
         socket.emit "store:suggest", store
         socket.on "store:suggest:callback", (evt) ->
           console.log evt
