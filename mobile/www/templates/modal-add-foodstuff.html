@@ -60,13 +60,10 @@
   <ion-content ng-show="confirmed">
     <div class="padding">
       <h1>Cool, Thanks!</h1>
-      <p class="font-size-bigger" ng-hide="new_foodstuff_priv">
+      <p class="font-size-bigger">
         We'll review your potential foodstuff and let you know if it meets our
         specifications. This can usually take [length of time] but no more than
         [another length of time].
-      </p>
-      <p class="font-size-bigger" ng-show="new_foodstuff_priv">
-        Your private foodstuff has been created!
       </p>
       <button
         ng-click="init(); close_add_foodstuff_modal()"

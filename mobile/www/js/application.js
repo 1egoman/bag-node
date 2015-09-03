@@ -131,7 +131,7 @@ angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordo
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagd.herokuapp.com";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('bag.authorization', []);
 
@@ -1114,7 +1114,11 @@ angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl
     }, 100);
   };
   socket.on('foodstuff:create:callback', function(evt) {
-    return $scope.confirmed = evt.data;
+    if (evt["private"]) {
+      return $scope.close_add_foodstuff_modal();
+    } else {
+      return $scope.confirmed = evt.data;
+    }
   });
 
   /*

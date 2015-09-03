@@ -30,7 +30,10 @@ angular.module('bag.controllers.new_foodstuff', [])
 
   # we got a callback!
   socket.on 'foodstuff:create:callback', (evt) ->
-    $scope.confirmed = evt.data
+    if evt.private
+      $scope.close_add_foodstuff_modal()
+    else
+      $scope.confirmed = evt.data
 
   ###
   # Initialization

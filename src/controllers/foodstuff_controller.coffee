@@ -79,6 +79,8 @@ exports.create = (req, res) ->
                   error: err or "Reached max private foodstuffs."
               else
                 done foodstuff_params
+          else
+            done foodstuff_params
 
         # unpaid users cannot make private recipes
         else
@@ -98,6 +100,7 @@ exports.create = (req, res) ->
           else
             res.send
               status: "bag.success.foodstuff.create"
+              private: foodstuff_params.private
               data: foodstuff
   else
     res.send
