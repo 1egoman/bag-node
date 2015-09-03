@@ -143,9 +143,11 @@ Store.find verified: false
                     f.save (err, user) ->
                       return cb err if err
                       console.log "Saved #{chalk.red f.name}"
+                      cb null
 
                   else
                     console.log "bad store. skipping for now..."
+                    cb null
 
 
 
@@ -171,6 +173,7 @@ Store.find verified: false
               Store.remove _id: s._id, (err) ->
                 return cb err if err
                 console.log "Deleted junk: #{chalk.red s.name}"
+                cb null
         
 
 
