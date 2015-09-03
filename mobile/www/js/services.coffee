@@ -197,7 +197,7 @@ angular.module('starter.services', [])
 
     else
       item.store = null
-      0 # well, we give up?
+      item.price or 0 # well, we give up?
 
 
 # get a reference to all stores
@@ -284,8 +284,10 @@ angular.module('starter.services', [])
         @do_suggest_store = true
 
       suggest_store: (store) ->
+        console.log store
         socket.emit "store:suggest", store
         socket.on "store:suggest:callback", (evt) ->
+          console.log evt
           if evt.resolves_to
             @pick_store evt.resolves_to
           else

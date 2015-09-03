@@ -428,7 +428,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       return price;
     } else {
       item.store = null;
-      return 0;
+      return item.price || 0;
     }
   };
 }).factory('stores', function(socket, $q) {
@@ -513,8 +513,10 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return this.do_suggest_store = true;
       },
       suggest_store: function(store) {
+        console.log(store);
         socket.emit("store:suggest", store);
         return socket.on("store:suggest:callback", function(evt) {
+          console.log(evt);
           if (evt.resolves_to) {
             return this.pick_store(evt.resolves_to);
           } else {

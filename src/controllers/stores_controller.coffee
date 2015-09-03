@@ -40,16 +40,15 @@ exports.suggest = (req, res) ->
     store.verified = false
     store.tags = []
 
-    new Store store
-    .save (err) ->
+    new_store = new Store store
+    new_store.save (err) ->
       if err
         res.send
           name: "bag.error.store.suggest"
           err: err
 
       else
-        res.send
-          name: "bag.success.store.suggest"
+        res.send name: "bag.success.store.suggest"
 
   else
     res.send
