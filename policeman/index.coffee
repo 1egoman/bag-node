@@ -19,7 +19,7 @@ Store.find verified: false
 
     Foodstuff.findOne _id: s.item.toString()
     .exec (err, f) ->
-      return console.log err if err
+      return cb err if err
 
       # look at each of the stores for that item, and see if it matches what the
       # user inputted (we are looking for duplicates)
@@ -41,7 +41,7 @@ Store.find verified: false
             cb null
 
       , (err, matches) ->
-        return console.log err if err
+        return cb err if err
         matches = _.compact matches
         
         # get the users opinion
@@ -49,7 +49,7 @@ Store.find verified: false
           type: "rawlist"
           message: """
           Store:
-            #{chalk.green "Store Name: #{s.name}"}
+            #{chalk.red "Store Name: #{s.name}"}
             #{chalk.cyan  "Item Name: #{f.name}"}
             #{chalk.green "Item Brand: #{s.item_brand}"}
             #{chalk.green "Item Price: #{s.item_price}"}
@@ -61,10 +61,16 @@ Store.find verified: false
             "Totally junk"
             new inq.Separator()
           ].concat matches.map (m) ->
-            "Really a duplicate of #{chalk.red m.name}"
+            "|Really a duplicate of: #{chalk.red m.name}"
         ], (answers) ->
+          store = s
         
           switch
+
+
+
+
+
 
             # the store is really new.... lets verify it!
             when answers.resp.indexOf('new') isnt -1
@@ -79,7 +85,6 @@ Store.find verified: false
                 name: "store_desc"
               ]
               , (out) ->
-                store = s
 
                 # save the store
                 store.verified = true
@@ -100,24 +105,73 @@ Store.find verified: false
 
 
 
-            when answers.resp.indexOf('duplicate') isnt -1
-              inq.prompt [
-                type: "input"
-                message: "Enter the store id of the duplicate store"
-                name: "store_id"
-              ]
-              , (out) ->
-                store.verified = true
-                store.name = out.store_name
-                store.desc = out.store_desc
-                store.save (err, user) ->
-                  return cb err if err
-                  console.log "Saved #{chalk.red out.store_name}"
-                  cb null, answers
 
+
+
+
+
+            # the store is a dupe...
+            # we'll take all the item info from this store and use it to create
+            # a new foodstuff attached to the specified store. Then, we'll
+            # delete it.
+            when answers.resp.indexOf('duplicate') isnt -1
+
+              do_store = (store_name) ->
+
+                # find the store
+                Store.findOne name: store_name, (err, store) ->
+                  return cb err if err
+                  if store
+
+                    # save the foodstuff
+                    f.stores[store._id] = price: s.item_price
+                    f.markModified "stores.#{store._id}.price" # this is magic
+
+                    f.save (err, user) ->
+                      return cb err if err
+                      console.log "Saved #{chalk.red f.name}"
+
+                  else
+                    console.log "bad store. skipping for now..."
+
+
+
+
+              if answers.resp[0] is '|'
+                store = answers.resp.split(': ')[1]
+                do_store chalk.stripColor store.trim()
+              else
+                inq.prompt [
+                  type: "input"
+                  message: "Enter the store name of the duplicate store"
+                  name: "store_id"
+                ]
+                , (out) ->
+                  do_store out.store_id
+
+
+
+
+
+            # just delete the foodstuff, as it's just garbage
+            when answers.resp.indexOf('junk') isnt -1
+              Store.remove _id: s._id, (err) ->
+                return cb err if err
+                console.log "Deleted junk: #{chalk.red s.name}"
         
 
-    , (err, all) ->
-     console.log "Error", err if err
 
-      process.exit 0
+
+
+
+
+
+
+
+
+
+  , (err, all) ->
+    console.log "Error", err if err
+    console.log chalk.bold chalk.green "drumroll.... and, we are done!"
+
+    process.exit 0
