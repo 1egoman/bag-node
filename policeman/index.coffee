@@ -89,6 +89,11 @@ Store.find verified: false
                 message: "Store Logo"
                 name: "store_logo"
                 default: s.image
+              ,
+                type: "input"
+                message: "Store Tags"
+                name: "store_tags"
+                default: s.tags.join(' ')
               ]
               , (out) ->
 
@@ -97,6 +102,7 @@ Store.find verified: false
                 store.name = out.store_name
                 store.desc = out.store_desc
                 store.image = out.store_logo
+                store.image = out.store_tags.split ' '
                 store.save (err) ->
                   return cb err if err
                   console.log "Saved #{chalk.red out.store_name}"
