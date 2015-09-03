@@ -1344,7 +1344,8 @@ angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', funct
       i = ref[j];
       $scope.sort_opts[i._id] = $scope.make_sort_opts(i);
     }
-    return $scope.$apply();
+    $scope.$apply();
+    return $scope.$broadcast('scroll.refreshComplete');
   });
   $scope.user_more_private = function(user) {
     if (!user) {
@@ -1378,6 +1379,11 @@ angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', funct
       foodstuff: item._id
     });
     return $scope.my_recipes = _.without($scope.my_recipes, item);
+  };
+  $scope.do_refresh = function() {
+    return socket.emit('item:index', {
+      user: 'me'
+    });
   };
 
   /*

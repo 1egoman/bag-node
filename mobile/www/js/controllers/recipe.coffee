@@ -87,6 +87,9 @@ angular.module('bag.controllers.tab_recipe', [])
 
     $scope.$apply()
 
+    # for pull to refresh
+    $scope.$broadcast 'scroll.refreshComplete'
+
   # check to make sure a new user can create more private recipes
   $scope.user_more_private = (user) ->
     if not user
@@ -114,6 +117,10 @@ angular.module('bag.controllers.tab_recipe', [])
   $scope.delete_item = (item) ->
     socket.emit "foodstuff:destroy", foodstuff: item._id
     $scope.my_recipes = _.without $scope.my_recipes, item
+
+  # when a user pulls to refresh...
+  $scope.do_refresh = ->
+    socket.emit 'item:index', user: 'me'
 
 
   ###

@@ -10,6 +10,11 @@
 
   <ion-content>
 
+    <ion-refresher
+      pulling-text="Pull to reload items..."
+      on-refresh="do_refresh()">
+    </ion-refresher>
+
     <!-- wait for the stuff to come in -->
     <loading-spinner complete="my_recipes"></loading-spinner>
 
