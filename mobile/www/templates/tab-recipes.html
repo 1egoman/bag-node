@@ -11,7 +11,15 @@
   <ion-content>
 
     <!-- wait for the stuff to come in -->
-    <loading-spinner complete="my_recipes.length"></loading-spinner>
+    <loading-spinner complete="my_recipes"></loading-spinner>
+
+    <ion-item ng-if="my_recipes && my_recipes.length === 0">
+      <h2>No Items</h2>
+      <p>
+        Adding items to Bag lets you contribute to our repository of items, and
+        helps you get more variety in your lists.
+      </p>
+    </ion-item>
 
     <ion-list>
 

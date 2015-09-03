@@ -1336,6 +1336,19 @@ angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', funct
     $scope.my_recipes = evt.data;
     return $scope.$apply();
   });
+  $scope.user_more_private = function(user) {
+    if (!user) {
+      return false;
+    } else if (user.plan === 1) {
+      return $scope.my_recipes.filter(function(r) {
+        return r["private"];
+      }).length < 10;
+    } else if (user.plan === 2) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   /*
    * Initialization

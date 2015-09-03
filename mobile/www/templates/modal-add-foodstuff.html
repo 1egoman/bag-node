@@ -37,8 +37,10 @@
           class="no-resize"></textarea>
       </label>
 
+      {{user_more_private(user)}}
+
       <ion-toggle
-        ng-show="user.plan > 0"
+        ng-show="user.plan > 0 && user_more_private(user)"
         ng-model="new_foodstuff_priv"
       >Make this private
       </ion-toggle>

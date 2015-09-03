@@ -82,6 +82,19 @@ angular.module('bag.controllers.tab_recipe', [])
     $scope.my_recipes = evt.data
     $scope.$apply()
 
+  # check to make sure a new user can create more private recipes
+  $scope.user_more_private = (user) ->
+    if not user
+      false
+    else if user.plan is 1
+      $scope.my_recipes.filter (r) ->
+        r.private
+      .length < 10
+    else if user.plan is 2
+      true
+    else
+      false
+
   ###
   # Initialization
   ###
