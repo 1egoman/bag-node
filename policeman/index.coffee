@@ -83,6 +83,12 @@ Store.find verified: false
                 type: "input"
                 message: "Store Desc"
                 name: "store_desc"
+                default: s.desc
+              ,
+                type: "input"
+                message: "Store Logo"
+                name: "store_logo"
+                default: s.image
               ]
               , (out) ->
 
@@ -90,10 +96,10 @@ Store.find verified: false
                 store.verified = true
                 store.name = out.store_name
                 store.desc = out.store_desc
+                store.image = out.store_logo
                 store.save (err) ->
                   return cb err if err
                   console.log "Saved #{chalk.red out.store_name}"
-                  cb null, answers
 
                   # save the foodstuff
                   f.stores[store._id] = price: s.item_price
@@ -102,6 +108,7 @@ Store.find verified: false
                   f.save (err, user) ->
                     return cb err if err
                     console.log "Saved #{chalk.red f.name}"
+                    cb null, answers
 
 
 
