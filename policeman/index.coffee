@@ -3,6 +3,7 @@ require("../src/db") process.env.MONGOLAB_URI or process.env.db or "mongodb://ba
 
 Store = require "../src/models/store_model"
 Foodstuff = require "../src/models/foodstuff_model"
+Bag = require "../src/models/bag_model"
 inq = require "inquirer"
 async = require "async"
 chalk = require "chalk"
@@ -317,10 +318,26 @@ Store.find verified: false
 
                 # just delete the foodstuff, as it's just garbage
                 when answers.resp.indexOf('junk') isnt -1
-                  Foodstuff.remove _id: f._id, (err) ->
+                  console.log f
+
+                  # delete from the bag
+                  Bag.findOne user: f.user, (err, bag) ->
+
                     return cb err if err
-                    console.log "Deleted junk: #{chalk.red f.name}"
-                    cb null
+
+                    # remove in the user's bag
+                    bag.contents = bag.contents.filter (c) -> c._id.toString() isnt f._id.toString()
+                    bag.markModified "contents"
+
+                    bag.save (err) ->
+                      return cb err if err
+
+
+                      # delete the physical item, too
+                      Foodstuff.remove _id: f._id, (err) ->
+                        return cb err if err
+                        console.log "Deleted junk: #{chalk.red f.name}"
+                        cb null
 
         , (err, data) ->
           return console.log err if err
