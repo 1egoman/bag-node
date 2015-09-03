@@ -28,10 +28,10 @@
           </span>
 
           <span class="quantity-and-price"
-            ng-show="item.stores[item.store].price && item.quantity">
+            ng-show="(item.price || item.stores[item.store].price) && item.quantity">
             <span ng-hide="sortOpts.hide_quantity">{{item.quantity}}</span>
             <span ng-hide="sortOpts.hide_quantity">@</span>
-            <span>{{ (item.store && item.stores[item.store].price || item.price) | currency}}</span>
+            <span>{{ (item.price && item.price || item.stores[item.store].price) | currency}}</span>
           </span>
         </span>
       </span>

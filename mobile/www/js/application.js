@@ -428,7 +428,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       return price;
     } else {
       item.store = null;
-      return 0;
+      return item.price || 0;
     }
   };
 }).factory('stores', function(socket, $q) {

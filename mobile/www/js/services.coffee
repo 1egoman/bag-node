@@ -197,7 +197,7 @@ angular.module('starter.services', [])
 
     else
       item.store = null
-      0 # well, we give up?
+      item.price or 0 # well, we give up?
 
 
 # get a reference to all stores
