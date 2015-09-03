@@ -1,6 +1,6 @@
 <!-- all items within this recipe -->
 <div class="card" ng-class="{strike: item.checked, private: item.private,
-  unverified: !item.verified}">
+  unverified: item.verified === false}">
   <ion-item class="item-icon-right">
     <i 
       class="pull-right icon ion-chevron-right icon-accessory"
