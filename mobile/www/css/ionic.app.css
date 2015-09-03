@@ -7786,6 +7786,8 @@ a.button {
   margin-bottom: 10px; }
 .list.recipe.private .item-content, .card.private .item-content {
   background: #f2ecd9; }
+.list.recipe.unverified .item-content, .card.unverified .item-content {
+  background: #dbf3ec; }
 .list.recipe .item.item-avatar, .card .item.item-avatar {
   padding-left: 16px; }
 .list.recipe.strike .item-content, .card.strike .item-content {
