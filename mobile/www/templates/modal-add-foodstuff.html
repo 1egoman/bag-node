@@ -15,6 +15,15 @@
   <ion-content ng-hide="confirmed">
     <div class="list">
 
+      <ion-item ng-hide="new_foodstuff_priv">
+        <h2>Add a new foodstuff</h2>
+        <p class="no-elipsis">
+          Any new public foodstuffs must be approoved bfore other users can
+          access them. If a foodstuff is a duplicate, then we will replace it
+          with it's established item.
+        </p>
+      </ion-item>
+
       <label class="item item-input">
         <input type="text" placeholder="Name" ng-model="new_foodstuff_name"/>
       </label>
