@@ -1,4 +1,4 @@
-angular.module('starter.controllers.tab_picks', [])
+angular.module('bag.controllers.tab_picks', [])
   
 .controller 'PicksCtrl', (
   $scope,

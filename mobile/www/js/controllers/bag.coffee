@@ -1,4 +1,4 @@
-angular.module('starter.controllers.tab_bag', [])
+angular.module('bag.controllers.tab_bag', [])
   
 .controller 'BagsCtrl', (
   $scope,

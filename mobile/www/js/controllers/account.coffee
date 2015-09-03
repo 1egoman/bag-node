@@ -1,4 +1,4 @@
-angular.module 'starter.controllers.account', []
+angular.module 'bag.controllers.account', []
 
 .controller 'AccountCtrl', (
   $scope

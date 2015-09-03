@@ -1,4 +1,4 @@
-angular.module 'starter.directives', []
+angular.module 'bag.directives', []
   
 .directive 'recipeCard', ->
   restrict: 'E'

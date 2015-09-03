@@ -1,4 +1,4 @@
-angular.module('starter.controllers.tab_recipe', [])
+angular.module('bag.controllers.tab_recipe', [])
   
 .controller 'RecipesCtrl', (
   $scope,

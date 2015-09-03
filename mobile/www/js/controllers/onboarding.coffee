@@ -1,4 +1,4 @@
-angular.module 'starter.controllers.onboarding', []
+angular.module 'bag.controllers.onboarding', []
 
 .controller 'onboardCtrl', (
   $scope

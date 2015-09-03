@@ -1,4 +1,4 @@
-angular.module('starter.controllers.item_info', [])
+angular.module('bag.controllers.item_info', [])
   
 .controller 'ItemInfoCtrl', (
   $scope,

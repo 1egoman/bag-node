@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
+angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordova', 'bag.controllers', 'bag.services', 'bag.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -133,7 +133,7 @@ var auth_module, ref, socket, user_id, user_token;
 
 window.host = "http://bagd.herokuapp.com";
 
-auth_module = angular.module('starter.authorization', []);
+auth_module = angular.module('bag.authorization', []);
 
 if (localStorage.user) {
   ref = JSON.parse(localStorage.user);
@@ -192,7 +192,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.tab_picks', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('bag.controllers', ['btford.socket-io', 'ngSanitize', 'bag.authorization', 'bag.controllers.onboarding', 'bag.controllers.account', 'bag.controllers.stores_picker', 'bag.controllers.tab_bag', 'bag.controllers.tab_recipe', 'bag.controllers.tab_picks', 'bag.controllers.item_info', 'bag.controllers.new_foodstuff', 'bag.controllers.new_recipe', 'bag.controllers.recipe_card', 'bag.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -200,7 +200,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starte
   });
 });
 
-angular.module('starter.directives', []).directive('recipeCard', function() {
+angular.module('bag.directives', []).directive('recipeCard', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/recipe-card.html',
@@ -247,7 +247,7 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module('starter.services', []).factory('AllItems', function(socket) {
+angular.module('bag.services', []).factory('AllItems', function(socket) {
   var root;
   root = {};
   root.id = {};
@@ -548,7 +548,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   };
 });
 
-angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state, $cordovaDialogs) {
+angular.module('bag.controllers.account', []).controller('AccountCtrl', function($scope, user, $state, $cordovaDialogs) {
   user.then(function(user) {
     return $scope.username = user.name;
   });
@@ -588,7 +588,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading, $cordovaDialogs) {
+angular.module('bag.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading, $cordovaDialogs) {
   socket.on("login:callback", function(data) {
     if (data.err) {
       return $cordovaDialogs.alert("Those login credentials don't match what we have on file. Give it another try?", "Incorrect Credentials", "OK");
@@ -620,7 +620,7 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs) {
+angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs) {
   socket.emit('bag:index');
   socket.on('bag:index:callback', function(evt) {
     $scope.bag = evt.data;
@@ -912,7 +912,7 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   return $scope.amount_in_page = 25;
 });
 
-angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
+angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
   $scope.get_item_or_recipe = function() {
     if ($ionicHistory.currentView().stateName.indexOf('recipe') === -1) {
       return 'iteminfo';
@@ -1091,7 +1091,7 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   return $scope.store = {};
 });
 
-angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery, $timeout) {
+angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery, $timeout) {
   $scope.predefined_tags = getTagsForQuery;
   $scope.create_foodstuff = function(name, price, tags, desc, priv) {
     var foodstuff;
@@ -1126,7 +1126,7 @@ angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuff
   return $scope.init();
 });
 
-angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
+angular.module('bag.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
   $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -1202,7 +1202,7 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
   return $scope.init();
 });
 
-angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
+angular.module('bag.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
       return (function(data) {
@@ -1255,7 +1255,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
   return $scope.user = persistant.new_user || {};
 });
 
-angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
+angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
   socket.emit("pick:index");
   socket.on("pick:index:callback", function(payload) {
     if (payload.data) {
@@ -1272,7 +1272,7 @@ angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', func
   };
 });
 
-angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, user) {
+angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, user) {
 
   /*
    * Choose to add a new foodstuff or a recipe
@@ -1358,7 +1358,7 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
   });
 });
 
-angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize, calculateTotal) {
+angular.module('bag.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize, calculateTotal) {
   $scope.calculate_total = calculateTotal;
 
   /*
@@ -1396,7 +1396,7 @@ angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', f
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module('starter.controllers.stores_picker', []).controller('StorePickerCtrl', function($scope, socket, user, $ionicActionSheet) {
+angular.module('bag.controllers.stores_picker', []).controller('StorePickerCtrl', function($scope, socket, user, $ionicActionSheet) {
   socket.emit("store:index");
   socket.on("store:index:callback", function(payload) {
     $scope.stores = payload.data;

@@ -1,4 +1,4 @@
-angular.module('starter.controllers.new_foodstuff', [])
+angular.module('bag.controllers.new_foodstuff', [])
 
 .controller 'NewFoodstuffCtrl', (
   $scope
