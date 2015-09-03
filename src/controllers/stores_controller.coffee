@@ -51,9 +51,8 @@ exports.suggest = (req, res) ->
           name: "bag.error.store.suggest"
           err: err
 
-      # else
-      #   res.send
-      #     name: "bag.success.store.suggest"
+      else
+        res.send name: "bag.success.store.suggest"
 
   else
     res.send
