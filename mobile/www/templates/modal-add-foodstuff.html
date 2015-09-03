@@ -50,7 +50,7 @@
           new_foodstuff_price.toString().length > 0 )"
           ng-click="create_foodstuff(new_foodstuff_name, new_foodstuff_price,
           new_foodstuff_tags, new_foodstuff_desc, new_foodstuff_priv || false)"
-          >Create Foodstuff request
+          >Create Foodstuff
         </button>
       </div>
     </div>
@@ -60,12 +60,12 @@
   <ion-content ng-show="confirmed">
     <div class="padding">
       <h1>Cool, Thanks!</h1>
-      <p class="font-size-bigger" ng-show="new_foodstuff_priv">
+      <p class="font-size-bigger" ng-hide="new_foodstuff_priv">
         We'll review your potential foodstuff and let you know if it meets our
         specifications. This can usually take [length of time] but no more than
         [another length of time].
       </p>
-      <p class="font-size-bigger" ng-hide="new_foodstuff_priv">
+      <p class="font-size-bigger" ng-show="new_foodstuff_priv">
         Your private foodstuff has been created!
       </p>
       <button
