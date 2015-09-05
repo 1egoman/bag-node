@@ -47,3 +47,9 @@ angular.module('bag.controllers.tab_picks', [])
   # more info for an item
   $scope.more_info = (item) ->
     $state.go "tab.recipeinfo", id: item._id
+
+
+  ###
+  # Initialization
+  ###
+  $scope.host = window.host

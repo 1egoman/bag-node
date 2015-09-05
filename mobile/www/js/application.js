@@ -1260,11 +1260,16 @@ angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function
   $scope.to_user_recipes = function() {
     return $state.go("tab.recipes");
   };
-  return $scope.more_info = function(item) {
+  $scope.more_info = function(item) {
     return $state.go("tab.recipeinfo", {
       id: item._id
     });
   };
+
+  /*
+   * Initialization
+   */
+  return $scope.host = window.host;
 });
 
 angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, user) {
