@@ -1,29 +1,32 @@
-angular.module('bag.services', [])
+angular.module('bag.services', [
+  'bag.services.factory'
+  'bag.services.bag'
+  'bag.services.recipe'
+  'bag.services.foodstuff'
+])
   
-.factory 'AllItems', (socket) ->
+.factory 'AllItems', (socket, List, Foodstuff) ->
   root = {}
   root.id = {}
   # look through all foodstuffs and items for the specified id
 
   root.by_id = (sc, id, cb) ->
-    socket.emit 'foodstuff:show', foodstuff: id
-    socket.emit 'list:show', list: id
     sc.id_calls = 0
 
-    responseFoodstuff = (evt) ->
-      root.id[id] = evt.data or root.id[id]
+    List.show
+      list: id
+    .then (evt) ->
+      root.id[id] = evt or root.id[id]
       sc.id_calls++
-      socket.removeListener 'foodstuff:show:callback'
 
-    responseList = (evt) ->
-      root.id[id] = evt.data or root.id[id]
+    Foodstuff.show
+      foodstuff: id
+    .then (evt) ->
+      root.id[id] = evt or root.id[id]
       sc.id_calls++
-      socket.removeListener 'list:show:callback'
 
     sc.$watch 'id_calls', ->
       sc.id_calls == 2 and cb root.id[id]
-    socket.on 'foodstuff:show:callback', responseFoodstuff
-    socket.on 'list:show:callback', responseList
 
   # get a reference to all items in db
   # both foodstuffs and recipes
@@ -31,53 +34,46 @@ angular.module('bag.services', [])
   root.all = (sc, cb) ->
     root.all_resp = []
 
-    socket.emit 'foodstuff:index',
+    List.index
       limit: sc.amount_in_page
       start: sc.start_index or 0
+    .then (evt) ->
+      root.all_resp = evt.concat(root.all_resp or [])
+      sc.all_calls++
 
-    socket.emit 'list:index',
+    Foodstuff.index
       limit: sc.amount_in_page
       start: sc.start_index or 0
+    .then (evt) ->
+      root.all_resp = evt.concat(root.all_resp or [])
+      sc.all_calls++
 
     sc.all_calls = 0
-
-    responseFoodstuff = (evt) ->
-      root.all_resp = evt.data.concat(root.all_resp or [])
-      sc.all_calls++
-      socket.removeListener 'foodstuff:index:callback'
-
-    responseList = (evt) ->
-      root.all_resp = evt.data.concat(root.all_resp or [])
-      sc.all_calls++
-      socket.removeListener 'list:index:callback'
 
     sc.$watch 'all_calls', ->
       sc.all_calls == 2 and cb(root.all_resp)
 
-    socket.on 'foodstuff:index:callback', responseFoodstuff
-    socket.on 'list:index:callback', responseList
-
 
   # given a search string, find all matching lists and foodstuffs
   root.search = (sc, search_str, cb) ->
-    socket.emit 'foodstuff:search', foodstuff: search_str
-    socket.emit 'list:search', list: search_str
     sc.id_calls = 0
 
-    responseFoodstuff = (evt) ->
-      root.id[id] = evt.data or root.id[id]
-      sc.id_calls++
-      socket.removeListener 'foodstuff:search:callback'
 
-    responseList = (evt) ->
-      root.id[id] = evt.data or root.id[id]
+    List.search
+      list: search_str
+    .then (evt) ->
+      root.id[id] = evt or root.id[id]
       sc.id_calls++
-      socket.removeListener 'list:search:callback'
+
+    Foodstuff.search
+      foodstuff: search_str
+    .then (evt) ->
+      root.id[id] = evt or root.id[id]
+      sc.id_calls++
 
     sc.$watch 'id_calls', ->
       sc.id_calls == 2 and cb root.id[id]
-    socket.on 'foodstuff:show:callback', responseFoodstuff
-    socket.on 'list:show:callback', responseList
+
 
 
 

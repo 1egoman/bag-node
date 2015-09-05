@@ -190,6 +190,7 @@ angular.module('bag.controllers.item_info', [])
     else
       false
 
+
   # are we a favorite?
   user.then (data) ->
     $scope.favs = data.favs
@@ -198,3 +199,4 @@ angular.module('bag.controllers.item_info', [])
   # Initializers
   ###
   $scope.store = {}
+  $scope.host = window.host
