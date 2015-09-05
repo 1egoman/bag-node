@@ -1064,7 +1064,7 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
   return $scope.store = {};
 });
 
-angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery, $timeout) {
+angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, $q, getTagsForQuery, $timeout, Foodstuff) {
   $scope.predefined_tags = getTagsForQuery;
   $scope.create_foodstuff = function(name, price, tags, desc, priv) {
     var foodstuff;
@@ -1077,22 +1077,17 @@ angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl
         return i.text;
       })
     };
-    socket.emit('foodstuff:create', {
+    return Foodstuff.create({
       foodstuff: foodstuff
+    }).then(function(evt) {
+      if (evt["private"]) {
+        $scope.close_add_foodstuff_modal();
+      } else {
+        $scope.confirmed = evt.data;
+      }
+      return $scope.do_refresh();
     });
-    return $timeout(function() {
-      return socket.emit('item:index', {
-        user: 'me'
-      });
-    }, 100);
   };
-  socket.on('foodstuff:create:callback', function(evt) {
-    if (evt["private"]) {
-      return $scope.close_add_foodstuff_modal();
-    } else {
-      return $scope.confirmed = evt.data;
-    }
-  });
 
   /*
    * Initialization
@@ -1498,17 +1493,28 @@ angular.module("bag.services.bag", []).factory("Bag", function(SocketFactory) {
 });
 
 angular.module("bag.services.foodstuff", []).factory("Foodstuff", function(SocketFactory) {
-  return SocketFactory("foodstuff", ["index", "show", "update", "search"]);
+  return SocketFactory("foodstuff", ["index", "show", "create", "update", "search"]);
 });
 
 angular.module("bag.services.recipe", []).factory("List", function(SocketFactory) {
   return SocketFactory("list", ["index", "show", "update", "search"]);
 });
 
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
 angular.module("bag.services.factory", []).factory("SocketFactory", function(socket, $q) {
   return function(name, methods) {
-    var fn, i, j, len, root;
+    var fn, get_what_to_send, i, j, len, root;
     root = {};
+    get_what_to_send = function(evt) {
+      var keys;
+      keys = Object.keys(evt);
+      if (keys.length === 2 && indexOf.call(keys, "status") >= 0 && indexOf.call(keys, "data") >= 0) {
+        return evt.data;
+      } else {
+        return evt;
+      }
+    };
     fn = function(i) {
       return root[i] = function(opts) {
         var defer;
@@ -1519,9 +1525,9 @@ angular.module("bag.services.factory", []).factory("SocketFactory", function(soc
         socket.emit(name + ":" + i, window.strip_$$(opts));
         socket.on(name + ":" + i + ":callback", function(evt) {
           if (evt.status.indexOf("success") !== -1) {
-            return defer.resolve(evt.data);
+            return defer.resolve(get_what_to_send(evt));
           } else {
-            return defer.reject(evt.data);
+            return defer.reject(get_what_to_send);
           }
         });
         return defer.promise;
