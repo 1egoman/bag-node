@@ -31,7 +31,7 @@
             {{stores[item.store].name || 'Custom'}}
           </span>
 
-          <span class="quantity-and-price"
+          <span class="quantity-and-price" style="margin-right: -7px;"
             ng-show="(item.price || item.stores[item.store].price) && item.quantity">
             <span ng-hide="sortOpts.hide_quantity">{{item.quantity}}</span>
             <span ng-hide="sortOpts.hide_quantity">@</span>

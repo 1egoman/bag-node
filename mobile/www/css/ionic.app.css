@@ -7790,7 +7790,14 @@ a.button {
   background: #dbf3ec; }
 .list.recipe .item-avatar, .card .item-avatar {
   min-height: 0; }
-.list.recipe.strike .item-content, .card.strike .item-content {
+.list.recipe .list-fluid, .card .list-fluid {
+  margin-left: -16px;
+  margin-top: 8px; }
+  .list.recipe .list-fluid .title, .card .list-fluid .title {
+    margin-left: 16px; }
+.list.recipe.recipe-card .item-content, .card.recipe-card .item-content {
+  padding-right: 32px; }
+.list.recipe.strike .item-content, .list.recipe .strike-item, .card.strike .item-content, .card .strike-item {
   background: #ddd; }
 .list.recipe .price-line, .card .price-line {
   margin-top: 10px;
