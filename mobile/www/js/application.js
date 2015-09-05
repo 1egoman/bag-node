@@ -813,3 +813,37 @@ angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', f
    * Intializers
    */
 });
+
+angular.module("bag.services.bag", []).factory("Bag", function(SocketFactory) {
+  return SocketFactory("bag", ["index", "update"]);
+});
+
+angular.module("bag.services.factory", []).factory("SocketFactory", function(socket, $q) {
+  return function(name, methods) {
+    var fn, i, j, len, root;
+    root = {};
+    fn = function(i) {
+      return root[i] = function(opts) {
+        var defer;
+        if (opts == null) {
+          opts = null;
+        }
+        defer = $q.defer();
+        socket.emit(name + ":" + i, window.strip_$$(opts));
+        socket.on(name + ":" + i + ":callback", function(evt) {
+          if (evt.status.indexOf("success") !== -1) {
+            return defer.resolve(evt.data);
+          } else {
+            return defer.reject(evt.data);
+          }
+        });
+        return defer.promise;
+      };
+    };
+    for (j = 0, len = methods.length; j < len; j++) {
+      i = methods[j];
+      fn(i);
+    }
+    return root;
+  };
+});
