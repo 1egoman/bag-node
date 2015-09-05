@@ -201,11 +201,14 @@ angular.module('bag.controllers.item_info', [])
   $scope.item_to_bag = (item) ->
     Bag.index().then (all) ->
 
-      item.quantity = 1
-      if item.contents
-        all.contentsLists.push item
+      if item in item.contents or item in item.contentsLists
+        null
       else
-        all.contents.push item
+        item.quantity = 1
+        if item.contents
+          all.contentsLists.push item
+        else
+          all.contents.push item
 
       Bag.update
         bag: all
