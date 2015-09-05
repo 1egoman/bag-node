@@ -1061,7 +1061,8 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
   /*
    * Initializers
    */
-  return $scope.store = {};
+  $scope.store = {};
+  return $scope.host = window.host;
 });
 
 angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, $q, getTagsForQuery, $timeout, Foodstuff) {
@@ -1497,7 +1498,7 @@ angular.module("bag.services.foodstuff", []).factory("Foodstuff", function(Socke
 });
 
 angular.module("bag.services.recipe", []).factory("List", function(SocketFactory) {
-  return SocketFactory("list", ["index", "show", "update", "search"]);
+  return SocketFactory("list", ["index", "show", "create", "update", "search"]);
 });
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };

@@ -23,6 +23,7 @@ account = require "./account"
 chalk = require "chalk"
 pjson = require "../package.json"
 body_parser = require "body-parser"
+request = require "request"
 
 
 # this object maps all routes to their respective methods
@@ -85,6 +86,9 @@ exports.http = (app) ->
     <a href="http://getbag.io">bag's website</a>?</p>
     """
 
+  ###
+  # payment and managing account routes
+  ###
 
   # login to manage portal
   app.get "/login", account.login_get
@@ -105,6 +109,23 @@ exports.http = (app) ->
   app.post "/webhooks/stripe",
     body_parser.json(),
     account.stripe_webhook
+
+  ###
+  # Generate Identicons
+  ###
+  app.get "/identicon/:name", (req, res) ->
+    name = req.params.name
+
+    # encode the name so we can create an identicon
+    encode = (name) ->
+      key="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/= ".split ''
+      if name
+        str = ""
+        for i in [0..name.length-1]
+          str += (n=key.indexOf name[i]).toString()
+        str
+
+    request("http://www.gravatar.com/avatar/#{encode name}?s=320&d=identicon&r=PG").pipe res
 
 
 
