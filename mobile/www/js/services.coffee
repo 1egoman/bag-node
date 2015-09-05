@@ -1,4 +1,7 @@
-angular.module('starter.services', [])
+angular.module('bag.services', [
+  'bag.services.factory'
+  'bag.services.bag'
+])
   
 .factory 'AllItems', (socket) ->
   root = {}

@@ -3,7 +3,6 @@ angular.module('starter.controllers.tab_bag', [])
 .controller 'BagsCtrl', (
   $scope,
   $ionicModal,
-  $ionicSlideBoxDelegate,
   socket,
   $state,
   $ionicListDelegate,
@@ -12,20 +11,22 @@ angular.module('starter.controllers.tab_bag', [])
   persistant,
   $rootScope,
   searchItem
+  calculateTotal
+  pickPrice
+  stores
+  $cordovaDialogs
+  Bag
 ) ->
   # get all bags
   # this fires once at the load of the controller, but also repeadedly when
-  # any function wants th reload the whole view.
-  socket.emit 'bag:index'
-  socket.on 'bag:index:callback', (evt) ->
-    # console.log("bag:index:callback", evt)
-    $scope.bag = evt.data
-    # force the slide-box to update and make
-    # each "page" > 0px (stupid bugfix)
-    $ionicSlideBoxDelegate.update()
-    # updating the sorting for the bag
+  # any function wants to reload the whole view.
+  load_bag = (bag) ->
+    $scope.bag = bag
     $scope.sorted_bag = $scope.sort_items()
+    $scope.$broadcast 'scroll.refreshComplete'
 
+  # initially load the bag
+  Bag.index().then load_bag
 
   # calculate total price for a whole bag
   # this takes into account any sub-recipes
@@ -52,6 +53,19 @@ angular.module('starter.controllers.tab_bag', [])
     ).reduce ((m, x) ->
       m + x
     ), 0
+
+  # using the speicified item, calculate the lowest possible price
+  # using the user's stores
+  $scope.get_lowest_price = (item) -> calculateTotal item
+
+  # pull to refresh handler
+  $scope.do_refresh = ->
+    Bag.index().then load_bag
+
+  # listen for all stores
+  # once resolved, we'll use this to display the store next to the price
+  stores.then (s) -> $scope.stores = s
+  $scope.stores = {}
 
   ###
   # Create new item
@@ -207,13 +221,12 @@ angular.module('starter.controllers.tab_bag', [])
   # basically, when an item is checked it doesn't add to any totals
   # because the user is presumed to have bought it already.
   $scope.update_bag = ->
-    socket.emit 'bag:update', bag: window.strip_$$($scope.bag)
+    Bag.update
+      bag: $scope.bag
+    .then (data) ->
 
-  socket.on 'bag:update:callback', (evt) ->
-    # update the bag
-    $scope.bag = evt.data
-    # updating the sorting for the bag
-    $scope.sorted_bag = $scope.sort_items()
+      # updating the sorting for the bag
+      $scope.sorted_bag = $scope.sort_items()
 
   ###
   # Deleting an item in a bag
@@ -296,10 +309,6 @@ angular.module('starter.controllers.tab_bag', [])
   $scope.filter_open = false
   $scope.filtered_items = []
   $scope.completed_items = []
-
-  $scope.echo = ->
-    console.log 'Called!'
-    'Called!'
 
   $scope.sort_type = persistant.sort or 'no'
   $scope.sorted_bag = []

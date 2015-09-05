@@ -136,7 +136,7 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
   };
 });
 
-angular.module('starter.services', []).factory('AllItems', function(socket) {
+angular.module('bag.services', ['bag.services.factory', 'bag.services.bag']).factory('AllItems', function(socket) {
   var root;
   root = {};
   root.id = {};
@@ -232,13 +232,14 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem) {
-  socket.emit('bag:index');
-  socket.on('bag:index:callback', function(evt) {
-    $scope.bag = evt.data;
-    $ionicSlideBoxDelegate.update();
-    return $scope.sorted_bag = $scope.sort_items();
-  });
+angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs, Bag) {
+  var load_bag;
+  load_bag = function(bag) {
+    $scope.bag = bag;
+    $scope.sorted_bag = $scope.sort_items();
+    return $scope.$broadcast('scroll.refreshComplete');
+  };
+  Bag.index().then(load_bag);
   $scope.calculate_total = function(bag) {
     var total;
     total = 0;
@@ -260,6 +261,16 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
       return m + x;
     }), 0);
   };
+  $scope.get_lowest_price = function(item) {
+    return calculateTotal(item);
+  };
+  $scope.do_refresh = function() {
+    return Bag.index().then(load_bag);
+  };
+  stores.then(function(s) {
+    return $scope.stores = s;
+  });
+  $scope.stores = {};
 
   /*
    * Create new item
@@ -395,14 +406,12 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
    * Updating a bag
    */
   $scope.update_bag = function() {
-    return socket.emit('bag:update', {
-      bag: window.strip_$$($scope.bag)
+    return Bag.update({
+      bag: $scope.bag
+    }).then(function(data) {
+      return $scope.sorted_bag = $scope.sort_items();
     });
   };
-  socket.on('bag:update:callback', function(evt) {
-    $scope.bag = evt.data;
-    return $scope.sorted_bag = $scope.sort_items();
-  });
 
   /*
    * Deleting an item in a bag
@@ -484,10 +493,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.filter_open = false;
   $scope.filtered_items = [];
   $scope.completed_items = [];
-  $scope.echo = function() {
-    console.log('Called!');
-    return 'Called!';
-  };
   $scope.sort_type = persistant.sort || 'no';
   $scope.sorted_bag = [];
   $scope.view_title = 'My Bag';
