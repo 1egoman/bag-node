@@ -1490,28 +1490,28 @@ angular.module('bag.controllers.stores_picker', []).controller('StorePickerCtrl'
   };
 });
 
-angular.module("bag.services.bag", []).factory("Bag", function(SocketFactory) {
-  return SocketFactory("bag", ["index", "update"]);
+angular.module('bag.services.bag', []).factory('Bag', function(SocketFactory) {
+  return SocketFactory('bag', ['index', 'update']);
 });
 
-angular.module("bag.services.foodstuff", []).factory("Foodstuff", function(SocketFactory) {
-  return SocketFactory("foodstuff", ["index", "show", "create", "update", "search"]);
+angular.module('bag.services.foodstuff', []).factory('Foodstuff', function(SocketFactory) {
+  return SocketFactory('foodstuff', ['index', 'show', 'create', 'update', 'search']);
 });
 
-angular.module("bag.services.recipe", []).factory("List", function(SocketFactory) {
-  return SocketFactory("list", ["index", "show", "create", "update", "search"]);
+angular.module('bag.services.recipe', []).factory('List', function(SocketFactory) {
+  return SocketFactory('list', ['index', 'show', 'create', 'update', 'search']);
 });
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module("bag.services.factory", []).factory("SocketFactory", function(socket, $q) {
+angular.module('bag.services.factory', []).factory('SocketFactory', function(socket, $q) {
   return function(name, methods) {
     var fn, get_what_to_send, i, j, len, root;
     root = {};
     get_what_to_send = function(evt) {
       var keys;
       keys = Object.keys(evt);
-      if (keys.length === 2 && indexOf.call(keys, "status") >= 0 && indexOf.call(keys, "data") >= 0) {
+      if (keys.length === 2 && indexOf.call(keys, 'status') >= 0 && indexOf.call(keys, 'data') >= 0) {
         return evt.data;
       } else {
         return evt;
@@ -1524,9 +1524,9 @@ angular.module("bag.services.factory", []).factory("SocketFactory", function(soc
           opts = null;
         }
         defer = $q.defer();
-        socket.emit(name + ":" + i, window.strip_$$(opts));
-        socket.on(name + ":" + i + ":callback", function(evt) {
-          if (evt.status.indexOf("success") !== -1) {
+        socket.emit(name + ':' + i, window.strip_$$(opts));
+        socket.on(name + ':' + i + ':callback', function(evt) {
+          if (evt.status.indexOf('success') !== -1) {
             return defer.resolve(get_what_to_send(evt));
           } else {
             return defer.reject(get_what_to_send);
@@ -1535,9 +1535,12 @@ angular.module("bag.services.factory", []).factory("SocketFactory", function(soc
         return defer.promise;
       };
     };
-    for (j = 0, len = methods.length; j < len; j++) {
+    j = 0;
+    len = methods.length;
+    while (j < len) {
       i = methods[j];
       fn(i);
+      j++;
     }
     return root;
   };
