@@ -229,7 +229,8 @@ angular.module('bag.directives', []).directive('recipeCard', function() {
       stores.then(function(s) {
         return $scope.stores = s;
       });
-      return $scope.stores = {};
+      $scope.stores = {};
+      return $scope.host = window.host;
     }
   };
 }).directive("loadingSpinner", function() {

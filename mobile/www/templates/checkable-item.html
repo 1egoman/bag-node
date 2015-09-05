@@ -7,7 +7,11 @@
       ng-click="moreInfo(item)"
       style="padding-left: 16px;"
     ></i>
-    <div ng-class="{'item-checkbox': sortOpts.checks}">
+    <div ng-class="{'item-checkbox': sortOpts.checks, 'item-avatar': !sortOpts.checks}">
+      <img
+        src="{{ item.image || host+'/identicon/'+item.name}}"
+        ng-show="!sortOpts.checks"
+      />
 
       <!-- Check off the item -->
       <label class="checkbox" style="right: 64px;" ng-if="sortOpts.checks">

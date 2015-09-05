@@ -7788,8 +7788,8 @@ a.button {
   background: #f2ecd9; }
 .list.recipe.unverified .item-content, .card.unverified .item-content {
   background: #dbf3ec; }
-.list.recipe .item.item-avatar, .card .item.item-avatar {
-  padding-left: 16px; }
+.list.recipe .item-avatar, .card .item-avatar {
+  min-height: 0; }
 .list.recipe.strike .item-content, .card.strike .item-content {
   background: #ddd; }
 .list.recipe .price-line, .card .price-line {
@@ -7801,7 +7801,9 @@ a.button {
   overflow: hidden;
   text-overflow: ellipsis; }
 .list.recipe .title, .card .title {
-  position: relative; }
+  position: relative;
+  left: -10px;
+  display: block; }
   .list.recipe .title.strike .line, .card .title.strike .line {
     position: absolute;
     top: 9px;

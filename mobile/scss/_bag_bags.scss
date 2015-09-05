@@ -19,13 +19,12 @@
     background: lighten(desaturate($energized, 50%), 40%);
   }
 
-
   &.unverified .item-content {
     background: lighten($balanced, 40%);
   }
 
-  .item.item-avatar {
-    padding-left: 16px;
+  .item-avatar {
+    min-height: 0;
   }
 
   // darken selected items
@@ -54,6 +53,8 @@
 
   .title {
     position: relative;
+    left: -10px;
+    display: block;
 
     &.strike .line {
       position: absolute;
