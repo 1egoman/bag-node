@@ -1524,16 +1524,15 @@ pre {
   .container-fluid:after {
     clear: both; }
 
-.row, .threes, .get-app-btns {
+.row, .threes {
   margin-left: -15px;
   margin-right: -15px; }
   .row:before,
   .threes:before,
-  .get-app-btns:before,
-  .row:after, .threes:after, .get-app-btns:after {
+  .row:after, .threes:after {
     content: " ";
     display: table; }
-  .row:after, .threes:after, .get-app-btns:after {
+  .row:after, .threes:after {
     clear: both; }
 
 .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
@@ -2821,92 +2820,68 @@ select[multiple].input-lg, .input-group-lg > select[multiple].form-control,
     -webkit-box-shadow: none;
     box-shadow: none; }
 
-.btn-default, .get-app-btns > div button, .get-app-btns > div a {
+.btn-default, .get-app-btns > div .btn {
   color: #333;
   background-color: #fff;
   border-color: #ccc; }
   .btn-default:hover,
-  .get-app-btns > div button:hover,
-  .get-app-btns > div a:hover,
+  .get-app-btns > div .btn:hover,
   .btn-default:focus,
-  .get-app-btns > div button:focus,
-  .get-app-btns > div a:focus,
+  .get-app-btns > div .btn:focus,
   .btn-default.focus,
-  .get-app-btns > div button.focus,
-  .get-app-btns > div a.focus,
+  .get-app-btns > div .focus.btn,
   .btn-default:active,
-  .get-app-btns > div button:active,
-  .get-app-btns > div a:active,
+  .get-app-btns > div .btn:active,
   .btn-default.active,
-  .get-app-btns > div button.active,
-  .get-app-btns > div a.active,
-  .open > .btn-default.dropdown-toggle, .get-app-btns > div .open > button.dropdown-toggle, .get-app-btns > div .open > a.dropdown-toggle {
+  .get-app-btns > div .active.btn,
+  .open > .btn-default.dropdown-toggle, .get-app-btns > div .open > .dropdown-toggle.btn {
     color: #333;
     background-color: #e6e6e6;
     border-color: #adadad; }
   .btn-default:active,
-  .get-app-btns > div button:active,
-  .get-app-btns > div a:active,
+  .get-app-btns > div .btn:active,
   .btn-default.active,
-  .get-app-btns > div button.active,
-  .get-app-btns > div a.active,
-  .open > .btn-default.dropdown-toggle, .get-app-btns > div .open > button.dropdown-toggle, .get-app-btns > div .open > a.dropdown-toggle {
+  .get-app-btns > div .active.btn,
+  .open > .btn-default.dropdown-toggle, .get-app-btns > div .open > .dropdown-toggle.btn {
     background-image: none; }
   .btn-default.disabled,
-  .get-app-btns > div button.disabled,
-  .get-app-btns > div a.disabled,
+  .get-app-btns > div .disabled.btn,
   .btn-default.disabled:hover,
-  .get-app-btns > div button.disabled:hover,
-  .get-app-btns > div a.disabled:hover,
+  .get-app-btns > div .disabled.btn:hover,
   .btn-default.disabled:focus,
-  .get-app-btns > div button.disabled:focus,
-  .get-app-btns > div a.disabled:focus,
+  .get-app-btns > div .disabled.btn:focus,
   .btn-default.disabled.focus,
-  .get-app-btns > div button.disabled.focus,
-  .get-app-btns > div a.disabled.focus,
+  .get-app-btns > div .disabled.focus.btn,
   .btn-default.disabled:active,
-  .get-app-btns > div button.disabled:active,
-  .get-app-btns > div a.disabled:active,
+  .get-app-btns > div .disabled.btn:active,
   .btn-default.disabled.active,
-  .get-app-btns > div button.disabled.active,
-  .get-app-btns > div a.disabled.active,
+  .get-app-btns > div .disabled.active.btn,
   .btn-default[disabled],
-  .get-app-btns > div button[disabled],
-  .get-app-btns > div a[disabled],
+  .get-app-btns > div [disabled].btn,
   .btn-default[disabled]:hover,
-  .get-app-btns > div button[disabled]:hover,
-  .get-app-btns > div a[disabled]:hover,
+  .get-app-btns > div [disabled].btn:hover,
   .btn-default[disabled]:focus,
-  .get-app-btns > div button[disabled]:focus,
-  .get-app-btns > div a[disabled]:focus,
+  .get-app-btns > div [disabled].btn:focus,
   .btn-default[disabled].focus,
-  .get-app-btns > div button[disabled].focus,
-  .get-app-btns > div a[disabled].focus,
+  .get-app-btns > div [disabled].focus.btn,
   .btn-default[disabled]:active,
-  .get-app-btns > div button[disabled]:active,
-  .get-app-btns > div a[disabled]:active,
+  .get-app-btns > div [disabled].btn:active,
   .btn-default[disabled].active,
-  .get-app-btns > div button[disabled].active,
-  .get-app-btns > div a[disabled].active,
+  .get-app-btns > div [disabled].active.btn,
   fieldset[disabled] .btn-default,
-  fieldset[disabled] .get-app-btns > div button,
-  .get-app-btns > div fieldset[disabled] button, fieldset[disabled] .get-app-btns > div a,
-  .get-app-btns > div fieldset[disabled] a, fieldset[disabled] .btn-default:hover,
-  fieldset[disabled] .get-app-btns > div button:hover,
-  .get-app-btns > div fieldset[disabled] button:hover, fieldset[disabled] .get-app-btns > div a:hover,
-  .get-app-btns > div fieldset[disabled] a:hover, fieldset[disabled] .btn-default:focus,
-  fieldset[disabled] .get-app-btns > div button:focus,
-  .get-app-btns > div fieldset[disabled] button:focus, fieldset[disabled] .get-app-btns > div a:focus,
-  .get-app-btns > div fieldset[disabled] a:focus, fieldset[disabled] .btn-default.focus,
-  fieldset[disabled] .get-app-btns > div button.focus,
-  .get-app-btns > div fieldset[disabled] button.focus, fieldset[disabled] .get-app-btns > div a.focus,
-  .get-app-btns > div fieldset[disabled] a.focus, fieldset[disabled] .btn-default:active,
-  fieldset[disabled] .get-app-btns > div button:active,
-  .get-app-btns > div fieldset[disabled] button:active, fieldset[disabled] .get-app-btns > div a:active,
-  .get-app-btns > div fieldset[disabled] a:active, fieldset[disabled] .btn-default.active, fieldset[disabled] .get-app-btns > div button.active, .get-app-btns > div fieldset[disabled] button.active, fieldset[disabled] .get-app-btns > div a.active, .get-app-btns > div fieldset[disabled] a.active {
+  fieldset[disabled] .get-app-btns > div .btn,
+  .get-app-btns > div fieldset[disabled] .btn, fieldset[disabled] .btn-default:hover,
+  fieldset[disabled] .get-app-btns > div .btn:hover,
+  .get-app-btns > div fieldset[disabled] .btn:hover, fieldset[disabled] .btn-default:focus,
+  fieldset[disabled] .get-app-btns > div .btn:focus,
+  .get-app-btns > div fieldset[disabled] .btn:focus, fieldset[disabled] .btn-default.focus,
+  fieldset[disabled] .get-app-btns > div .focus.btn,
+  .get-app-btns > div fieldset[disabled] .focus.btn, fieldset[disabled] .btn-default:active,
+  fieldset[disabled] .get-app-btns > div .btn:active,
+  .get-app-btns > div fieldset[disabled] .btn:active, fieldset[disabled] .btn-default.active, fieldset[disabled] .get-app-btns > div .active.btn, .get-app-btns > div fieldset[disabled] .active.btn {
     background-color: #fff;
     border-color: #ccc; }
-  .btn-default .badge, .get-app-btns > div button .badge, .get-app-btns > div a .badge {
+  .btn-default .badge, .get-app-btns > div .btn .badge {
     color: #fff;
     background-color: #333; }
 
@@ -5968,7 +5943,7 @@ button.close {
   background-color: transparent; }
 
 .navbar {
-  background-image: url(http://us.123rf.com/450wm/afhunta/afhunta1009/afhunta100900069/7740515-shelves-with-goods-inside-a-large-supermarket.jpg);
+  background-image: url(/img/hero.jpg);
   background-position: top center;
   background-size: 100%; }
   .navbar > div {
@@ -6075,15 +6050,18 @@ button.close {
     .threes .threes-cell h3 {
       text-align: center; }
 
-.get-app-btns > div {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px; }
-  @media (min-width: 992px) {
-    .get-app-btns > div {
-      float: left;
-      width: 50%; } }
+.get-app-btns {
+  padding-bottom: 50px; }
+  .get-app-btns > div .btn {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 64px; }
+    @media (min-width: 992px) {
+      .get-app-btns > div .btn {
+        float: left;
+        width: 50%; } }
 
 body {
   padding-bottom: 50px; }

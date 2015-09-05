@@ -1,0 +1,8 @@
+.get-app-btns {
+  padding-bottom: 50px;
+  > div .btn {
+    @include make-md-column(6);
+    @extend .btn-default;
+    margin-bottom: 64px;
+  }
+}
