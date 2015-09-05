@@ -2,11 +2,65 @@
 
   <ion-content>
     <div class="list">
-      <ion-radio ng-model="sort_type" ng-value="no" ng-click="change_sort('no')">No Sort</ion-radio>
-      <ion-radio ng-model="sort_type" ng-value="tags" ng-click="change_sort('tags')">Tags</ion-radio>
-      <ion-radio ng-model="sort_type" ng-value="tags_list"
-        ng-click="change_sort('tags_list')">List Mode</ion-radio>
-      <ion-radio ng-model="sort_type" ng-value="completion" ng-click="change_sort('completion')">Item State</ion-radio>
+
+      <ion-item
+        class="item-avatar sort-type dues"
+        ng-click="change_sort('no')"
+        ng-class="{on: sort_type === 'no'}"
+      >
+        <img src="img/sort_nosort.svg" />
+
+        <h2>No Sort</h2>
+        <p class="no-elipsis">
+          No sorting is applied.
+        </p>
+      </ion-item>
+
+
+      <ion-item
+        class="item-avatar sort-type dues"
+        ng-click="change_sort('tags')"
+        ng-class="{on: sort_type === 'tags'}"
+      >
+        <img src="img/sort_category.svg" />
+        <i class="icon ion-help-circled" ng-click="show_filter_help('tags')"></i>
+
+        <h2>Category</h2>
+        <p class="no-elipsis">
+          Sorting by category (produce, meats, dairy)
+        </p>
+      </ion-item>
+
+
+      <ion-item
+        class="item-avatar sort-type"
+        ng-click="change_sort('tags_store')"
+        ng-class="{on: sort_type === 'tags_store'}"
+      >
+        <img src="img/sort_foodstuffs.svg" />
+        <i class="icon ion-help-circled" ng-click="show_filter_help('tags_store')"></i>
+
+        <h2>Item List</h2>
+        <p class="no-elipsis">
+          Sorting recipe contents by category (produce, meats, dairy)
+        </p>
+      </ion-item>
+
+
+      <ion-item
+        class="item-avatar sort-type"
+        ng-click="change_sort('completion')"
+        ng-class="{on: sort_type === 'completion'}"
+      >
+        <img src="img/sort_checked.svg" />
+        <i class="icon ion-help-circled" ng-click="show_filter_help('completion')"></i>
+
+        <h2>Checked State</h2>
+        <p class="no-elipsis">
+          Is an item checked?
+        </p>
+      </ion-item>
+
     </div>
   </ion-content>
 </ion-view>

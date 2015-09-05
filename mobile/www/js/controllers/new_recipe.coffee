@@ -1,4 +1,4 @@
-angular.module 'starter.controllers.new_recipe', []
+angular.module 'bag.controllers.new_recipe', []
 
 .controller 'NewRecipeCtrl', (
   $scope,
@@ -7,6 +7,8 @@ angular.module 'starter.controllers.new_recipe', []
   AllItems,
   searchItem,
   $q
+  getTagsForQuery
+  $timeout
 ) ->
 
   # new item modal of adding items to the recipe
@@ -16,12 +18,7 @@ angular.module 'starter.controllers.new_recipe', []
     $scope.item_modal = modal
 
   # tags to search through
-  $scope.predefined_tags = (query) ->
-    defer = $q.defer()
-    socket.emit 'tags:index'
-    socket.once 'tags:index:callback', (evt) ->
-      defer.resolve evt.data
-    defer.promise
+  $scope.predefined_tags = getTagsForQuery
 
   # create a new foodstuff
   $scope.create_recipe = (name, tags, desc) ->
@@ -46,6 +43,11 @@ angular.module 'starter.controllers.new_recipe', []
 
     # make the request
     socket.emit 'list:create', list: recipe
+
+    # pull it in from the server
+    $timeout ->
+      socket.emit 'item:index', user: 'me'
+    , 100
 
   # we got a callback!
   socket.on 'list:create:callback', (evt) ->

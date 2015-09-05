@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" ng-class="{private: item.private}">
   <ion-item ng-controller="RecipeCtrl" class="item-icon-right">
 
     <!-- recipe header -->
@@ -12,23 +12,11 @@
 
 
         <!-- price for the entire recipe -->
-        <span class="pull-right">
+        <span class="pull-right" ng-show="recipe.quantity && calculate_total(recipe) !== 0">
 
           <!-- quantity box -->
           <span ng-hide="sortOpts.no_quantity">
-            <input
-              type="number"
-              placeholder="Qty"
-              style="width: 2em; display: inline; margin-top: -4px; direction: rtl;"
-
-              min="1"
-              max="99"
-              oninput="this.value=this.value.slice(0, 2)"
-
-              ng-model="recipe.quantity"
-              ng-change="change(recipe)"
-              ng-disabled="!change"
-            />
+            <span>{{recipe.quantity}}</span>
             @&nbsp;
           </span>
           <span>{{calculate_total(recipe) | currency}}</span>
@@ -58,8 +46,9 @@
           <span ng-bind-html="format_name(item.name)"></span>
 
           <!-- rightmost icons -->
-          <span class="pull-right" ng-show="item.price || item.contents" style="margin-right: -16px;">
-            {{item.price || calculate_total(item) | currency}}
+          <span class="pull-right" style="margin-right: -16px;">
+          {{ (item.store && item.stores[item.store].price || item.price) ||
+          calculate_total(item) | currency}}
           </span>
         </span>
       </li>

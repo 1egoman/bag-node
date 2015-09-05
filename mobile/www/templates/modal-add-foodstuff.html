@@ -15,6 +15,15 @@
   <ion-content ng-hide="confirmed">
     <div class="list">
 
+      <ion-item ng-hide="new_foodstuff_priv">
+        <h2>Add a new foodstuff</h2>
+        <p class="no-elipsis">
+          Any new public foodstuffs must be approoved bfore other users can
+          access them. If a foodstuff is a duplicate, then we will replace it
+          with it's established item.
+        </p>
+      </ion-item>
+
       <label class="item item-input">
         <input type="text" placeholder="Name" ng-model="new_foodstuff_name"/>
       </label>
@@ -37,14 +46,20 @@
           class="no-resize"></textarea>
       </label>
 
+      <ion-toggle
+        ng-show="user.plan > 0 && user_more_private(user)"
+        ng-model="new_foodstuff_priv"
+      >Make this private
+      </ion-toggle>
+
       <div class="padding">
         <button
           class="button button-block button-royal activated"
           ng-disabled="!( new_foodstuff_name && new_foodstuff_desc &&
           new_foodstuff_price.toString().length > 0 )"
           ng-click="create_foodstuff(new_foodstuff_name, new_foodstuff_price,
-          new_foodstuff_tags, new_foodstuff_desc)"
-        >Create Foodstuff request
+          new_foodstuff_tags, new_foodstuff_desc, new_foodstuff_priv || false)"
+          >Create Foodstuff
         </button>
       </div>
     </div>
@@ -59,10 +74,10 @@
         specifications. This can usually take [length of time] but no more than
         [another length of time].
       </p>
-        <button
-          ng-click="init(); close_add_foodstuff_modal()"
-          class="button button-block button-royal"
-        >OK</button>
+      <button
+        ng-click="init(); close_add_foodstuff_modal()"
+        class="button button-block button-royal"
+      >OK</button>
     </div>
   </ion-content>
 

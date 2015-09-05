@@ -16,6 +16,12 @@ path = require "path"
 bodyParser = require "body-parser"
 router = require "./router"
 
+session = require "express-session"
+app.use session
+  secret: 'keyboard cat'
+  resave: false
+  saveUninitialized: false
+
 
 exports.main = ->
 
@@ -29,7 +35,7 @@ exports.main = ->
   server = router.websocket app
 
   # listen for requests
-  PORT = process.argv.port or 8000
+  PORT = process.env.PORT or 8000
   server.listen PORT, ->
     console.log chalk.blue "-> :#{PORT}"
 
@@ -42,7 +48,7 @@ exports.middleware = (app) ->
 
 
 exports.connectToDB = ->
-  require("./db") module.exports.mongouri or module.exports.db or "mongodb://bag:bag@ds047602.mongolab.com:47602/bag-dev"
+  require("./db") process.env.MONGOLAB_URI or process.env.db or "mongodb://bag:bag@ds047602.mongolab.com:47602/bag-dev"
 
 
 exports.main()

@@ -11,11 +11,18 @@ mongoose = require 'mongoose'
 foodstuff = mongoose.Schema
   name: String
   desc: String
-  price: String
-  store: String
+  tags: Array
+  image: String
+
   checked: Boolean
   user: String
-  tags: Array
+  price: String
   verified: Boolean
+
+  stores: Object
+
+  private: Boolean
+
+foodstuff.set 'versionKey', false
 
 module.exports = mongoose.model 'foodstuff', foodstuff

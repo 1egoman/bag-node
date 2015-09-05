@@ -1,4 +1,4 @@
-angular.module('starter.controllers.tab_recipe', [])
+angular.module('bag.controllers.tab_recipe', [])
   
 .controller 'RecipesCtrl', (
   $scope,
@@ -6,6 +6,7 @@ angular.module('starter.controllers.tab_recipe', [])
   persistant,
   $state,
   $ionicPopup
+  user
 ) ->
   # With the new view caching in Ionic, Controllers are only called
   # when they are recreated or on app start, instead of every page change.
@@ -77,18 +78,61 @@ angular.module('starter.controllers.tab_recipe', [])
   $scope.more_info = (item) ->
     $state.go 'tab.recipeinfo', id: item._id
 
-  socket.on 'list:index:callback', (evt) ->
+  socket.on 'item:index:callback', (evt) ->
     $scope.my_recipes = evt.data
+
+    # create sort opts
+    for i in $scope.my_recipes
+      $scope.sort_opts[i._id] = $scope.make_sort_opts i
+
+    $scope.$apply()
+
+    # for pull to refresh
+    $scope.$broadcast 'scroll.refreshComplete'
+
+  # check to make sure a new user can create more private recipes
+  $scope.user_more_private = (user) ->
+    if not user
+      false
+    else if user.plan is 1
+      $scope.my_recipes.filter (r) ->
+        r.private
+      .length < 10
+    else if user.plan is 2
+      true
+    else
+      false
+
+  # using an item, create its sorting settings
+  $scope.make_sort_opts = (item) ->
+    if item.private
+      checks: false
+      no_quantity: true
+    else
+      checks: false
+      no_quantity: true
+      no_delete: true
+
+  # delete a private recipe
+  $scope.delete_item = (item) ->
+    socket.emit "foodstuff:destroy", foodstuff: item._id
+    $scope.my_recipes = _.without $scope.my_recipes, item
+
+  # when a user pulls to refresh...
+  $scope.do_refresh = ->
+    socket.emit 'item:index', user: 'me'
+
 
   ###
   # Initialization
   ###
-  $scope.sort_opts =
-    checks: false
-    no_quantity: true
-    no_delete: true
   $scope.my_recipes = []
-  socket.emit 'list:index', user: 'me'
-  $scope.$on '$destroy', ->
-    $scope.foodstuff_or_recipe_modal.remove()
-    $scope.foodstuff_modal.remove()
+  $scope.sort_opts = {}
+
+  user.then (u) ->
+    $scope.user = u
+    socket.emit 'item:index', user: 'me'
+    $scope.$on '$destroy', ->
+      $scope.foodstuff_or_recipe_modal.remove()
+      $scope.foodstuff_modal.remove()
+

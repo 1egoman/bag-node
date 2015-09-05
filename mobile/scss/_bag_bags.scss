@@ -15,8 +15,41 @@
     margin-bottom: 10px;
   }
 
+  &.private .item-content {
+    background: lighten(desaturate($energized, 50%), 40%);
+  }
+
+
+  &.unverified .item-content {
+    background: lighten($balanced, 40%);
+  }
+
   .item.item-avatar {
     padding-left: 16px;
+  }
+
+  // darken selected items
+  &.strike .item-content {
+    background: #ddd;
+  }
+
+  // move the price/quantity underneath the name line
+  .price-line {
+    @extend .pull-left;
+    margin-top: 10px;
+    width: 100%;
+
+    .quantity-and-price {
+      @extend .pull-right;
+    }
+  }
+
+  .item-name {
+    @extend .pull-left;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .title {

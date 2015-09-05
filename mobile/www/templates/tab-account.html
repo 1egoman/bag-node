@@ -1,14 +1,30 @@
 <ion-view view-title="Account">
   <ion-content>
     <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
 
-    <!-- yea, I know. nice and hacky... -->
-    <ion-item onclick="location.reload()">
-      Refresh Page
-    </ion-item>
+      <ion-item ng-click="to_stores_chooser()">
+        My Stores
+        <i
+          class="pull-right icon ion-chevron-right icon-accessory"
+          style="padding-left: 16px;"
+        ></i>
+      </ion-item>
+
+      <ion-item class="item-divider">My Account</ion-item>
+
+      <ion-item>
+        Current Plan: <strong>{{user_plan}}</strong>
+        <span class="pull-right" ng-click="refresh_user()">Refresh</span>
+      </ion-item>
+
+      <ion-item ng-click="logout()">
+        Logout {{username}}
+      </ion-item>
+
+      <!-- yea, I know. nice and hacky... -->
+      <ion-item onclick="location.reload()">
+        Refresh Page
+      </ion-item>
 
     </ion-list>
   </ion-content>

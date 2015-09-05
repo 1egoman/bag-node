@@ -1,4 +1,4 @@
-angular.module('starter.controllers.tab_bag', [])
+angular.module('bag.controllers.tab_bag', [])
   
 .controller 'BagsCtrl', (
   $scope,
@@ -31,27 +31,15 @@ angular.module('starter.controllers.tab_bag', [])
   # calculate total price for a whole bag
   # this takes into account any sub-recipes
   # through recursion.
-  $scope.calculate_total = (bag) ->
-    total = 0
-    $scope.get_all_content(bag, true).forEach (item) ->
-      if item.checked == true
-        return
-      else if item.contents
-        # this recipe has items of its own
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) or 1)
-      else
-        # do total
-        total += parseFloat(item.price) * (parseFloat(item.quantity) or 1)
-      return
-    total
-
+  $scope.calculate_total = calculateTotal
 
   # for an entire section, calculate the total
   $scope.calculate_total_section = (items) ->
     _(items).map((i) ->
-      $scope.calculate_total(i) * i.quantity
+      price: $scope.calculate_total i
+      ref: i
     ).reduce ((m, x) ->
-      m + x
+      m + x.price * x.ref.quantity # account for both price and quantity
     ), 0
 
   # using the speicified item, calculate the lowest possible price
@@ -95,18 +83,9 @@ angular.module('starter.controllers.tab_bag', [])
         $scope.add_items_done = true
       $scope.$broadcast 'scroll.infiniteScrollComplete'
 
-  # filter with ionic filter bar
-  $scope.open_search = ->
-    search = searchItem $scope.add_items, (filtered_items) ->
-      $scope.add_items = filtered_items
-
-    search.open()
-    $scope.hide_search = search.hide
-
   # close the add modal
   $scope.close_add_modal = ->
     $scope.modal.hide()
-    $scope.hide_search and $scope.hide_search()
 
   # cleanup the modal when we're done with it
   $scope.$on '$destroy', ->
@@ -114,7 +93,6 @@ angular.module('starter.controllers.tab_bag', [])
 
   # add a new item to the bag
   $scope.add_item_to_bag = (item) ->
-    console.log 1
 
     # set quantity to one, for an initial new item
     item.quantity = 1
@@ -143,6 +121,13 @@ angular.module('starter.controllers.tab_bag', [])
     # update everything!
     $scope.update_bag()
     $scope.close_add_modal()
+
+  # search for a new item
+  $scope.on_search_change = (txt) -> socket.emit "item:search", item: txt
+  socket.on "item:search:callback", (payload) ->
+    if payload.data
+      $scope.add_items = payload.data
+
 
   ###
   # View mechanics
@@ -212,7 +197,8 @@ angular.module('starter.controllers.tab_bag', [])
   # transistion to a more info page about the specified item
   $scope.more_info = (item) ->
     $ionicListDelegate.closeOptionButtons()
-    $state.go 'tab.iteminfo', id: item._id
+    $state.go 'tab.iteminfo',
+      id: item._id
 
   ###
   # Updating a bag
@@ -290,6 +276,24 @@ angular.module('starter.controllers.tab_bag', [])
           ) or 'No sort'
         )
 
+
+      # sort by sort tags, and by store
+      when 'tags_store'
+        persistant.sort_opts = $scope.sort_opts = checks: true
+        return _.groupBy $scope.flatten_bag(), (i) ->
+          tag_sort = _.find(i.tags, (x) ->
+            x.indexOf('sort-') != -1
+          ) or 'No sort'
+
+          if i.store
+            # lookup store id and use that.
+            $scope.stores[i.store].name + ": "+ tag_sort
+          else
+            "No Store: #{tag_sort}"
+
+
+
+
       # no sort
       else
         persistant.sort_opts = $scope.sort_opts = {}
@@ -297,9 +301,34 @@ angular.module('starter.controllers.tab_bag', [])
         break
     return
 
+  # show help for a specified filter
+  $scope.show_filter_help = (sort) ->
+    switch sort
+
+      when 'tags'
+        $cordovaDialogs.alert """
+        Category Filter
+        Each item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc.
+        """, "Filter Help", 'Ok'
+
+      when 'tags_store'
+        $cordovaDialogs.alert """
+        Category Filter
+        Each item in the bag is sorted by its type. Milk would go under dairy, chicken would go under meats, etc. However, recipes are broken down into their elemental foodstuffs, so you can check off each item as you buy it.
+        """, "Filter Help", 'Ok'
+
+
+      when 'completion'
+        $cordovaDialogs.alert """
+        Checked Filter
+        Sort items depending on if an item is checked.
+        """, "Filter Help", 'Ok'
+
+
+
   # update the old sort to the specified one
   $scope.change_sort = (new_sort_name) ->
-    persistant.sort = new_sort_name
+    persistant.sort = $scope.sort_type = new_sort_name
     $scope.sort_opts = persistant.sort_opts
     $scope.sorted_bag = $scope.sort_items()
 

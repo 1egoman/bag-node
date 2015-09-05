@@ -4,16 +4,17 @@
 # the 2nd parameter is an array of 'requires'
 # 'starter.services' is found in services.js
 # 'starter.controllers' is found in controllers.js
-angular.module 'starter', [
+angular.module 'bag', [
   'ionic'
   'jett.ionic.filter.bar'
   'ngTagsInput'
-  'starter.controllers'
-  'starter.services'
-  'starter.directives'
+  'ngCordova'
+  'bag.controllers'
+  'bag.services'
+  'bag.directives'
 ]
   
-.run ($ionicPlatform, $ionicConfig) ->
+.run ($ionicPlatform, $ionicConfig, $rootScope, auth) ->
 
   # ionic stuff
   $ionicPlatform.ready ->
@@ -40,72 +41,133 @@ angular.module 'starter', [
   $ionicConfig.tabs.style 'standard'
   # Makes them all look the same across all OS
 
-.config ($stateProvider, $urlRouterProvider) ->
+
+  # lastly, should we hide or show bottom tab bar?
+  # hide only if we aren't authorized
+  $rootScope.hideTabs = not auth.success
+
+.config ($stateProvider, $urlRouterProvider, authProvider) ->
+
   $stateProvider
   
-  # each tab has ist own nav history stack
+  # each tab has its own nav history stack
   .state 'tab',
     url: '/tab'
     abstract: true
     templateUrl: 'templates/tabs.html'
 
 
-
-  # bag tab
-  .state 'tab.bag',
-    url: '/bag'
+  # tutorial on how to us the app
+  .state 'tab.howtouse',
+    url: '/howtouse'
     views:
-      'tab-bag':
-        templateUrl: 'templates/tab-bag.html'
-        controller: 'BagsCtrl'
-
-  .state 'tab.select',
-    url: '/select_sort_method'
-    views:
-      'tab-bag':
-        templateUrl: 'templates/tab-select.html'
-        controller: 'BagsCtrl'
-
-  # more info about an item, such as a recipe or a foodstuff
-  .state 'tab.iteminfo',
-    url: '/iteminfo/:id'
-    views:
-      'tab-bag':
-        templateUrl: 'templates/item-info.html'
-        controller: 'ItemInfoCtrl'
+      'view-auth':
+        templateUrl: 'templates/auth/howtouse.html'
+        controller: 'onboardCtrl'
 
 
+  # if auth was successful, then register the whole gambit of routes
+  if authProvider.getSuccess()
 
-  # recipes tab
-  .state 'tab.recipes',
-    url: '/recipes'
-    views:
-      'tab-recipes':
-        templateUrl: 'templates/tab-recipes.html'
-        controller: 'RecipesCtrl'
+    $stateProvider
+    
+    # bag tab
+    .state 'tab.bag',
+      url: '/bag'
+      views:
+        'tab-bag':
+          templateUrl: 'templates/tab-bag.html'
+          controller: 'BagsCtrl'
 
+    .state 'tab.select',
+      url: '/select_sort_method'
+      views:
+        'tab-bag':
+          templateUrl: 'templates/tab-select.html'
+          controller: 'BagsCtrl'
 
-  # recipe info
-  # this will open in the recipe stack and not the bag one
-  .state 'tab.recipeinfo',
-    url: '/recipeinfo/:id'
-    views:
-      'tab-recipes':
-        templateUrl: 'templates/item-info.html'
-        controller: 'ItemInfoCtrl'
+    # more info about an item, such as a recipe or a foodstuff
+    .state 'tab.iteminfo',
+      url: '/iteminfo/:id'
+      views:
+        'tab-bag':
+          templateUrl: 'templates/item-info.html'
+          controller: 'ItemInfoCtrl'
 
 
 
-  # settings page - still mostly stock
-  .state 'tab.account',
-    url: '/account'
-    views:
-      'tab-account':
-        templateUrl: 'templates/tab-account.html'
-        controller: 'AccountCtrl'
+    # user picks tab
+    .state 'tab.picks',
+      url: '/picks'
+      views:
+        'tab-picks':
+          templateUrl: 'templates/tab-picks.html'
+          controller: 'PicksCtrl'
 
-  # if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise '/tab/bag'
+
+    # user recipes tab
+    .state 'tab.recipes',
+      url: '/recipes'
+      views:
+        'tab-picks':
+          templateUrl: 'templates/tab-recipes.html'
+          controller: 'RecipesCtrl'
+
+
+    # recipe info
+    # this will open in the recipe stack and not the bag one
+    .state 'tab.recipeinfo',
+      url: '/recipeinfo/:id'
+      views:
+        'tab-picks':
+          templateUrl: 'templates/item-info.html'
+          controller: 'ItemInfoCtrl'
+
+
+
+    # settings page - still mostly stock
+    .state 'tab.account',
+      url: '/account'
+      views:
+        'tab-account':
+          templateUrl: 'templates/tab-account.html'
+          controller: 'AccountCtrl'
+
+
+    .state 'tab.stores',
+      url: '/stores'
+      views:
+        'tab-account':
+          templateUrl: 'templates/tab-store-picker.html'
+          controller: 'StorePickerCtrl'
+
+
+    # if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise '/tab/bag'
+
+  # If the user isn't logged in / hasn't created an account with us yet....
+  else
+    $stateProvider
+      
+
+    .state 'tab.onboard',
+      url: '/onboarding/:step'
+      views:
+        'view-auth':
+          templateUrl: 'templates/auth/onboard.html'
+          controller: 'onboardCtrl'
+
+
+
+    # login page
+    .state 'tab.login',
+      url: '/login'
+      views:
+        'view-auth':
+          templateUrl: 'templates/auth/login.html'
+          controller: 'authCtrl'
+
+    $urlRouterProvider.otherwise '/tab/login'
 
 # convert to titlecase
 # like 'hello world' -> 'Hello World'

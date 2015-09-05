@@ -1,0 +1,11 @@
+.get-app-btns {
+  @extend .row;
+
+  &>div {
+    @include make-md-column(6);
+
+    button, a {
+      @extend .btn-default;
+    }
+  }
+}

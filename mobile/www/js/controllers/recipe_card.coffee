@@ -1,5 +1,4 @@
-angular.module('starter.controllers.recipe_card', [])
-  
+angular.module('bag.controllers.recipe_card', []) 
 .controller 'RecipeCtrl', (
   $scope,
   socket,
@@ -7,24 +6,13 @@ angular.module('starter.controllers.recipe_card', [])
   $location,
   $sce,
   $sanitize
+  calculateTotal
 ) ->
 
   # calculate total price for a whole recipe
   # this takes into account any sub-recipes
   # through recursion. Anything checked off won't be taken into account.
-  $scope.calculate_total = (bag) ->
-    total = 0
-    $scope.get_all_content(bag).forEach (item) ->
-      if item.checked == true
-        return
-      else if item.contents
-        # this recipe has items of its own
-        total += $scope.calculate_total(item) * (parseFloat(item.quantity) or 1)
-      else
-        # do total
-        total += parseFloat(item.price) * (parseFloat(item.quantity) or 1)
-      return
-    total
+  $scope.calculate_total = calculateTotal
 
   ###
   # Updating a recipe

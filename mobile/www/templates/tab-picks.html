@@ -1,30 +1,57 @@
-<ion-view view-title="Your Picks">
+<ion-view view-title="My Picks">
 
   <ion-nav-buttons side="right">
-    <!-- plus for adding a new foodstuff -->
+    <!-- plus for seeing our recipes -->
     <button 
-      ng-click="open_foodstuff_or_recipe_modal()" 
-      class="button button-icon icon ion-plus-round"
+      ng-click="to_user_recipes()" 
+      class="button button-icon icon ion-coffee"
     ></button>
   </ion-nav-buttons>
 
+
   <ion-content>
+
+    <!-- wait for the stuff to come in -->
+    <loading-spinner complete="picks"></loading-spinner>
+
     <ion-list>
+
       <ion-item>
-        <h2>This, based on your history, is what we think you should be interested
-          in!</h2>
+        <h2>Feature Coming Soon!</h2>
+        <p class="no-elipsis">
+          This screen will provide suggestions on what to eat for your next
+          meal.
+        </p>
       </ion-item>
-      <ion-item class="item-remove-animate item-avatar item-icon-right"
-        ng-repeat="pick in picks" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
+
+      <ion-item
+        class="item-remove-animate item-avatar item-icon-right"
+        ng-repeat="pick in picks"
+        type="item-text-wrap"
+        href="#/tab/recipeinfo/{{pick._id}}"
+      >
         <img ng-src="{{pick.face}}">
         <h2>{{pick.name}}</h2>
-        <p>{{pick.tags.join(', ')}}</p>
+        <p>{{pick.desc}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-assertive" ng-click="remove(chat)">
           Delete
         </ion-option-button>
       </ion-item>
+
+
+
+      <!-- <checkable&#45;item -->
+      <!--   ng&#45;repeat="item in picks" -->
+      <!--   item="item"  -->
+      <!--  -->
+      <!--   change="update_bag" -->
+      <!--   delete&#45;item="delete_item(item)" -->
+      <!--   more&#45;info="more_info(item)" -->
+      <!--   sort&#45;opts="{hide_quantity: true, }" -->
+      <!-- ></checkable&#45;item> -->
+      <!--  -->
     </ion-list>
   </ion-content>
 </ion-view>
