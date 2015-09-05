@@ -13,6 +13,7 @@ angular.module('bag.controllers.item_info', [])
   calculateTotal
   stores
   storePicker
+  Bag
 ) ->
 
 
@@ -194,6 +195,22 @@ angular.module('bag.controllers.item_info', [])
   # are we a favorite?
   user.then (data) ->
     $scope.favs = data.favs
+
+
+  # add item to bag
+  $scope.item_to_bag = (item) ->
+    Bag.index().then (all) ->
+
+      item.quantity = 1
+      if item.contents
+        all.contentsLists.push item
+      else
+        all.contents.push item
+
+      Bag.update
+        bag: all
+      .then ->
+        $state.go "tab.bag"
 
   ###
   # Initializers

@@ -886,7 +886,7 @@ angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($s
   return $scope.amount_in_page = 25;
 });
 
-angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
+angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker, Bag) {
   $scope.get_item_or_recipe = function() {
     if ($ionicHistory.currentView().stateName.indexOf('recipe') === -1) {
       return 'iteminfo';
@@ -1058,6 +1058,21 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
   user.then(function(data) {
     return $scope.favs = data.favs;
   });
+  $scope.item_to_bag = function(item) {
+    return Bag.index().then(function(all) {
+      item.quantity = 1;
+      if (item.contents) {
+        all.contentsLists.push(item);
+      } else {
+        all.contents.push(item);
+      }
+      return Bag.update({
+        bag: all
+      }).then(function() {
+        return $state.go("tab.bag");
+      });
+    });
+  };
 
   /*
    * Initializers
