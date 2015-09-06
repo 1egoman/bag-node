@@ -54,7 +54,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= config.srcTest %>',
-          src: '{,*/}*.spec.coffee',
+          src: '{,*/}*.coffee',
           dest: '<%= config.distTest %>',
           ext: '.spec.js'
         }]
@@ -95,6 +95,7 @@ module.exports = function (grunt) {
         'expect',
         'assert',
         'AssertionError',
+        'Promise'
         ],
         timeout: 3000,
         ignoreLeaks: false,
@@ -109,6 +110,7 @@ module.exports = function (grunt) {
 
           // tests
           'test/dist/**/*.spec.js',
+          'test/dist/**/spec_helper.js',
         ],
       },
     },

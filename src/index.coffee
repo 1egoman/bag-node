@@ -47,8 +47,9 @@ exports.middleware = (app) ->
   app.use bodyParser.json()
 
 
-exports.connectToDB = ->
-  require("./db") process.env.MONGOLAB_URI or process.env.db or "mongodb://bag:bag@ds047602.mongolab.com:47602/bag-dev"
+exports.connectToDB = (cb) ->
+  require("./db") process.env.MONGOLAB_URI or process.env.db or "mongodb://bag:bag@ds047602.mongolab.com:47602/bag-dev", cb
 
 
-exports.main()
+if require.main is module
+  exports.main()

@@ -7,7 +7,7 @@
 ###
 mongoose = require "mongoose"
 
-module.exports = (host) ->
+module.exports = (host, cb) ->
   # connect to mongo database
   mongoose.connect host
   # error?
@@ -15,5 +15,4 @@ module.exports = (host) ->
   # success
   mongoose.connection.once 'open', ->
     console.log 'Connected To Mongo instance:', host
-    return
-  return
+    cb() if cb
