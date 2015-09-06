@@ -56,7 +56,7 @@ describe "bag queries", ->
         ,
           send: (data) ->
             data.should.not.be.null
-            data.status.should.contain "success"
+            data.status.should.contain "error"
             (data.data is null).should.be.true
 
             done()
@@ -73,6 +73,10 @@ describe "bag queries", ->
         name: "test item"
         desc: "used in tests for bag, please delete me"
         tags: []
+        store: "test store"
+        stores:
+          "test store":
+            price: 5.00
 
       # update the bag
       Bag.update
@@ -121,6 +125,86 @@ describe "bag queries", ->
             data.status.should.contain "error"
             done()
 
+  # bag:update_store
+  # within a bag, replace every store instance with another.
+  describe "bag:update_store", ->
+
+    # TODO we should test this further to make sure the substitution happened
+    it "should be able to successfully replace our test item", (done) ->
+      Bag.update_store
+        user:
+          _id: USER_ID
+          plan: 0
+        body:
+          item: "test item"
+          store: "test store two"
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "success"
+        data.data.should.be.an.object
+
+        # data information
+        data.data.user.should.equal USER_ID
+        data.data.contents.should.be.an.object
+        data.data.contentsLists.should.be.an.object
+
+        # normal contents
+        if data.data.contents.length
+          data.data.contents[0].should.be.an.object
+          data.data.contents[0].name.should.be.a.string
+          data.data.contents[0]._id.should.be.a.string
+
+        # list contents
+        if data.data.contentsLists.length
+          data.data.contentsLists[0].should.be.an.object
+          data.data.contentsLists[0].name.should.be.a.string
+          data.data.contentsLists[0]._id.should.be.a.string
+
+        done()
+
+    it "bad user id", (done) ->
+      Bag.update_store
+        user:
+          _id: "bla"
+          plan: 0
+        body:
+          item: "test item"
+          store: "test store two"
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "error"
+        (data.data is null).should.be.true
+        done()
+
+    it "bad item id", (done) ->
+      Bag.update_store
+        user:
+          _id: USER_ID
+          plan: 0
+        body:
+          item: "I don't exist"
+          store: "test store two"
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "success" # need to figure this out FIXME
+        done()
+
+    it "bad store", (done) ->
+      Bag.update_store
+        user:
+          _id: USER_ID
+          plan: 0
+        body:
+          item: "test item"
+          store: null # something falsey
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "error"
+        (data.data is null).should.be.true
+        done()
+
+
+
   # unsupported routes
   for i in [
     "show"
@@ -130,6 +214,6 @@ describe "bag queries", ->
     "destroy"
   ]
     describe "bag:#{i}", ->
-      it "should verify that bag:#{i} doesn't do anything (Not supported.)", ->
+      it "should verify that bag:#{i} doesn't do anything (should return Not supported.)", ->
         Bag[i] {}, send: (data) ->
           data.should.equal "Not supported."
