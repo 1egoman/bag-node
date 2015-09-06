@@ -921,6 +921,9 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
       };
     }
   };
+  $ionicLoading.show({
+    template: "Loading..."
+  });
   user.then(function(usr) {
     socket.emit("bag:index", {
       user: usr._id
@@ -928,6 +931,7 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
     return socket.on("bag:index:callback", function(bag) {
       var to_level;
       $scope.bag = bag.data;
+      $ionicLoading.hide();
       to_level = function(haystack) {
         var flattened, j, len, list_contents, needle, results;
         if (haystack == null) {
