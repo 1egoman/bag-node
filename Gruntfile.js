@@ -95,7 +95,8 @@ module.exports = function (grunt) {
         'expect',
         'assert',
         'AssertionError',
-        'Promise'
+        'Promise',
+        'projection'
         ],
         timeout: 3000,
         ignoreLeaks: false,
