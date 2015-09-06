@@ -35,7 +35,7 @@ angular.module('bag.controllers.tab_picks', [])
   socket.emit "pick:index"
   socket.on "pick:index:callback", (payload) ->
     if payload.data
-      $scope.picks = payload.data.picks
+      $scope.picks = _.sortBy payload.data.picks, (i) -> i.score or 0
 
   # add picks to controller
   # do (picks) ->
