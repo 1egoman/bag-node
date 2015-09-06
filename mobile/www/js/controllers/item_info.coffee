@@ -14,6 +14,7 @@ angular.module('bag.controllers.item_info', [])
   stores
   storePicker
   Bag
+  $cordovaDialogs
 ) ->
 
 
@@ -200,9 +201,18 @@ angular.module('bag.controllers.item_info', [])
   # add item to bag
   $scope.item_to_bag = (item) ->
     Bag.index().then (all) ->
+      console.log all
 
-      if item in item.contents or item in item.contentsLists
-        null
+      # is item in the bag?
+      in_bag = do (bag=all) ->
+        if item.contents
+          all.contentsLists.filter (c) -> c._id.toString() is itm._id.toString()
+        else
+          all.contents.filter (c) -> c._id.toString() is item._id.toString()
+
+
+      if item and in_bag.length
+        $cordovaDialogs.alert "Item already in Bag", "In Bag", 'OK'
       else
         item.quantity = 1
         if item.contents
@@ -210,10 +220,10 @@ angular.module('bag.controllers.item_info', [])
         else
           all.contents.push item
 
-      Bag.update
-        bag: all
-      .then ->
-        $state.go "tab.bag"
+        Bag.update
+          bag: all
+        .then ->
+          $state.go "tab.bag"
 
   ###
   # Initializers

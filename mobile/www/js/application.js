@@ -886,9 +886,7 @@ angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($s
   return $scope.amount_in_page = 25;
 });
 
-var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker, Bag) {
+angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker, Bag, $cordovaDialogs) {
   $scope.get_item_or_recipe = function() {
     if ($ionicHistory.currentView().stateName.indexOf('recipe') === -1) {
       return 'iteminfo';
@@ -1062,8 +1060,21 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
   });
   $scope.item_to_bag = function(item) {
     return Bag.index().then(function(all) {
-      if (indexOf.call(item.contents, item) >= 0 || indexOf.call(item.contentsLists, item) >= 0) {
-        null;
+      var in_bag;
+      console.log(all);
+      in_bag = (function(bag) {
+        if (item.contents) {
+          return all.contentsLists.filter(function(c) {
+            return c._id.toString() === itm._id.toString();
+          });
+        } else {
+          return all.contents.filter(function(c) {
+            return c._id.toString() === item._id.toString();
+          });
+        }
+      })(all);
+      if (item && in_bag.length) {
+        return $cordovaDialogs.alert("Item already in Bag", "In Bag", 'OK');
       } else {
         item.quantity = 1;
         if (item.contents) {
@@ -1071,12 +1082,12 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
         } else {
           all.contents.push(item);
         }
+        return Bag.update({
+          bag: all
+        }).then(function() {
+          return $state.go("tab.bag");
+        });
       }
-      return Bag.update({
-        bag: all
-      }).then(function() {
-        return $state.go("tab.bag");
-      });
     });
   };
 
