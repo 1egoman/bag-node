@@ -1074,7 +1074,7 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
         }
       })(all);
       if (item && in_bag.length) {
-        return $cordovaDialogs.alert("Item already in Bag", "In Bag", 'OK');
+        return $cordovaDialogs.alert("Item already in bag", "In Bag", 'OK');
       } else {
         item.quantity = 1;
         if (item.contents) {

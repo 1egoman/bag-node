@@ -212,7 +212,7 @@ angular.module('bag.controllers.item_info', [])
 
 
       if item and in_bag.length
-        $cordovaDialogs.alert "Item already in Bag", "In Bag", 'OK'
+        $cordovaDialogs.alert "Item already in bag", "In Bag", 'OK'
       else
         item.quantity = 1
         if item.contents
