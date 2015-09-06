@@ -1,4 +1,4 @@
-angular.module 'starter.controllers.stores_picker', []
+angular.module 'bag.controllers.stores_picker', []
 
 .controller 'StorePickerCtrl', (
   $scope

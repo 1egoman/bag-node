@@ -10,8 +10,21 @@
 
   <ion-content>
 
+    <ion-refresher
+      pulling-text="Pull to reload items..."
+      on-refresh="do_refresh()">
+    </ion-refresher>
+
     <!-- wait for the stuff to come in -->
-    <loading-spinner complete="my_recipes.length"></loading-spinner>
+    <loading-spinner complete="my_recipes"></loading-spinner>
+
+    <ion-item ng-if="my_recipes && my_recipes.length === 0">
+      <h2>No Items</h2>
+      <p class="no-elipsis">
+        Adding items to Bag lets you contribute to our repository of items, and
+        helps you get more variety in your lists.
+      </p>
+    </ion-item>
 
     <ion-list>
 
@@ -33,7 +46,8 @@
           change="update_bag"
           ng-if="!(item.contents || item.contentsLists)"
           more-info="more_info(item)"
-          sort-opts="sort_opts"
+          sort-opts="sort_opts[item._id]"
+          delete-item="delete_item(item)"
         ></checkable-item>
       </div>
       <br/>

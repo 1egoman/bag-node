@@ -23,5 +23,6 @@ foodstuff = mongoose.Schema
 
   private: Boolean
 
+foodstuff.set 'versionKey', false
 
 module.exports = mongoose.model 'foodstuff', foodstuff

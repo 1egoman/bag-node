@@ -2,6 +2,10 @@
   @extend .item-avatar;
   padding-left: 96px;
 
+  &.on {
+    background: #efefef;
+  }
+
   min-height: 95px;
   &.dues { min-height: 75px; }
 
@@ -19,5 +23,7 @@
 
   .ion-help-circled {
     @extend .pull-right;
+    padding-left: 30px;
+    padding-bottom: 40px;
   }
 }

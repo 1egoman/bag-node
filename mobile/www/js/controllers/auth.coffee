@@ -1,4 +1,4 @@
-angular.module 'starter.controllers.login', []
+angular.module 'bag.controllers.login', []
 
 
 .controller 'authCtrl', (

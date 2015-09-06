@@ -6,6 +6,7 @@
       <ion-item
         class="item-avatar sort-type dues"
         ng-click="change_sort('no')"
+        ng-class="{on: sort_type === 'no'}"
       >
         <img src="img/sort_nosort.svg" />
 
@@ -19,6 +20,7 @@
       <ion-item
         class="item-avatar sort-type dues"
         ng-click="change_sort('tags')"
+        ng-class="{on: sort_type === 'tags'}"
       >
         <img src="img/sort_category.svg" />
         <i class="icon ion-help-circled" ng-click="show_filter_help('tags')"></i>
@@ -33,6 +35,7 @@
       <ion-item
         class="item-avatar sort-type"
         ng-click="change_sort('tags_store')"
+        ng-class="{on: sort_type === 'tags_store'}"
       >
         <img src="img/sort_foodstuffs.svg" />
         <i class="icon ion-help-circled" ng-click="show_filter_help('tags_store')"></i>
@@ -47,6 +50,7 @@
       <ion-item
         class="item-avatar sort-type"
         ng-click="change_sort('completion')"
+        ng-class="{on: sort_type === 'completion'}"
       >
         <img src="img/sort_checked.svg" />
         <i class="icon ion-help-circled" ng-click="show_filter_help('completion')"></i>

@@ -1,12 +1,17 @@
 <!-- all items within this recipe -->
-<div class="card" ng-class="{strike: item.checked, private: item.private}">
+<div class="card" ng-class="{strike: item.checked, unverified: item.verified ===
+  false && item.private === false, private: item.private}">
   <ion-item class="item-icon-right">
     <i 
       class="pull-right icon ion-chevron-right icon-accessory"
       ng-click="moreInfo(item)"
       style="padding-left: 16px;"
     ></i>
-    <div ng-class="{'item-checkbox': sortOpts.checks}">
+    <div ng-class="{'item-checkbox': sortOpts.checks, 'item-avatar': !sortOpts.checks}">
+      <img
+        src="{{ item.image || host+'/identicon/'+item.name}}"
+        ng-show="!sortOpts.checks"
+      />
 
       <!-- Check off the item -->
       <label class="checkbox" style="right: 64px;" ng-if="sortOpts.checks">
@@ -26,11 +31,11 @@
             {{stores[item.store].name || 'Custom'}}
           </span>
 
-          <span class="quantity-and-price"
-            ng-show="item.stores[item.store].price && item.quantity">
+          <span class="quantity-and-price" style="margin-right: -7px;"
+            ng-show="(item.price || item.stores[item.store].price) && item.quantity">
             <span ng-hide="sortOpts.hide_quantity">{{item.quantity}}</span>
             <span ng-hide="sortOpts.hide_quantity">@</span>
-            <span>{{ (item.store && item.stores[item.store].price || item.price) | currency}}</span>
+            <span>{{ (item.price && item.price || item.stores[item.store].price) | currency}}</span>
           </span>
         </span>
       </span>

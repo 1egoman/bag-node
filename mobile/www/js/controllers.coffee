@@ -3,9 +3,10 @@
 # user_token='my_token'
 # window.host = "http://192.168.1.13:8000"
 # window.host = "http://192.168.1.15:8000"
-window.host = "http://api.getbag.io"
+# window.host = "http://api.getbag.io"
+window.host = "http://bagd.herokuapp.com"
 
-auth_module = angular.module 'starter.authorization', []
+auth_module = angular.module 'bag.authorization', []
 if localStorage.user
   # user_id = '55a84d00e4b06e29cb4eb960'
   # user_token='my_token'
@@ -54,35 +55,35 @@ else
 window.strip_$$ = (a) -> angular.fromJson angular.toJson(a)
 
 
-angular.module 'starter.controllers', [
+angular.module 'bag.controllers', [
   'btford.socket-io'
   'ngSanitize'
 
   # authorization stuff
-  'starter.authorization'
-  'starter.controllers.onboarding'
+  'bag.authorization'
+  'bag.controllers.onboarding'
 
   # settings
-  'starter.controllers.account'
-  'starter.controllers.stores_picker'
+  'bag.controllers.account'
+  'bag.controllers.stores_picker'
 
   # local controllers in different files
-  'starter.controllers.tab_bag'
-  'starter.controllers.tab_recipe'
-  'starter.controllers.tab_picks'
+  'bag.controllers.tab_bag'
+  'bag.controllers.tab_recipe'
+  'bag.controllers.tab_picks'
 
   # item info pages, both on bags view and recipes view
-  'starter.controllers.item_info'
+  'bag.controllers.item_info'
 
   # create new recipes and foodstuffs
-  'starter.controllers.new_foodstuff'
-  'starter.controllers.new_recipe'
+  'bag.controllers.new_foodstuff'
+  'bag.controllers.new_recipe'
 
   # recipe card controller for recipe-card directive
-  'starter.controllers.recipe_card'
+  'bag.controllers.recipe_card'
 
   # login controller
-  'starter.controllers.login'
+  'bag.controllers.login'
 ]
 
 

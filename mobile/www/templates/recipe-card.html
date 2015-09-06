@@ -1,4 +1,4 @@
-<div class="card" ng-class="{private: item.private}">
+<div class="card recipe-card" ng-class="{private: item.private}">
   <ion-item ng-controller="RecipeCtrl" class="item-icon-right">
 
     <!-- recipe header -->
@@ -12,7 +12,7 @@
 
 
         <!-- price for the entire recipe -->
-        <span class="pull-right" ng-show="recipe.quantity && calculate_total(recipe) !== 0">
+        <span class="pull-right" ng-show="recipe.quantity && calculate_total(recipe) !== null">
 
           <!-- quantity box -->
           <span ng-hide="sortOpts.no_quantity">
@@ -27,11 +27,12 @@
 
 
     <!-- a recipe card -->
-    <div class="list" style="margin-left: -16px;">
+    <div class="list-fluid">
+
 
       <!-- all items within this recipe -->
       <li href="#" class="item" ng-class="{'item-checkbox':
-        sortOpts.checks}" ng-repeat="item in get_all_content(recipe)">
+        sortOpts.checks, 'strike-item': item.checked}" ng-repeat="item in get_all_content(recipe)">
 
         <!-- Check off the item -->
         <label class="checkbox" ng-if="sortOpts.checks && change">
@@ -40,9 +41,7 @@
         </label>
 
         <!-- the title -->
-        <span class="title" ng-class="{strike: item.checked}">
-          <div class="line"></div>
-
+        <span class="title">
           <span ng-bind-html="format_name(item.name)"></span>
 
           <!-- rightmost icons -->

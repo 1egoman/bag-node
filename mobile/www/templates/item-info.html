@@ -20,7 +20,7 @@
 
       <div class="img-wrapper">
         <img
-           src="{{ item.image || 'http://lorempixum.com/500/500'}}"
+          src="{{ item.image || host+'/identicon/'+item.name}}"
           class="item-img"
         />
       </div>
@@ -33,7 +33,16 @@
         <div class="item">
           <!-- item name and price -->
           <span>
-            <h1>{{item.name | titlecase}}</h1>
+            <h1>
+              {{item.name | titlecase}}
+
+              <!-- add item to bag -->
+              <i
+                class="icon ion-bag pull-right"
+                ng-click="item_to_bag(item)"
+                ng-hide="get_item_or_recipe() !== 'recipeinfo'"
+              ></i>
+            </h1>
             <span class="pull-right">
               {{calculate_total([item]) | currency}}
             </span>

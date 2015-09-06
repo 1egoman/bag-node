@@ -4,14 +4,14 @@
 # the 2nd parameter is an array of 'requires'
 # 'starter.services' is found in services.js
 # 'starter.controllers' is found in controllers.js
-angular.module 'starter', [
+angular.module 'bag', [
   'ionic'
   'jett.ionic.filter.bar'
   'ngTagsInput'
   'ngCordova'
-  'starter.controllers'
-  'starter.services'
-  'starter.directives'
+  'bag.controllers'
+  'bag.services'
+  'bag.directives'
 ]
   
 .run ($ionicPlatform, $ionicConfig, $rootScope, auth) ->

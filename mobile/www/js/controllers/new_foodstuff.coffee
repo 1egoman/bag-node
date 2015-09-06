@@ -1,11 +1,11 @@
-angular.module('starter.controllers.new_foodstuff', [])
+angular.module('bag.controllers.new_foodstuff', [])
 
 .controller 'NewFoodstuffCtrl', (
   $scope
-  socket
   $q
   getTagsForQuery
   $timeout
+  Foodstuff
 ) ->
 
   # tags to search through
@@ -21,16 +21,17 @@ angular.module('starter.controllers.new_foodstuff', [])
       tags: (tags or []).map((i) ->
         i.text
       )
-    socket.emit 'foodstuff:create', foodstuff: foodstuff
+    Foodstuff.create
+      foodstuff: foodstuff
+    .then (evt) ->
+      if evt.private
+        $scope.close_add_foodstuff_modal()
+      else
+        $scope.confirmed = evt.data
 
-    # pull it in from the server
-    $timeout ->
-      socket.emit 'item:index', user: 'me'
-    , 100
+      # make sure the view is refreshed
+      $scope.do_refresh()
 
-  # we got a callback!
-  socket.on 'foodstuff:create:callback', (evt) ->
-    $scope.confirmed = evt.data
 
   ###
   # Initialization

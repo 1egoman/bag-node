@@ -2,12 +2,13 @@
   "name": "HelloIonic",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.1"
+    "ionic": "driftyco/ionic-bower#1.0.1",
+    "angular-mocks": "1.4.3"
   },
   "dependencies": {
     "angular-socket-io": "~0.7.0",
     "ngCordova": "~0.1.20-alpha",
-    "ionic-filter-bar": "~1.0.5",
+    "ionic-filter-bar": "~1.0.6",
     "angular-sanitize": "~1.4.3",
     "ng-tags-input": "3.0.0",
     "underscore": "~1.8.3",

@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordova', 'starter.controllers', 'starter.services', 'starter.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
+angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordova', 'bag.controllers', 'bag.services', 'bag.directives']).run(function($ionicPlatform, $ionicConfig, $rootScope, auth) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -131,9 +131,9 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngC
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://api.getbag.io";
+window.host = "http://bagd.herokuapp.com";
 
-auth_module = angular.module('starter.authorization', []);
+auth_module = angular.module('bag.authorization', []);
 
 if (localStorage.user) {
   ref = JSON.parse(localStorage.user);
@@ -192,7 +192,7 @@ window.strip_$$ = function(a) {
   return angular.fromJson(angular.toJson(a));
 };
 
-angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starter.authorization', 'starter.controllers.onboarding', 'starter.controllers.account', 'starter.controllers.stores_picker', 'starter.controllers.tab_bag', 'starter.controllers.tab_recipe', 'starter.controllers.tab_picks', 'starter.controllers.item_info', 'starter.controllers.new_foodstuff', 'starter.controllers.new_recipe', 'starter.controllers.recipe_card', 'starter.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
+angular.module('bag.controllers', ['btford.socket-io', 'ngSanitize', 'bag.authorization', 'bag.controllers.onboarding', 'bag.controllers.account', 'bag.controllers.stores_picker', 'bag.controllers.tab_bag', 'bag.controllers.tab_recipe', 'bag.controllers.tab_picks', 'bag.controllers.item_info', 'bag.controllers.new_foodstuff', 'bag.controllers.new_recipe', 'bag.controllers.recipe_card', 'bag.controllers.login']).controller('RecipeListCtrl', function($scope, socket, $ionicSlideBoxDelegate) {
   socket.emit('list:index');
   socket.on('list:index:callback', function(evt) {
     $scope.recipes = evt.data;
@@ -200,7 +200,7 @@ angular.module('starter.controllers', ['btford.socket-io', 'ngSanitize', 'starte
   });
 });
 
-angular.module('starter.directives', []).directive('recipeCard', function() {
+angular.module('bag.directives', []).directive('recipeCard', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/recipe-card.html',
@@ -229,7 +229,8 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
       stores.then(function(s) {
         return $scope.stores = s;
       });
-      return $scope.stores = {};
+      $scope.stores = {};
+      return $scope.host = window.host;
     }
   };
 }).directive("loadingSpinner", function() {
@@ -247,87 +248,66 @@ angular.module('starter.directives', []).directive('recipeCard', function() {
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module('starter.services', []).factory('AllItems', function(socket) {
+angular.module('bag.services', ['bag.services.factory', 'bag.services.bag', 'bag.services.recipe', 'bag.services.foodstuff']).factory('AllItems', function(socket, List, Foodstuff) {
   var root;
   root = {};
   root.id = {};
   root.by_id = function(sc, id, cb) {
-    var responseFoodstuff, responseList;
-    socket.emit('foodstuff:show', {
-      foodstuff: id
-    });
-    socket.emit('list:show', {
-      list: id
-    });
     sc.id_calls = 0;
-    responseFoodstuff = function(evt) {
-      root.id[id] = evt.data || root.id[id];
-      sc.id_calls++;
-      return socket.removeListener('foodstuff:show:callback');
-    };
-    responseList = function(evt) {
-      root.id[id] = evt.data || root.id[id];
-      sc.id_calls++;
-      return socket.removeListener('list:show:callback');
-    };
-    sc.$watch('id_calls', function() {
+    List.show({
+      list: id
+    }).then(function(evt) {
+      root.id[id] = evt || root.id[id];
+      return sc.id_calls++;
+    });
+    Foodstuff.show({
+      foodstuff: id
+    }).then(function(evt) {
+      root.id[id] = evt || root.id[id];
+      return sc.id_calls++;
+    });
+    return sc.$watch('id_calls', function() {
       return sc.id_calls === 2 && cb(root.id[id]);
     });
-    socket.on('foodstuff:show:callback', responseFoodstuff);
-    return socket.on('list:show:callback', responseList);
   };
   root.all = function(sc, cb) {
-    var responseFoodstuff, responseList;
     root.all_resp = [];
-    socket.emit('foodstuff:index', {
+    List.index({
       limit: sc.amount_in_page,
       start: sc.start_index || 0
+    }).then(function(evt) {
+      root.all_resp = evt.concat(root.all_resp || []);
+      return sc.all_calls++;
     });
-    socket.emit('list:index', {
+    Foodstuff.index({
       limit: sc.amount_in_page,
       start: sc.start_index || 0
+    }).then(function(evt) {
+      root.all_resp = evt.concat(root.all_resp || []);
+      return sc.all_calls++;
     });
     sc.all_calls = 0;
-    responseFoodstuff = function(evt) {
-      root.all_resp = evt.data.concat(root.all_resp || []);
-      sc.all_calls++;
-      return socket.removeListener('foodstuff:index:callback');
-    };
-    responseList = function(evt) {
-      root.all_resp = evt.data.concat(root.all_resp || []);
-      sc.all_calls++;
-      return socket.removeListener('list:index:callback');
-    };
-    sc.$watch('all_calls', function() {
+    return sc.$watch('all_calls', function() {
       return sc.all_calls === 2 && cb(root.all_resp);
     });
-    socket.on('foodstuff:index:callback', responseFoodstuff);
-    return socket.on('list:index:callback', responseList);
   };
   root.search = function(sc, search_str, cb) {
-    var responseFoodstuff, responseList;
-    socket.emit('foodstuff:search', {
-      foodstuff: search_str
-    });
-    socket.emit('list:search', {
-      list: search_str
-    });
     sc.id_calls = 0;
-    responseFoodstuff = function(evt) {
-      root.id[id] = evt.data || root.id[id];
-      sc.id_calls++;
-      return socket.removeListener('foodstuff:search:callback');
-    };
-    responseList = function(evt) {
-      root.id[id] = evt.data || root.id[id];
-      sc.id_calls++;
-      return socket.removeListener('list:search:callback');
-    };
-    sc.$watch('id_calls', function() {
+    List.search({
+      list: search_str
+    }).then(function(evt) {
+      root.id[id] = evt || root.id[id];
+      return sc.id_calls++;
+    });
+    Foodstuff.search({
+      foodstuff: search_str
+    }).then(function(evt) {
+      root.id[id] = evt || root.id[id];
+      return sc.id_calls++;
+    });
+    return sc.$watch('id_calls', function() {
       return sc.id_calls === 2 && cb(root.id[id]);
     });
-    socket.on('foodstuff:show:callback', responseFoodstuff);
-    return socket.on('list:show:callback', responseList);
   };
   return root;
 }).factory('persistant', function() {
@@ -428,7 +408,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       return price;
     } else {
       item.store = null;
-      return 0;
+      return item.price || 0;
     }
   };
 }).factory('stores', function(socket, $q) {
@@ -446,7 +426,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
     defer.resolve(stores);
   });
   return defer.promise;
-}).factory("storePicker", function($ionicModal, $q, stores, user, $state, $timeout) {
+}).factory("storePicker", function($ionicModal, $q, stores, user, $state, $timeout, $cordovaDialogs) {
   return function($scope, item) {
     var initial_p, p;
     initial_p = $q.defer();
@@ -480,6 +460,7 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
       });
     });
     $scope.store_picker = {
+      user: null,
       pick_store: function(item) {
         p.resolve(item);
         return $scope.store_picker_modal.hide();
@@ -507,8 +488,27 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
         return this.pick_store({
           _id: "custom"
         });
+      },
+      to_suggest_store: function() {
+        return this.do_suggest_store = true;
+      },
+      suggest_store: function(store) {
+        console.log(store);
+        socket.emit("store:suggest", store);
+        return socket.on("store:suggest:callback", function(evt) {
+          console.log(evt);
+          if (evt.resolves_to) {
+            return this.pick_store(evt.resolves_to);
+          } else {
+            $cordovaDialogs.alert("We'll take a look at this and add it soon.", "Thanks", "OK");
+            return $scope.store_picker_modal.hide();
+          }
+        });
       }
     };
+    user.then(function(u) {
+      return $scope.store_picker.user = u;
+    });
     $scope.$on('$destroy', function() {
       return $scope.store_picker_modal.remove();
     });
@@ -528,10 +528,37 @@ angular.module('starter.services', []).factory('AllItems', function(socket) {
   };
 });
 
-angular.module('starter.controllers.account', []).controller('AccountCtrl', function($scope, user, $state) {
+angular.module('bag.controllers.account', []).controller('AccountCtrl', function($scope, user, $state, $cordovaDialogs) {
   user.then(function(user) {
     return $scope.username = user.name;
   });
+  socket.on('user:show:callback', function(evt) {
+    var old_plan;
+    user = evt.data;
+    $scope.user_plan || ($scope.user_plan = "");
+    old_plan = $scope.user_plan.slice(0);
+    $scope.user_plan = (function(plan) {
+      switch (plan) {
+        case 0:
+          return "Bag Free";
+        case 1:
+          return "Bag Pro";
+        case 2:
+          return "Bag Executive";
+        default:
+          return "Unknown";
+      }
+    })(user.plan);
+    if (old_plan.length && old_plan !== $scope.user_plan) {
+      return $cordovaDialogs.alert("FYI, because of your new plan, some features may not be available until you restart the application.", "Reload App", 'Ok');
+    }
+  });
+  $scope.refresh_user = function() {
+    return socket.emit('user:show', {
+      user: user_id
+    });
+  };
+  $scope.refresh_user();
   $scope.logout = function() {
     delete localStorage.user;
     return location.reload();
@@ -541,7 +568,7 @@ angular.module('starter.controllers.account', []).controller('AccountCtrl', func
   };
 });
 
-angular.module('starter.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading, $cordovaDialogs) {
+angular.module('bag.controllers.login', []).controller('authCtrl', function($scope, $http, $state, socket, $ionicLoading, $cordovaDialogs) {
   socket.on("login:callback", function(data) {
     if (data.err) {
       return $cordovaDialogs.alert("Those login credentials don't match what we have on file. Give it another try?", "Incorrect Credentials", "OK");
@@ -573,14 +600,14 @@ angular.module('starter.controllers.login', []).controller('authCtrl', function(
   };
 });
 
-angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, $ionicSlideBoxDelegate, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs) {
-  socket.emit('bag:index');
-  socket.on('bag:index:callback', function(evt) {
-    $scope.bag = evt.data;
-    $ionicSlideBoxDelegate.update();
+angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs, Bag) {
+  var load_bag;
+  load_bag = function(bag) {
+    $scope.bag = bag;
     $scope.sorted_bag = $scope.sort_items();
     return $scope.$broadcast('scroll.refreshComplete');
-  });
+  };
+  Bag.index().then(load_bag);
   $scope.calculate_total = calculateTotal;
   $scope.calculate_total_section = function(items) {
     return _(items).map(function(i) {
@@ -596,7 +623,7 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
     return calculateTotal(item);
   };
   $scope.do_refresh = function() {
-    return socket.emit('bag:index');
+    return Bag.index().then(load_bag);
   };
   stores.then(function(s) {
     return $scope.stores = s;
@@ -737,14 +764,12 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
    * Updating a bag
    */
   $scope.update_bag = function() {
-    return socket.emit('bag:update', {
-      bag: window.strip_$$($scope.bag)
+    return Bag.update({
+      bag: $scope.bag
+    }).then(function(data) {
+      return $scope.sorted_bag = $scope.sort_items();
     });
   };
-  socket.on('bag:update:callback', function(evt) {
-    $scope.bag = evt.data;
-    return $scope.sorted_bag = $scope.sort_items();
-  });
 
   /*
    * Deleting an item in a bag
@@ -840,7 +865,7 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
     }
   };
   $scope.change_sort = function(new_sort_name) {
-    persistant.sort = new_sort_name;
+    persistant.sort = $scope.sort_type = new_sort_name;
     $scope.sort_opts = persistant.sort_opts;
     return $scope.sorted_bag = $scope.sort_items();
   };
@@ -851,10 +876,6 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   $scope.filter_open = false;
   $scope.filtered_items = [];
   $scope.completed_items = [];
-  $scope.echo = function() {
-    console.log('Called!');
-    return 'Called!';
-  };
   $scope.sort_type = persistant.sort || 'no';
   $scope.sorted_bag = [];
   $scope.view_title = 'My Bag';
@@ -865,7 +886,7 @@ angular.module('starter.controllers.tab_bag', []).controller('BagsCtrl', functio
   return $scope.amount_in_page = 25;
 });
 
-angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker) {
+angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker, Bag, $cordovaDialogs) {
   $scope.get_item_or_recipe = function() {
     if ($ionicHistory.currentView().stateName.indexOf('recipe') === -1) {
       return 'iteminfo';
@@ -1037,14 +1058,47 @@ angular.module('starter.controllers.item_info', []).controller('ItemInfoCtrl', f
   user.then(function(data) {
     return $scope.favs = data.favs;
   });
+  $scope.item_to_bag = function(item) {
+    return Bag.index().then(function(all) {
+      var in_bag;
+      console.log(all);
+      in_bag = (function(bag) {
+        if (item.contents) {
+          return all.contentsLists.filter(function(c) {
+            return c._id.toString() === itm._id.toString();
+          });
+        } else {
+          return all.contents.filter(function(c) {
+            return c._id.toString() === item._id.toString();
+          });
+        }
+      })(all);
+      if (item && in_bag.length) {
+        return $cordovaDialogs.alert("Item already in bag", "In Bag", 'OK');
+      } else {
+        item.quantity = 1;
+        if (item.contents) {
+          all.contentsLists.push(item);
+        } else {
+          all.contents.push(item);
+        }
+        return Bag.update({
+          bag: all
+        }).then(function() {
+          return $state.go("tab.bag");
+        });
+      }
+    });
+  };
 
   /*
    * Initializers
    */
-  return $scope.store = {};
+  $scope.store = {};
+  return $scope.host = window.host;
 });
 
-angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, socket, $q, getTagsForQuery, $timeout) {
+angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, $q, getTagsForQuery, $timeout, Foodstuff) {
   $scope.predefined_tags = getTagsForQuery;
   $scope.create_foodstuff = function(name, price, tags, desc, priv) {
     var foodstuff;
@@ -1057,18 +1111,17 @@ angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuff
         return i.text;
       })
     };
-    socket.emit('foodstuff:create', {
+    return Foodstuff.create({
       foodstuff: foodstuff
+    }).then(function(evt) {
+      if (evt["private"]) {
+        $scope.close_add_foodstuff_modal();
+      } else {
+        $scope.confirmed = evt.data;
+      }
+      return $scope.do_refresh();
     });
-    return $timeout(function() {
-      return socket.emit('item:index', {
-        user: 'me'
-      });
-    }, 100);
   };
-  socket.on('foodstuff:create:callback', function(evt) {
-    return $scope.confirmed = evt.data;
-  });
 
   /*
    * Initialization
@@ -1079,7 +1132,7 @@ angular.module('starter.controllers.new_foodstuff', []).controller('NewFoodstuff
   return $scope.init();
 });
 
-angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
+angular.module('bag.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
   $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -1155,7 +1208,7 @@ angular.module('starter.controllers.new_recipe', []).controller('NewRecipeCtrl',
   return $scope.init();
 });
 
-angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
+angular.module('bag.controllers.onboarding', []).controller('onboardCtrl', function($scope, user, socket, persistant, $state, $stateParams) {
   socket.on("user:create:callback", function(payload) {
     if (payload.status === "bag.success.user.create") {
       return (function(data) {
@@ -1208,7 +1261,7 @@ angular.module('starter.controllers.onboarding', []).controller('onboardCtrl', f
   return $scope.user = persistant.new_user || {};
 });
 
-angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
+angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
   socket.emit("pick:index");
   socket.on("pick:index:callback", function(payload) {
     if (payload.data) {
@@ -1218,14 +1271,19 @@ angular.module('starter.controllers.tab_picks', []).controller('PicksCtrl', func
   $scope.to_user_recipes = function() {
     return $state.go("tab.recipes");
   };
-  return $scope.more_info = function(item) {
+  $scope.more_info = function(item) {
     return $state.go("tab.recipeinfo", {
       id: item._id
     });
   };
+
+  /*
+   * Initialization
+   */
+  return $scope.host = window.host;
 });
 
-angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, user) {
+angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, user) {
 
   /*
    * Choose to add a new foodstuff or a recipe
@@ -1286,19 +1344,60 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
     });
   };
   socket.on('item:index:callback', function(evt) {
+    var i, j, len, ref;
     $scope.my_recipes = evt.data;
-    return $scope.$apply();
+    ref = $scope.my_recipes;
+    for (j = 0, len = ref.length; j < len; j++) {
+      i = ref[j];
+      $scope.sort_opts[i._id] = $scope.make_sort_opts(i);
+    }
+    $scope.$apply();
+    return $scope.$broadcast('scroll.refreshComplete');
   });
+  $scope.user_more_private = function(user) {
+    if (!user) {
+      return false;
+    } else if (user.plan === 1) {
+      return $scope.my_recipes.filter(function(r) {
+        return r["private"];
+      }).length < 10;
+    } else if (user.plan === 2) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  $scope.make_sort_opts = function(item) {
+    if (item["private"]) {
+      return {
+        checks: false,
+        no_quantity: true
+      };
+    } else {
+      return {
+        checks: false,
+        no_quantity: true,
+        no_delete: true
+      };
+    }
+  };
+  $scope.delete_item = function(item) {
+    socket.emit("foodstuff:destroy", {
+      foodstuff: item._id
+    });
+    return $scope.my_recipes = _.without($scope.my_recipes, item);
+  };
+  $scope.do_refresh = function() {
+    return socket.emit('item:index', {
+      user: 'me'
+    });
+  };
 
   /*
    * Initialization
    */
-  $scope.sort_opts = {
-    checks: false,
-    no_quantity: true,
-    no_delete: true
-  };
   $scope.my_recipes = [];
+  $scope.sort_opts = {};
   return user.then(function(u) {
     $scope.user = u;
     socket.emit('item:index', {
@@ -1311,7 +1410,7 @@ angular.module('starter.controllers.tab_recipe', []).controller('RecipesCtrl', f
   });
 });
 
-angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize, calculateTotal) {
+angular.module('bag.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize, calculateTotal) {
   $scope.calculate_total = calculateTotal;
 
   /*
@@ -1349,7 +1448,7 @@ angular.module('starter.controllers.recipe_card', []).controller('RecipeCtrl', f
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module('starter.controllers.stores_picker', []).controller('StorePickerCtrl', function($scope, socket, user, $ionicActionSheet) {
+angular.module('bag.controllers.stores_picker', []).controller('StorePickerCtrl', function($scope, socket, user, $ionicActionSheet) {
   socket.emit("store:index");
   socket.on("store:index:callback", function(payload) {
     $scope.stores = payload.data;
@@ -1425,5 +1524,61 @@ angular.module('starter.controllers.stores_picker', []).controller('StorePickerC
         buttonClicked: actionsheet_cb
       });
     }
+  };
+});
+
+angular.module('bag.services.bag', []).factory('Bag', function(SocketFactory) {
+  return SocketFactory('bag', ['index', 'update']);
+});
+
+angular.module('bag.services.foodstuff', []).factory('Foodstuff', function(SocketFactory) {
+  return SocketFactory('foodstuff', ['index', 'show', 'create', 'update', 'search']);
+});
+
+angular.module('bag.services.recipe', []).factory('List', function(SocketFactory) {
+  return SocketFactory('list', ['index', 'show', 'create', 'update', 'search']);
+});
+
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+angular.module('bag.services.factory', []).factory('SocketFactory', function(socket, $q) {
+  return function(name, methods) {
+    var fn, get_what_to_send, i, j, len, root;
+    root = {};
+    get_what_to_send = function(evt) {
+      var keys;
+      keys = Object.keys(evt);
+      if (keys.length === 2 && indexOf.call(keys, 'status') >= 0 && indexOf.call(keys, 'data') >= 0) {
+        return evt.data;
+      } else {
+        return evt;
+      }
+    };
+    fn = function(i) {
+      return root[i] = function(opts) {
+        var defer;
+        if (opts == null) {
+          opts = null;
+        }
+        defer = $q.defer();
+        socket.emit(name + ':' + i, window.strip_$$(opts));
+        socket.on(name + ':' + i + ':callback', function(evt) {
+          if (evt.status.indexOf('success') !== -1) {
+            return defer.resolve(get_what_to_send(evt));
+          } else {
+            return defer.reject(get_what_to_send);
+          }
+        });
+        return defer.promise;
+      };
+    };
+    j = 0;
+    len = methods.length;
+    while (j < len) {
+      i = methods[j];
+      fn(i);
+      j++;
+    }
+    return root;
   };
 });

@@ -19,12 +19,29 @@
     background: lighten(desaturate($energized, 50%), 40%);
   }
 
-  .item.item-avatar {
-    padding-left: 16px;
+  &.unverified .item-content {
+    background: lighten($balanced, 40%);
+  }
+
+  .item-avatar {
+    min-height: 0;
+  }
+
+  // make recipe card items have higlighting that is full-width
+  .list-fluid {
+    margin-left: -16px;
+    margin-top: 8px;
+    .title {
+      margin-left: 16px;
+    }
+  }
+
+  &.recipe-card .item-content {
+    padding-right: 32px;
   }
 
   // darken selected items
-  &.strike .item-content {
+  &.strike .item-content, .strike-item {
     background: #ddd;
   }
 
@@ -49,6 +66,8 @@
 
   .title {
     position: relative;
+    left: -10px;
+    display: block;
 
     &.strike .line {
       position: absolute;
