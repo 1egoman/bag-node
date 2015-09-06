@@ -208,7 +208,7 @@ angular.module('bag.controllers.item_info', [])
       # is item in the bag?
       in_bag = do (bag=all) ->
         if item.contents
-          all.contentsLists.filter (c) -> c._id.toString() is itm._id.toString()
+          all.contentsLists.filter (c) -> c._id.toString() is item._id.toString()
         else
           all.contents.filter (c) -> c._id.toString() is item._id.toString()
 

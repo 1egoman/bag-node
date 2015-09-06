@@ -1069,7 +1069,7 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
       in_bag = (function(bag) {
         if (item.contents) {
           return all.contentsLists.filter(function(c) {
-            return c._id.toString() === itm._id.toString();
+            return c._id.toString() === item._id.toString();
           });
         } else {
           return all.contents.filter(function(c) {
