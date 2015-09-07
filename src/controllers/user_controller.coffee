@@ -9,10 +9,13 @@ uuid = require "uuid"
 _ = require "underscore"
 bcrypt = require "bcrypt"
 async = require "async"
+
 User = require "../models/user_model"
 Pick = require "../models/pick_model"
 Bag = require "../models/bag_model"
 Store = require "../models/store_model"
+
+{gen_picks_for} = require "./pick_controller"
 
 # get a user of all lists
 # GET /user
@@ -230,8 +233,15 @@ exports.fav = (req, res) ->
           status: "bag.error.user.favorite"
           error: err
       else
-        res.send
-          status: "bag.success.user.favorite"
+        # regenerate picks
+        gen_picks_for data, (err) ->
+          if err
+            res.send
+              status: "bag.error.user.favorite"
+              error: err
+          else
+            res.send
+              status: "bag.success.user.favorite"
 
 
 
@@ -260,8 +270,15 @@ exports.un_fav = (req, res) ->
           status: "bag.error.user.unfavorite"
           error: err
       else
-        res.send
-          status: "bag.success.user.unfavorite"
+        # regenerate picks
+        gen_picks_for data, (err) ->
+          if err
+            res.send
+              status: "bag.error.user.unfavorite"
+              error: err
+          else
+            res.send
+              status: "bag.success.user.unfavorite"
 
 
 
@@ -314,6 +331,14 @@ exports.click = (req, res) ->
           status: "bag.error.user.click"
           error: err
       else
-        res.send
-          status: "bag.success.user.click"
+        # regenerate picks
+        gen_picks_for data, (err) ->
+          if err
+            res.send
+              status: "bag.error.user.click"
+              error: err
+          else
+            res.send
+              status: "bag.success.user.click"
+
 

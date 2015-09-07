@@ -386,6 +386,9 @@ angular.module('bag.services', ['bag.services.factory', 'bag.services.bag', 'bag
     if (user == null) {
       user = window.user;
     }
+    if (!user) {
+      return;
+    }
     if (item.store && item.stores && item.stores[item.store] && (ref = item.store, indexOf.call(user.stores, ref) >= 0)) {
       return item.stores[item.store].price;
     } else if (item.stores && user && user.stores.length) {

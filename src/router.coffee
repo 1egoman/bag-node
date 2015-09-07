@@ -77,6 +77,13 @@ exports.http = (app) ->
   app.resource "lists", list_ctrl
   app.resource "foodstuffs", foodstuff_ctrl
 
+  # generate user picks
+  app.get "/picks/:user", (req, res, next) ->
+    user_ctrl.show req, send: (user) ->
+      req.user = user.data
+      next()
+  , picks_ctrl.genpicks
+
   app.get "/", (req, res) ->
     res.send """
     <style>code {padding:2px 4px;font-size:90%;white-space:nowrap;background-color:#f9f2f4;border-radius:4px;color:#c7254e;}</style>
