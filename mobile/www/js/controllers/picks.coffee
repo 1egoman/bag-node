@@ -17,29 +17,16 @@ angular.module('bag.controllers.tab_picks', [])
   #});
   #
  
-  # picks = [
-  #   {
-  #       "_id": "54c50a4a901b060c006372d4",
-  #       "name": "pumpkin seeds",
-  #       "desc": "raw seeds, lb.",
-  #       "price": 5.00,
-  #       "item_type": {
-  #           "wegmans": "bulk"
-  #       },
-  #       "contents": [],
-  #       "contentsLists": [],
-  #       "__v": 0
-  #   }
-  # ]
 
-  socket.emit "pick:index"
-  socket.on "pick:index:callback", (payload) ->
-    if payload.data
-      $scope.picks = payload.data.picks
+  load_picks = ->
+    socket.emit "pick:index"
+    socket.on "pick:index:callback", (payload) ->
+      if payload.data
+        $scope.picks = payload.data.picks
+      $scope.$broadcast 'scroll.refreshComplete'
+  load_picks()
 
-  # add picks to controller
-  # do (picks) ->
-  #   $scope.picks = _.sortBy picks, (p) -> p.name
+  do_refresh = -> load_picks()
 
   # go to "my recipes" view
   $scope.to_user_recipes = -> $state.go "tab.recipes"

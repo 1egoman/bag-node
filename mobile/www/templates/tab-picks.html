@@ -11,17 +11,22 @@
 
   <ion-content>
 
+    <!-- reload picks -->
+    <ion-refresher
+      pulling-text="Pull to reload picks..."
+      on-refresh="do_refresh()">
+    </ion-refresher>
+
     <!-- wait for the stuff to come in -->
     <loading-spinner complete="picks"></loading-spinner>
 
     <ion-list>
 
-      <ion-item ng-hide="picks.length">
+      <ion-item>
         <h2>Feature Coming Soon!</h2>
         <p class="no-elipsis">
           This screen will provide suggestions on what to eat for your next
-          meal. We'll enable this feature once you've had enough time to build
-          up a history of meals.
+          meal.
         </p>
       </ion-item>
 
