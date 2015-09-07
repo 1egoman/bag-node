@@ -68,7 +68,7 @@ exports.routes = routes =
 
   pick:
     controller: picks_ctrl
-    routes: ["index"]
+    routes: ["index", "genpicks"]
 
 
 
@@ -76,6 +76,13 @@ exports.routes = routes =
 exports.http = (app) ->
   app.resource "lists", list_ctrl
   app.resource "foodstuffs", foodstuff_ctrl
+
+  # generate user picks
+  app.get "/picks/:user", (req, res, next) ->
+    user_ctrl.show req, send: (user) ->
+      req.user = user.data
+      next()
+  , picks_ctrl.genpicks
 
   app.get "/", (req, res) ->
     res.send """

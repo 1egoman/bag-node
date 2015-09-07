@@ -1,0 +1,16 @@
+{
+  "name": "bag_algo",
+  "version": "1.0.0",
+  "description": "Bag \"intelligence\" algorithm ===",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.4.2",
+    "mongoose": "^4.1.3",
+    "underscore": "^1.8.3"
+  }
+}

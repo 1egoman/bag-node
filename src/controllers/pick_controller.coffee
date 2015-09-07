@@ -1,4 +1,5 @@
 Pick = require "../models/pick_model"
+Recipe = require "../models/list_model"
 
 # get a foodstuff of all lists
 # GET /foodstuff
@@ -19,3 +20,14 @@ exports.index = (req, res) ->
         status: "bag.success.picks.index"
         data: data
 
+exports.genpicks = (req, res) ->
+  require("../algo").query
+    user: req.user
+  , Recipe, Pick, (err) ->
+    if err
+      res.send
+        status: "bag.error.picks.genpicks"
+        error: err
+    else
+      res.send
+        status: "bag.success.picks.genpicks"
