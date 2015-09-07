@@ -79,7 +79,6 @@ describe "foodstuff queries", ->
 
 
   describe "foodstuff:create", ->
-
     it "foodstuff:create will create a new public, unverified foodstuff", (done) ->
       Foodstuff.create
         body:
@@ -229,6 +228,25 @@ describe "foodstuff queries", ->
               data.private.should.be.true
 
               done()
+
+  describe "foodstuff:show", ->
+    a_foodstuff_id = null
+
+    before (done) ->
+      require("../../../src/models/foodstuff_model")
+      .findOne (err, item) ->
+        a_foodstuff_id = item._id if item?._id
+        done err
+
+    it "foodstuff:show will return a valid foodstuff when given a valid id", (done) ->
+      Foodstuff.show
+        params:
+          foodstuff: a_foodstuff_id
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "success"
+        data.data.should.be.an.object
+        done()
 
 
   # unsupported routes
