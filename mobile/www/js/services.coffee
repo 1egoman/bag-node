@@ -158,6 +158,7 @@ angular.module('bag.services', [
 # otherwise, ik the minimum price
 .factory 'pickPrice', ->
   (item, user=window.user) ->
+    return if not user
 
     # a store was specified
     # if we don't have to calculate the store, we may as well use the one

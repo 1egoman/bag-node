@@ -1,5 +1,6 @@
 Pick = require "../models/pick_model"
 Recipe = require "../models/list_model"
+algo = require "../algo"
 
 # get a foodstuff of all lists
 # GET /foodstuff
@@ -20,8 +21,9 @@ exports.index = (req, res) ->
         status: "bag.success.picks.index"
         data: data
 
+# the route to regenerate picks
 exports.genpicks = (req, res) ->
-  require("../algo").query
+  algo.query
     user: req.user
   , Recipe, Pick, (err) ->
     if err
@@ -31,3 +33,10 @@ exports.genpicks = (req, res) ->
     else
       res.send
         status: "bag.success.picks.genpicks"
+
+# the method to regernerate picks
+exports.gen_picks_for = (user, cb) ->
+  exports.genpicks
+    user: user
+  , send: cb
+

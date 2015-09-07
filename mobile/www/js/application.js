@@ -131,7 +131,7 @@ angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordo
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://api.getbag.io";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('bag.authorization', []);
 
@@ -385,6 +385,9 @@ angular.module('bag.services', ['bag.services.factory', 'bag.services.bag', 'bag
     var pickable_stores, possible_stores, price, ref, store;
     if (user == null) {
       user = window.user;
+    }
+    if (!user) {
+      return;
     }
     if (item.store && item.stores && item.stores[item.store] && (ref = item.store, indexOf.call(user.stores, ref) >= 0)) {
       return item.stores[item.store].price;

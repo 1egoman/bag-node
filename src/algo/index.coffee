@@ -1,6 +1,10 @@
 #!/usr/bin/env coffee
 async = require "async"
 
+one = require "./one_oldfavs"
+two = require "./two_similaring"
+three = require "./three_views"
+
 exports.query = (opts, Recipe, Pick, cb) ->
 
   Recipe.find {}, (err, recipes) ->
@@ -15,9 +19,9 @@ exports.query = (opts, Recipe, Pick, cb) ->
         user.clicks or= []
 
         all = [
-          require("./one_oldfavs").exec.bind null, user
-          require("./two_similaring").exec.bind null, user, Recipe, recipes
-          require("./three_views").exec.bind null, user
+          one.exec.bind null, user
+          two.exec.bind null, user, Recipe, recipes
+          three.exec.bind null, user
         ]
 
         # using all of these items, lets compile a total score.
@@ -32,9 +36,6 @@ exports.query = (opts, Recipe, Pick, cb) ->
               else
                 totals[k] = v
 
-
-          console.log totals
-
           # add choices to picks on server
           Pick.findOne user: user._id, (err, pick) ->
             if err
@@ -46,5 +47,4 @@ exports.query = (opts, Recipe, Pick, cb) ->
                 if err
                   cb err
                 else
-                  console.log "Wrote picks!"
                   cb null
