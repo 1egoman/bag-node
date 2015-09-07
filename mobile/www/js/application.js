@@ -1266,12 +1266,22 @@ angular.module('bag.controllers.onboarding', []).controller('onboardCtrl', funct
 });
 
 angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
-  socket.emit("pick:index");
-  socket.on("pick:index:callback", function(payload) {
-    if (payload.data) {
-      return $scope.picks = payload.data.picks;
-    }
-  });
+  var load_picks;
+  load_picks = function() {
+    socket.emit("pick:index");
+    return socket.on("pick:index:callback", function(payload) {
+      if (payload.data) {
+        $scope.picks = _.sortBy(payload.data.picks, function(i) {
+          return i.score || 0;
+        });
+      }
+      return $scope.$broadcast('scroll.refreshComplete');
+    });
+  };
+  load_picks();
+  $scope.do_refresh = function() {
+    return load_picks();
+  };
   $scope.to_user_recipes = function() {
     return $state.go("tab.recipes");
   };

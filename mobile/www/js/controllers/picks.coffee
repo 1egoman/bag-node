@@ -22,11 +22,11 @@ angular.module('bag.controllers.tab_picks', [])
     socket.emit "pick:index"
     socket.on "pick:index:callback", (payload) ->
       if payload.data
-        $scope.picks = payload.data.picks
+        $scope.picks = _.sortBy payload.data.picks, (i) -> i.score or 0
       $scope.$broadcast 'scroll.refreshComplete'
   load_picks()
 
-  do_refresh = -> load_picks()
+  $scope.do_refresh = -> load_picks()
 
   # go to "my recipes" view
   $scope.to_user_recipes = -> $state.go "tab.recipes"

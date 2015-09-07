@@ -22,6 +22,7 @@ exports.index = (req, res) ->
           else if not v
             cb null
           else
+            v = v.toObject()
             v.score = data.picks[i]
             cb null, v
       , (err, all) ->
