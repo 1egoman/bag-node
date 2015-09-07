@@ -178,6 +178,7 @@ exports.update = (req, res) ->
         error: err
     else
       data[k] = v for k, v of req.body?.user
+      data.update_picks = true
       data.save (err) ->
         if err
           res.send
@@ -223,6 +224,7 @@ exports.fav = (req, res) ->
     # add item to favs list
     data.favs or= []
     data.favs.push item if item not in data.favs
+    data.update_picks = true
 
     # save it
     data.save (err) ->
@@ -256,6 +258,10 @@ exports.un_fav = (req, res) ->
     # add item to favs list
     data.favs or= []
     data.favs = _.without data.favs, item
+
+
+    # tell picks watcher to re-calculate picks for this user
+    data.update_picks = true
 
     # save it
     data.save (err) ->
@@ -316,6 +322,7 @@ exports.click = (req, res) ->
     data.clicks.push
       store: req.body.recipe
       date: new Date().toJSON()
+    data.update_picks = true
 
     # save it
     data.save (err) ->

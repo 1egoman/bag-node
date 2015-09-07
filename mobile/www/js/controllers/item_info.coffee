@@ -59,10 +59,12 @@ angular.module('bag.controllers.item_info', [])
 
 
   # an item in the bag, so lets find it within the bag
+  $ionicLoading.show template: "Loading..."
   user.then (usr) ->
     socket.emit "bag:index", user: usr._id
     socket.on "bag:index:callback", (bag) ->
       $scope.bag = bag.data
+      $ionicLoading.hide()
 
       # for each matching item (recipe's don't have stores), find the
       # most likely store to match the specified item id
@@ -206,7 +208,7 @@ angular.module('bag.controllers.item_info', [])
       # is item in the bag?
       in_bag = do (bag=all) ->
         if item.contents
-          all.contentsLists.filter (c) -> c._id.toString() is itm._id.toString()
+          all.contentsLists.filter (c) -> c._id.toString() is item._id.toString()
         else
           all.contents.filter (c) -> c._id.toString() is item._id.toString()
 

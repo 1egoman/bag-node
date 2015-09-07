@@ -1,4 +1,8 @@
 Pick = require "../models/pick_model"
+List = require "../models/list_model"
+async = require 'async'
+_ = require "underscore"
+
 Recipe = require "../models/list_model"
 algo = require "../algo"
 
@@ -6,20 +10,32 @@ algo = require "../algo"
 # GET /foodstuff
 exports.index = (req, res) ->
   query = Pick.findOne user: req.user._id
-
-  # limit quantity and a start index
-  query = query.skip parseInt req.body.start if req.body?.start
-  query = query.limit parseInt req.body.limit if req.body?.limit
-  
   query.exec (err, data) ->
     if err
       res.send
         status: "bag.error.picks.index"
         error: err
     else
-      res.send
-        status: "bag.success.picks.index"
-        data: data
+
+      # simplify all picks from the object representation to the item array
+      async.map Object.keys(data.picks), (i, cb) ->
+        List.findOne _id: i, (err, v) ->
+          if err
+            cb err
+          else if not v
+            cb null
+          else
+            v = v.toObject()
+            v.score = data.picks[i]
+            cb null, v
+      , (err, all) ->
+
+        # get rid of dupes and send it off
+        data = data.toObject()
+        data.picks = _.compact all
+        res.send
+          status: "bag.success.picks.index"
+          data: data
 
 # the route to regenerate picks
 exports.genpicks = (req, res) ->

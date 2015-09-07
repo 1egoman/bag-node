@@ -10,7 +10,7 @@ mongoose = require 'mongoose'
 
 pick = mongoose.Schema
   user: String
-  picks: Array
+  picks: Object
 
 pick.set 'versionKey', false
 
