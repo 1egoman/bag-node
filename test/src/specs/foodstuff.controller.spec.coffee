@@ -232,6 +232,7 @@ describe "foodstuff queries", ->
   describe "foodstuff:show", ->
     a_foodstuff_id = null
 
+    # get a foodstuff id we can use to test with
     before (done) ->
       require("../../../src/models/foodstuff_model")
       .findOne (err, item) ->
@@ -247,6 +248,50 @@ describe "foodstuff queries", ->
         data.status.should.contain "success"
         data.data.should.be.an.object
         done()
+
+    it "foodstuff:show will return nothing when given an invalid id", (done) ->
+      Foodstuff.show
+        params:
+          foodstuff: "invalid id"
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "error"
+        done()
+
+
+  describe "foodstuff:search", ->
+    a_foodstuff_name = null
+
+    # get a foodstuff id we can use to test with
+    before (done) ->
+      require("../../../src/models/foodstuff_model")
+      .findOne (err, item) ->
+        a_foodstuff_name = item.name if item?.name
+        done err
+
+    it "will return a valid foodstuff when given a valid needle", (done) ->
+      Foodstuff.search
+        user: _id: USER_ID
+        params:
+          foodstuff: a_foodstuff_name
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "success"
+        data.data.should.be.an.object
+        done()
+
+    it "will return nothing when given an invalid needle", (done) ->
+      Foodstuff.search
+        user: _id: USER_ID
+        params:
+          foodstuff: "invalid needle"
+      , send: (data) ->
+        data.should.not.be.null
+        data.status.should.contain "success"
+        data.data.should.be.an "array"
+        data.data.should.be.empty
+        done()
+
 
 
   # unsupported routes
