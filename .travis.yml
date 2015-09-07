@@ -6,5 +6,5 @@ services:
   - mongodb
 before_script:
   - npm install -g grunt-cli
-  - sleep 15
+  - sleep 5
   # - mongo mydb_test --eval 'db.addUser("travis", "test");'
