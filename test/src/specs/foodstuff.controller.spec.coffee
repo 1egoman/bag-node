@@ -229,3 +229,14 @@ describe "foodstuff queries", ->
               data.private.should.be.true
 
               done()
+
+
+  # unsupported routes
+  for i in [
+    "new"
+    "edit"
+  ]
+    describe "foodstuff:#{i}", ->
+      it "should verify that foodstuff:#{i} doesn't do anything (should return Not supported.)", ->
+        Foodstuff[i] {}, send: (data) ->
+          data.should.equal "Not supported."
