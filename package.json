@@ -20,7 +20,8 @@
     }
   ],
   "scripts": {
-    "start": "nodemon src/index.coffee"
+    "start": "nodemon src/index.coffee",
+    "test": "grunt test"
   },
   "dependencies": {
     "async": "^1.4.2",

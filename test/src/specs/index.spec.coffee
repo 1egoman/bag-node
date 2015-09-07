@@ -1,8 +1,10 @@
-'use strict';
+'use strict'
+{connectToDB} = require "../../../src"
 
-bag = source("bag")
+describe "connecting to database and sanity checks", ->
 
-describe "basic tests", ->
+  # sanity checks
+  # why? I want to make sure that some tests will pass.
   it "standard async test", (done) ->
     bool = false
     bool.should.be.false
@@ -28,9 +30,3 @@ describe "basic tests", ->
     data[0].should.be.eql obj
     # hard equal
     data[0].should.be.equal obj
-
-  # Now on to a `real` test
-  it "bag should be awesome", ->
-    bag.should.have.keys 'awesome'
-    bag.awesome.should.be.a 'function'
-    bag.awesome().should.be.equal 'awesome'

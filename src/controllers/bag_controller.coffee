@@ -16,6 +16,10 @@ exports.index = (req, res) ->
       res.send
         status: "bag.error.bag.index"
         error: err
+    else if not data
+      res.send
+        status: "bag.error.bag.index"
+        data: null
     else
       res.send
         status: "bag.success.bag.index"
@@ -48,8 +52,7 @@ exports.edit = (req, res) -> res.send "Not supported."
 # update a bag
 # PUT /bag/:bag
 exports.update = (req, res) ->
-  Bag.findOne _id: req.params.bag or req.body._id, (err, data) ->
-    console.log data
+  Bag.findOne _id: req.params.bag or req?.body?._id, (err, data) ->
     if err or not data
       res.send
         status: "bag.error.bag.update"
@@ -79,15 +82,16 @@ exports.update = (req, res) ->
 # update a store within a bag
 # given req.body.user, req.body.item, and req.body.store
 exports.update_store = (req, res) ->
-  Bag.findOne user: req.body.user, (err, data) ->
+  Bag.findOne user: req.user._id or req.body.user, (err, data) ->
     if err
       res.send
         status: "bag.error.bag.update"
         error: err
-    else
+
+    else if data and req.body.item and req.body.store
       # for each matching item (recipe's don't have stores), update the
       # store to the specified one
-      data.contents.filter (i) ->
+      contents = data.contents.filter (i) ->
         i._id is req.body.item
       .forEach (i) ->
         i.store = req.body.store
@@ -102,6 +106,10 @@ exports.update_store = (req, res) ->
           status: "bag.success.bag.update.store"
           data: data
 
+    else
+      res.send
+        status: "bag.error.bag.index"
+        data: null
 
 # delete a bag
 # DELETE /bag/:bag
