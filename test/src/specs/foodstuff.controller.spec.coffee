@@ -292,6 +292,10 @@ describe "foodstuff queries", ->
         data.data.should.be.empty
         done()
 
+  # TODO
+  describe "foodstuff:update", ->
+  describe "foodstuff:destroy", ->
+
 
 
   # unsupported routes
