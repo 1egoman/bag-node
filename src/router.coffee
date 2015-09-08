@@ -24,6 +24,7 @@ chalk = require "chalk"
 pjson = require "../package.json"
 body_parser = require "body-parser"
 request = require "request"
+cheerio = require "cheerio"
 
 
 # this object maps all routes to their respective methods
@@ -133,6 +134,19 @@ exports.http = (app) ->
         str
 
     request("http://www.gravatar.com/avatar/#{encode name}?s=320&d=identicon&r=PG").pipe res
+
+
+  # fetch an icon from flickr
+  app.get "/icon/:name", (req, res) ->
+    request "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff50460ec1cde1c406c3c9281da0fae2&text=#{req.params.name}&per_page=1&format=json", (err, resp, body) ->
+      if err
+        res.send err
+      else
+        body = JSON.parse body[14..-2]
+        item = body.photos.photo[0]
+        photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
+        console.log photoURL
+        request(photoURL).pipe res
 
 
 
