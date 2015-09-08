@@ -51,10 +51,19 @@ query = (opts, Recipe, User, Pick) ->
             if err
               return console.log err
             else
-              pick.picks = totals
+              all = _.compact _.map totals, (v, k) ->
+                if k not in pick.blacklist
+                  key: k
+                  value: v
+                else
+                  null
+
+              picks.pick = _.object _.pluck(all, 'key'), _.pluck(all, 'value')
+
 
               pick.save (err) ->
                 if err
                   return console.log err
                 else
                   console.log "Wrote picks!"
+                  console.log all

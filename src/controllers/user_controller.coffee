@@ -234,11 +234,11 @@ exports.fav = (req, res) ->
           error: err
       else
         # regenerate picks
-        gen_picks_for data, (err) ->
-          if err
+        gen_picks_for data, (out) ->
+          if out.status.indexOf("error") isnt -1
             res.send
               status: "bag.error.user.favorite"
-              error: err
+              error: out.error
           else
             res.send
               status: "bag.success.user.favorite"
@@ -271,15 +271,14 @@ exports.un_fav = (req, res) ->
           error: err
       else
         # regenerate picks
-        gen_picks_for data, (err) ->
-          if err
+        gen_picks_for data, (out) ->
+          if out.status.indexOf("error") isnt -1
             res.send
-              status: "bag.error.user.unfavorite"
-              error: err
+              status: "bag.error.user.favorite"
+              error: out.error
           else
             res.send
-              status: "bag.success.user.unfavorite"
-
+              status: "bag.success.user.favorite"
 
 
 # check if a username is unique
