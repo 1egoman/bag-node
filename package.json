@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "start": "nodemon src/index.coffee",
-    "test": "grunt test"
+    "test": "grunt test",
+    "test-cover": "cd test && istanbul cover support/runner.js"
   },
   "dependencies": {
     "async": "^1.4.2",
@@ -43,15 +44,19 @@
     "uuid": "^2.0.1"
   },
   "devDependencies": {
-    "matchdep": "~0.1.1",
+    "chai": "~1.7.2",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-watch": "~0.5.0",
-    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-istanbul-coverage": "^0.1.1",
+    "grunt-mocha-istanbul": "^3.0.1",
     "grunt-simple-mocha": "~0.4.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "sinon-chai": "~2.4.0",
-    "chai": "~1.7.2",
-    "mocha": "~1.12.1",
-    "sinon": "~1.7.3"
+    "istanbul": "^0.3.19",
+    "matchdep": "~0.1.1",
+    "mocha": "^2.3.2",
+    "sinon": "~1.7.3",
+    "sinon-chai": "~2.4.0"
   }
 }
