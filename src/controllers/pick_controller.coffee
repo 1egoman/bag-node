@@ -64,8 +64,12 @@ exports.destroy = (req, res) ->
         status: "bag.error.pick.delete"
         error: err
     else
+      # remove the old pick
       pick.picks[req.params.pick] = undefined
       pick.markModified "picks"
+
+      # add the pick to the blacklist
+      pick.blacklist.push req.params.pick
 
       pick.save (err) ->
         if err

@@ -11,6 +11,7 @@ mongoose = require 'mongoose'
 pick = mongoose.Schema
   user: String
   picks: Object
+  blacklist: Array
 
 pick.set 'versionKey', false
 
