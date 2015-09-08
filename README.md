@@ -20,12 +20,12 @@ records.
 
 ### Details that shouldn't be changed if at all possible!
 
-**website**: http://getbag.io
-**production backend location**: http://api.getbag.io
-**beta backend location**: http://api_beta.getbag.io
-**dev backend location**: http://api_dev.getbag.io
+- **website**: http://getbag.io
+- **production backend location**: http://api.getbag.io
+- **beta backend location**: http://api_beta.getbag.io
+- **dev backend location**: http://api_dev.getbag.io
 
-**support email address**: support@getbag.io
+- **support email address**: support@getbag.io
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
