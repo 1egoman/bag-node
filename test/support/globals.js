@@ -19,7 +19,9 @@ global.sinon = require('sinon');
 // relative to the base path (where the Gruntfile.js also lives)
 global.source = function (src) {
   console.log('source loading: ' +  src)
-  var resource = path.normalize('../../dist/' + src);
+  // var resource = path.normalize('../../dist/' + src);
+  var resource = path.normalize(__dirname+'../../cover_dist/' + src);
+  console.log(resource)
 
   return require(resource);
 };

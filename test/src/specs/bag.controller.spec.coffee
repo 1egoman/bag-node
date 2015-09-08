@@ -1,6 +1,7 @@
 'use strict'
 require "./spec_helper.spec"
-Bag = require "../../../src/controllers/bag_controller"
+# Bag = require "../../../src/controllers/bag_controller"
+Bag = source "controllers/bag_controller"
 
 # environment-specific config
 USER_ID = process.env.USER_ID or "55d3b333e2bf182b637341dc" # my user id (rgausnet)

@@ -136,12 +136,104 @@ module.exports = function (grunt) {
           mask: '*.spec.js'
         }
       }
+    },
+
+    coverage: {
+      coverage: {},
+          files: [
+              {
+                  src: '**/*.js',
+                  expand: true,
+                  cwd: 'dest',
+                  dest: 'test/src'
+              }
+          ],
+      instrument: {
+          ignore: [],
+          files: [
+              {
+                  src: '**/*.js',
+                  expand: true,
+                  cwd: 'dest',
+                  dest: 'test/src'
+              }
+          ]
+      },
+      report: {
+          reports: ['html', 'text-summary'],    /* [5] */
+          dest: 'coverage'                      /* [6] */
+      }
     }
   });
 
-  grunt.event.on('coverage', function(lcovFileContents, done){
+  grunt.event.on('coverage', function(coverage, done){
     // send coverage info
+    grunt.config('coverage.coverage', coverage);
     done();
+  });
+
+// Here we define the coverage task, it will have two targets: instrument and report
+grunt.registerMultiTask('coverage', 'Generates coverage reports for JS using Istanbul', function () {
+    switch(this.target) {
+    case 'instrument':
+        // In the target configuration it is possible to exclude certain files like
+        // third party libraries
+        var ignore = this.data.ignore || [];
+
+        // Create a new instrumenter
+        var istanbul = require("istanbul")
+        var instrumenter = new istanbul.Instrumenter();
+
+        // In the target configuration you need to specify the files to cover, here
+        // we will loop over all the files
+        grunt.file.expand({}, "dist/**/*.js").forEach(function (file) {
+
+            // 1: Get the filename for the current file
+            // 2: Read the file from disk, even if it might be a file we instructed
+            //    Istanbul to ignore. It will still get written to the output folder
+              var filename = file
+              var instrumented = grunt.file.read(filename);   /* [2] */
+              // Only instrument this file if it is not in ignored list
+              if (!grunt.file.isMatch(ignore, filename)) {
+                  // Instruct the instrumenter to work its magic on the file
+                  instrumented = instrumenter.instrumentSync(instrumented, filename);
+              }
+              // Write the file to its destination
+              grunt.file.write(file.replace("dist", "test/cover_dist"), instrumented);
+          });
+          break;
+      case 'report':
+          // We need config property coverage.coverage to be present, if it is not
+          // present this will fail the task
+          this.requiresConfig('coverage.coverage');
+
+          // 1: In the target configuration you can set the reporters to use when
+          //    generating the report.
+          // 2: In the target configuration you can set the folder in which the
+          //    report(s) will be stored.
+          var istanbul = require("istanbul")
+          var Report = istanbul.Report,
+              Collector = istanbul.Collector,
+              reporters = this.data.reports,    /* [1] */
+              dest = this.data.dest,            /* [2] */
+              collector = new Collector();
+
+          // Fetch the coverage object we saved earlier
+          collector.add(grunt.config('coverage.coverage'));
+
+          // Iterate over all reporters
+          reporters.forEach(function (reporter) {
+              // Create a report at the specified location for the current reports
+              Report.create(reporter, {
+                  dir: dest + '/' + reporter
+              }).writeReport(collector, true);
+          });
+          break;
+      default:
+          // The target is neither instrument nor report, display a friendly warning message
+          grunt.warn('The target "' + this.target + '" is an invalid target. Valid targets are "instrument" and "report"');
+          break;
+      }
   });
 
   grunt.registerTask('coverageBackend', 'Test backend files as well as code coverage.', function () {
@@ -192,10 +284,12 @@ module.exports = function (grunt) {
     'simplemocha:backend',
   ]);
 
-  grunt.registerTask('coverage', [
+  grunt.registerTask('cover', [
     'clean',
     'coffee',
-    'coverageBackend'
+    'coverage:instrument',
+    'test',
+    'coverage:report'
   ]);
 
   grunt.registerTask('heroku', [
