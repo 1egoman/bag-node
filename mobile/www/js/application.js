@@ -131,7 +131,7 @@ angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordo
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagd.herokuapp.com";
+window.host = "http://127.0.0.1:8000";
 
 auth_module = angular.module('bag.authorization', []);
 
@@ -1291,6 +1291,12 @@ angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function
   $scope.more_info = function(item) {
     return $state.go("tab.recipeinfo", {
       id: item._id
+    });
+  };
+  $scope.delete_item = function(pick) {
+    $scope.picks = _.without($scope.picks, pick);
+    return socket.emit("pick:delete", {
+      pick: pick._id
     });
   };
 

@@ -68,7 +68,7 @@ exports.routes = routes =
 
   pick:
     controller: picks_ctrl
-    routes: ["index"]
+    routes: ["index", "delete"]
 
 
 

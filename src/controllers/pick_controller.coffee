@@ -56,3 +56,22 @@ exports.gen_picks_for = (user, cb) ->
     user: user
   , send: cb
 
+# delete a pick
+exports.destroy = (req, res) ->
+  Pick.findOne user: req.user._id, (err, pick) ->
+    if err
+      res.send
+        status: "bag.error.pick.delete"
+        error: err
+    else
+      pick.picks[req.params.pick] = undefined
+      pick.markModified "picks"
+
+      pick.save (err) ->
+        if err
+          res.send
+            status: "bag.error.pick.delete"
+            error: err
+        else
+          res.send
+            status: "bag.success.pick.delete"

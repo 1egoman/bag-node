@@ -35,6 +35,11 @@ angular.module('bag.controllers.tab_picks', [])
   $scope.more_info = (item) ->
     $state.go "tab.recipeinfo", id: item._id
 
+  $scope.delete_item = (pick) ->
+    $scope.picks = _.without $scope.picks, pick
+
+    # issue a request back to the server to delete the pick
+    socket.emit "pick:delete", pick: pick._id
 
   ###
   # Initialization
