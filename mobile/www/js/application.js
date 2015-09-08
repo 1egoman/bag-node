@@ -131,7 +131,7 @@ angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordo
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://bagd.herokuapp.com";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('bag.authorization', []);
 
@@ -236,7 +236,7 @@ angular.module('bag.directives', []).directive('recipeCard', function() {
 }).directive("loadingSpinner", function() {
   return {
     restrict: 'E',
-    templateUrl: '/templates/spinner.html',
+    templateUrl: 'templates/spinner.html',
     scope: {
       complete: '='
     },
