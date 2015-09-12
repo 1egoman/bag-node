@@ -11,12 +11,18 @@
 
   <ion-content>
 
+    <!-- reload picks -->
+    <ion-refresher
+      pulling-text="Pull to reload picks..."
+      on-refresh="do_refresh()">
+    </ion-refresher>
+
     <!-- wait for the stuff to come in -->
     <loading-spinner complete="picks"></loading-spinner>
 
     <ion-list>
 
-      <ion-item>
+      <ion-item ng-hide="picks.length">
         <h2>Feature Coming Soon!</h2>
         <p class="no-elipsis">
           This screen will provide suggestions on what to eat for your next
@@ -30,12 +36,12 @@
         type="item-text-wrap"
         href="#/tab/recipeinfo/{{pick._id}}"
       >
-        <img ng-src="{{pick.image || host+'/identicon/'+pick.name}}">
+        <img ng-src="{{pick.image || host+'/icon/'+pick.name}}">
         <h2>{{pick.name}}</h2>
         <p>{{pick.desc}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
-        <ion-option-button class="button-assertive" ng-click="remove(chat)">
+        <ion-option-button class="button-assertive" ng-click="delete_item(pick)">
           Delete
         </ion-option-button>
       </ion-item>

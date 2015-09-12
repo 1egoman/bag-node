@@ -54,7 +54,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= config.srcTest %>',
-          src: '{,*/}*.spec.coffee',
+          src: '{,*/}*.coffee',
           dest: '<%= config.distTest %>',
           ext: '.spec.js'
         }]
@@ -95,6 +95,8 @@ module.exports = function (grunt) {
         'expect',
         'assert',
         'AssertionError',
+        'Promise',
+        'projection'
         ],
         timeout: 3000,
         ignoreLeaks: false,
@@ -109,25 +111,53 @@ module.exports = function (grunt) {
 
           // tests
           'test/dist/**/*.spec.js',
+          'test/dist/**/spec_helper.js',
         ],
       },
     },
+    // coverage: {
+    //   default: {
+    //     options: {
+    //       thresholds: {
+    //         statements: 90,
+    //         branches: 90,
+    //         lines: 90,
+    //         functions: 90
+    //       },
+    //       dir: 'coverage',
+    //       root: 'test'
+    //     }
+    //   }
+    // }
+    mocha_istanbul: {
+      coverage: {
+        src: './test/dist/specs/**', // a folder works nicely
+        options: {
+          mask: '*.spec.js'
+        }
+      }
+    }
+  });
+
+  grunt.event.on('coverage', function(lcovFileContents, done){
+    // send coverage info
+    done();
   });
 
   grunt.registerTask('coverageBackend', 'Test backend files as well as code coverage.', function () {
     var done = this.async();
 
-    var path = './test/support/runner.js';
+    var path = 'support/runner.js';
 
     var options = {
       cmd: 'istanbul',
       grunt: false,
       args: [
         'cover',
-        '--default-excludes',
-        '-x', 'app/**',
-        '--report', 'lcov',
-        '--dir', './coverage/backend',
+        // '--default-excludes',
+        // '-x', 'app#<{(|*',
+        // '--report', 'lcov',
+        // '--dir', './coverage/backend',
         path
       ],
       opts: {

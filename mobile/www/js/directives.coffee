@@ -30,7 +30,7 @@ angular.module 'bag.directives', []
 
 .directive "loadingSpinner", ->
   restrict: 'E'
-  templateUrl: '/templates/spinner.html'
+  templateUrl: 'templates/spinner.html'
   scope:
     complete: '='
   controller: ($scope) ->

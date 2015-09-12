@@ -161,22 +161,27 @@ exports.destroy = (req, res) ->
 
 # search for a foodstuff using the given search query (req.params.foodstuff)
 exports.search = (req, res) ->
-  Foodstuff.find
-    $or: [
-      private: false
-      name: $regex: new RegExp req.params.foodstuff, 'i'
-    ,
-      user: req.user._id
-      private: true
-      name: $regex: new RegExp req.params.foodstuff, 'i'
-    ]
-  , (err, data) ->
-    if err
-      res.send
-        status: "bag.error.foodstuff.search"
-        error: err
-    else
-      res.send
-        status: "bag.success.foodstuff.search"
-        data: data
+  if not req.params?.foodstuff
+    res.send
+      status: "bag.error.foodstuff.search"
+      error: "No needle."
+  else
+    Foodstuff.find
+      $or: [
+        private: false
+        name: $regex: new RegExp req.params.foodstuff, 'i'
+      ,
+        user: req.user._id
+        private: true
+        name: $regex: new RegExp req.params.foodstuff, 'i'
+      ]
+    , (err, data) ->
+      if err
+        res.send
+          status: "bag.error.foodstuff.search"
+          error: err
+      else
+        res.send
+          status: "bag.success.foodstuff.search"
+          data: data
 

@@ -131,7 +131,7 @@ angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordo
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://api.getbag.io";
+window.host = "http://192.168.1.13:8000";
 
 auth_module = angular.module('bag.authorization', []);
 
@@ -236,7 +236,7 @@ angular.module('bag.directives', []).directive('recipeCard', function() {
 }).directive("loadingSpinner", function() {
   return {
     restrict: 'E',
-    templateUrl: '/templates/spinner.html',
+    templateUrl: 'templates/spinner.html',
     scope: {
       complete: '='
     },
@@ -385,6 +385,9 @@ angular.module('bag.services', ['bag.services.factory', 'bag.services.bag', 'bag
     var pickable_stores, possible_stores, price, ref, store;
     if (user == null) {
       user = window.user;
+    }
+    if (!user) {
+      return;
     }
     if (item.store && item.stores && item.stores[item.store] && (ref = item.store, indexOf.call(user.stores, ref) >= 0)) {
       return item.stores[item.store].price;
@@ -921,6 +924,9 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
       };
     }
   };
+  $ionicLoading.show({
+    template: "Loading..."
+  });
   user.then(function(usr) {
     socket.emit("bag:index", {
       user: usr._id
@@ -928,6 +934,7 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
     return socket.on("bag:index:callback", function(bag) {
       var to_level;
       $scope.bag = bag.data;
+      $ionicLoading.hide();
       to_level = function(haystack) {
         var flattened, j, len, list_contents, needle, results;
         if (haystack == null) {
@@ -1065,7 +1072,7 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
       in_bag = (function(bag) {
         if (item.contents) {
           return all.contentsLists.filter(function(c) {
-            return c._id.toString() === itm._id.toString();
+            return c._id.toString() === item._id.toString();
           });
         } else {
           return all.contents.filter(function(c) {
@@ -1262,18 +1269,34 @@ angular.module('bag.controllers.onboarding', []).controller('onboardCtrl', funct
 });
 
 angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
-  socket.emit("pick:index");
-  socket.on("pick:index:callback", function(payload) {
-    if (payload.data) {
-      return $scope.picks = payload.data.picks;
-    }
-  });
+  var load_picks;
+  load_picks = function() {
+    socket.emit("pick:index");
+    return socket.on("pick:index:callback", function(payload) {
+      if (payload.data) {
+        $scope.picks = _.sortBy(payload.data.picks, function(i) {
+          return i.score || 0;
+        });
+      }
+      return $scope.$broadcast('scroll.refreshComplete');
+    });
+  };
+  load_picks();
+  $scope.do_refresh = function() {
+    return load_picks();
+  };
   $scope.to_user_recipes = function() {
     return $state.go("tab.recipes");
   };
   $scope.more_info = function(item) {
     return $state.go("tab.recipeinfo", {
       id: item._id
+    });
+  };
+  $scope.delete_item = function(pick) {
+    $scope.picks = _.without($scope.picks, pick);
+    return socket.emit("pick:delete", {
+      pick: pick._id
     });
   };
 

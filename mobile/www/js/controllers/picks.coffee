@@ -17,29 +17,16 @@ angular.module('bag.controllers.tab_picks', [])
   #});
   #
  
-  # picks = [
-  #   {
-  #       "_id": "54c50a4a901b060c006372d4",
-  #       "name": "pumpkin seeds",
-  #       "desc": "raw seeds, lb.",
-  #       "price": 5.00,
-  #       "item_type": {
-  #           "wegmans": "bulk"
-  #       },
-  #       "contents": [],
-  #       "contentsLists": [],
-  #       "__v": 0
-  #   }
-  # ]
 
-  socket.emit "pick:index"
-  socket.on "pick:index:callback", (payload) ->
-    if payload.data
-      $scope.picks = payload.data.picks
+  load_picks = ->
+    socket.emit "pick:index"
+    socket.on "pick:index:callback", (payload) ->
+      if payload.data
+        $scope.picks = _.sortBy payload.data.picks, (i) -> i.score or 0
+      $scope.$broadcast 'scroll.refreshComplete'
+  load_picks()
 
-  # add picks to controller
-  # do (picks) ->
-  #   $scope.picks = _.sortBy picks, (p) -> p.name
+  $scope.do_refresh = -> load_picks()
 
   # go to "my recipes" view
   $scope.to_user_recipes = -> $state.go "tab.recipes"
@@ -48,6 +35,11 @@ angular.module('bag.controllers.tab_picks', [])
   $scope.more_info = (item) ->
     $state.go "tab.recipeinfo", id: item._id
 
+  $scope.delete_item = (pick) ->
+    $scope.picks = _.without $scope.picks, pick
+
+    # issue a request back to the server to delete the pick
+    socket.emit "pick:delete", pick: pick._id
 
   ###
   # Initialization

@@ -20,7 +20,7 @@
 
       <div class="img-wrapper">
         <img
-          src="{{ item.image || host+'/identicon/'+item.name}}"
+          src="{{ item.image || host+'/icon/'+item.name}}"
           class="item-img"
         />
       </div>
@@ -49,7 +49,7 @@
           </span>
 
           <!-- item description -->
-          <p>{{item.desc}}</p>
+          <p class="no-elipsis">{{item.desc}}</p>
 
         </div>
 

@@ -27,4 +27,6 @@ user = mongoose.Schema
   plan_expire: Number
   stripe_id: String
 
+  update_picks: Boolean
+
 module.exports = mongoose.model 'user', user
