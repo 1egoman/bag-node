@@ -231,7 +231,7 @@ angular.module('bag.directives', []).directive('recipeCard', function() {
       });
       $scope.stores = {};
       $scope.host = window.host;
-      return $scope.encodeURI = window.encodeURI;
+      return $scope.encodeURI = window.encodeURIComponent;
     }
   };
 }).directive("loadingSpinner", function() {
@@ -1104,7 +1104,7 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
    */
   $scope.store = {};
   $scope.host = window.host;
-  return $scope.encodeURI = window.encodeURI;
+  return $scope.encodeURI = window.encodeURIComponent;
 });
 
 angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, $q, getTagsForQuery, $timeout, Foodstuff) {
