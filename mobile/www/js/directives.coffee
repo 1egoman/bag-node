@@ -27,6 +27,7 @@ angular.module 'bag.directives', []
     stores.then (s) -> $scope.stores = s
     $scope.stores = {}
     $scope.host = window.host
+    $scope.encodeURI = window.encodeURI
 
 .directive "loadingSpinner", ->
   restrict: 'E'

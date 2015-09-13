@@ -131,7 +131,7 @@ angular.module('bag', ['ionic', 'jett.ionic.filter.bar', 'ngTagsInput', 'ngCordo
 
 var auth_module, ref, socket, user_id, user_token;
 
-window.host = "http://192.168.1.13:8000";
+window.host = "http://api.getbag.io";
 
 auth_module = angular.module('bag.authorization', []);
 
@@ -230,7 +230,8 @@ angular.module('bag.directives', []).directive('recipeCard', function() {
         return $scope.stores = s;
       });
       $scope.stores = {};
-      return $scope.host = window.host;
+      $scope.host = window.host;
+      return $scope.encodeURI = window.encodeURI;
     }
   };
 }).directive("loadingSpinner", function() {
@@ -1102,7 +1103,8 @@ angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', funct
    * Initializers
    */
   $scope.store = {};
-  return $scope.host = window.host;
+  $scope.host = window.host;
+  return $scope.encodeURI = window.encodeURI;
 });
 
 angular.module('bag.controllers.new_foodstuff', []).controller('NewFoodstuffCtrl', function($scope, $q, getTagsForQuery, $timeout, Foodstuff) {
