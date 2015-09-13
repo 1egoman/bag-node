@@ -232,3 +232,4 @@ angular.module('bag.controllers.item_info', [])
   ###
   $scope.store = {}
   $scope.host = window.host
+  $scope.encodeURI = window.encodeURIComponent

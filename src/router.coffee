@@ -24,6 +24,7 @@ chalk = require "chalk"
 pjson = require "../package.json"
 body_parser = require "body-parser"
 request = require "request"
+qs = require "querystring"
 
 
 # this object maps all routes to their respective methods
@@ -120,18 +121,24 @@ exports.http = (app) ->
 
   # fetch an icon from flickr
   app.get "/icon/:name", (req, res) ->
-    request "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff50460ec1cde1c406c3c9281da0fae2&text=#{req.params.name}&per_page=1&sort=relevance&format=json", (err, resp, body) ->
+    name = req.params.name.replace /[^a-zA-Z0-9]/g, ''
+
+    request "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff50460ec1cde1c406c3c9281da0fae2&text=#{qs.escape name}&tags=food&per_page=1&sort=relevance&format=json", (err, resp, body) ->
       if err
         res.send err
       else
         # generate the photo
-        body = JSON.parse body[14..-2]
+        try
+          body = JSON.parse body[14..-2]
+        catch e
+          res.send e
+          return
         item = body.photos.photo[0]
         if item
           photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
 
           # log it out
-          console.log chalk.magenta "--> Image for '#{req.params.name}' is #{photoURL}"
+          console.log chalk.magenta "--> Image for '#{name}' is #{photoURL}"
 
           # send the photo as a response
           request(photoURL).pipe res
@@ -140,7 +147,7 @@ exports.http = (app) ->
           # otherwise, generate an identicon.
  
           # log it out
-          console.log chalk.magenta "--> Image for '#{req.params.name}' is an identicon."
+          console.log chalk.magenta "--> Image for '#{name}' is an identicon."
 
           # encode the name so we can create an identicon
           encode = (name) ->
@@ -151,7 +158,7 @@ exports.http = (app) ->
                 str += (n=key.indexOf name[i]).toString()
               str
 
-          request("http://www.gravatar.com/avatar/#{encode req.params.name}?s=320&d=identicon&r=PG").pipe res
+          request("http://www.gravatar.com/avatar/#{encode name}?s=320&d=identicon&r=PG").pipe res
 
 
 

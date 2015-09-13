@@ -9,7 +9,7 @@
     ></i>
     <div ng-class="{'item-checkbox': sortOpts.checks, 'item-avatar': !sortOpts.checks}">
       <img
-        src="{{ item.image || host+'/icon/'+item.name}}"
+        src="{{ item.image || host+'/icon/'+encodeURI(item.name)}}"
         ng-show="!sortOpts.checks"
       />
 
