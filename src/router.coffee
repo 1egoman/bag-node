@@ -121,10 +121,9 @@ exports.http = (app) ->
 
   # fetch an icon from flickr
   app.get "/icon/:name", (req, res) ->
-    name = req.params.name.replace /[^a-zA-Z0-9]/, ''
-    console.log name
+    name = req.params.name.replace /[^a-zA-Z0-9]/g, ''
 
-    request "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff50460ec1cde1c406c3c9281da0fae2&text=#{qs.escape name}&per_page=1&sort=relevance&format=json", (err, resp, body) ->
+    request "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff50460ec1cde1c406c3c9281da0fae2&text=#{qs.escape name}&tags=food&per_page=1&sort=relevance&format=json", (err, resp, body) ->
       if err
         res.send err
       else
