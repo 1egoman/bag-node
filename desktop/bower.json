@@ -1,0 +1,21 @@
+{
+  "name": "bag-desktop",
+  "version": "0.0.1",
+  "homepage": "getbag.io",
+  "authors": [
+    "1egoman <rsg1egoman@gmail.com>"
+  ],
+  "description": "Desktop app for bag",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.6",
+    "ui-router": "~0.2.15"
+  }
+}
