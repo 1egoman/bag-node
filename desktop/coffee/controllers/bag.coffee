@@ -228,9 +228,6 @@ angular.module('bag.controllers.tab_bag', [])
   # switching to list mode
   ###
 
-  $scope.to_list_mode = ->
-    $state.go 'tab.select'
-
   $rootScope.$on '$stateChangeSuccess', (event, toState) ->
     if toState.name == 'tab.bag'
       $scope.sorted_bag = $scope.sort_items()

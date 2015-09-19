@@ -43,12 +43,10 @@ angular.module 'bag', [
       templateUrl: 'templates/tab-bag.html'
       controller: 'BagsCtrl'
 
-    .state 'tab.select',
+    .state 'select',
       url: '/select_sort_method'
-      views:
-        main:
-          templateUrl: 'templates/tab-select.html'
-          controller: 'BagsCtrl'
+      templateUrl: 'templates/tab-select.html'
+      controller: 'BagsCtrl'
 
     # more info about an item, such as a recipe or a foodstuff
     .state 'tab.iteminfo',

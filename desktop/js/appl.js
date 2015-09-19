@@ -5,14 +5,10 @@
         url: '/bag',
         templateUrl: 'templates/tab-bag.html',
         controller: 'BagsCtrl'
-      }).state('tab.select', {
+      }).state('select', {
         url: '/select_sort_method',
-        views: {
-          main: {
-            templateUrl: 'templates/tab-select.html',
-            controller: 'BagsCtrl'
-          }
-        }
+        templateUrl: 'templates/tab-select.html',
+        controller: 'BagsCtrl'
       }).state('tab.iteminfo', {
         url: '/iteminfo/:id',
         views: {
@@ -425,9 +421,6 @@
     /*
      * switching to list mode
      */
-    $scope.to_list_mode = function() {
-      return $state.go('tab.select');
-    };
     $rootScope.$on('$stateChangeSuccess', function(event, toState) {
       if (toState.name === 'tab.bag') {
         $scope.sorted_bag = $scope.sort_items();

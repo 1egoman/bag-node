@@ -1,42 +1,14 @@
-<ion-view view-title="{{view_title}}">
+<!-- plus for adding an item or recipe to the bag -->
+<button 
+  ng-click="open_add_modal()" 
+  class="button button-icon icon ion-plus-round"
+  >
+</button>
 
-  <!-- display clean list on left -->
-  <ion-nav-buttons side="left">
-
-    <button 
-      ng-click="to_list_mode()"
-      class="button button-icon icon ion-funnel"
-      >
-    </button>
-
-  </ion-nav-buttons>
-
-  <!-- add and search are on the right -->
-  <ion-nav-buttons side="right">
-
-    <!-- search for searching through the bag -->
-    <button 
-      ng-click="filter_bag_contents()" 
-      class="button button-icon icon ion-search"
-      >
-    </button>
-
-    <!-- plus for adding an item or recipe to the bag -->
-    <button 
-      ng-click="open_add_modal()" 
-      class="button button-icon icon ion-plus-round"
-      >
-    </button>
-
-  </ion-nav-buttons>
 
   <!-- content -->
-  <ion-content>
+  <div class="container">
 
-  <ion-refresher
-    pulling-text="Pull to reload bag..."
-    on-refresh="do_refresh()">
-  </ion-refresher>
 
         <!-- wait for the stuff to come in -->
         <loading-spinner complete="bag"></loading-spinner>
@@ -54,10 +26,10 @@
         </div>
 
 
-        <!-- show a combined list of recipes and foodstuffs -->
-        <ion-list ng-if="get_all_content(bag).length !== 0">
+      <!-- show a combined list of recipes and foodstuffs -->
+        <div ng-if="get_all_content(bag).length !== 0">
 
-          <div ng-repeat="(section, items) in (
+          <li class="list-group" ng-repeat="(section, items) in (
             filter_open ? 
             {'Matching Results': filtered_items} :
             sorted_bag
@@ -91,8 +63,7 @@
               ></checkable-item>
             </div>
           </div>
-        </ion-list>
-    <br/>
+        </div>
 
 
   </ion-content>

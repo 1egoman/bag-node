@@ -2,7 +2,6 @@ angular.module('bag.controllers.tab_picks', [])
   
 .controller 'PicksCtrl', (
   $scope,
-  $ionicModal,
   persistant,
   $state,
   $ionicPopup

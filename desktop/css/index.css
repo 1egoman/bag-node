@@ -1414,7 +1414,9 @@ blockquote {
       content: '\2014 \00A0'; }
 
 .blockquote-reverse,
-blockquote.pull-right {
+blockquote.pull-right,
+.list.recipe blockquote.price-line,
+.card blockquote.price-line {
   padding-right: 15px;
   padding-left: 0;
   border-right: 5px solid #eeeeee;
@@ -1423,16 +1425,16 @@ blockquote.pull-right {
   .blockquote-reverse footer:before,
   .blockquote-reverse small:before,
   .blockquote-reverse .small:before,
-  blockquote.pull-right footer:before,
-  blockquote.pull-right small:before,
-  blockquote.pull-right .small:before {
+  blockquote.pull-right footer:before, .list.recipe blockquote.price-line footer:before, .card blockquote.price-line footer:before,
+  blockquote.pull-right small:before, .list.recipe blockquote.price-line small:before, .card blockquote.price-line small:before,
+  blockquote.pull-right .small:before, .list.recipe blockquote.price-line .small:before, .card blockquote.price-line .small:before {
     content: ''; }
   .blockquote-reverse footer:after,
   .blockquote-reverse small:after,
   .blockquote-reverse .small:after,
-  blockquote.pull-right footer:after,
-  blockquote.pull-right small:after,
-  blockquote.pull-right .small:after {
+  blockquote.pull-right footer:after, .list.recipe blockquote.price-line footer:after, .card blockquote.price-line footer:after,
+  blockquote.pull-right small:after, .list.recipe blockquote.price-line small:after, .card blockquote.price-line small:after,
+  blockquote.pull-right .small:after, .list.recipe blockquote.price-line .small:after, .card blockquote.price-line .small:after {
     content: '\00A0 \2014'; }
 
 address {
@@ -3076,7 +3078,7 @@ tbody.collapse.in {
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box; }
-  .dropdown-menu.pull-right {
+  .dropdown-menu.pull-right, .list.recipe .dropdown-menu.price-line, .card .dropdown-menu.price-line {
     right: 0;
     left: auto; }
   .dropdown-menu .divider {
@@ -3144,7 +3146,7 @@ tbody.collapse.in {
   top: 0;
   z-index: 990; }
 
-.pull-right > .dropdown-menu {
+.pull-right > .dropdown-menu, .list.recipe .price-line > .dropdown-menu, .card .price-line > .dropdown-menu {
   right: 0;
   left: auto; }
 
@@ -4392,11 +4394,15 @@ a.thumbnail.active {
   display: block; }
 
 .media-right,
-.media > .pull-right {
+.media > .pull-right, .list.recipe
+.media > .price-line, .card
+.media > .price-line {
   padding-left: 10px; }
 
 .media-left,
-.media > .pull-left {
+.media > .pull-left, .list.recipe
+.media > .item-name, .card
+.media > .item-name {
   padding-right: 10px; }
 
 .media-left,
@@ -4544,7 +4550,7 @@ a.list-group-item-danger {
   margin-bottom: 0;
   line-height: 1.3; }
 
-.panel {
+.panel, .list.recipe, .card {
   margin-bottom: 20px;
   background-color: #fff;
   border: 1px solid transparent;
@@ -4552,20 +4558,20 @@ a.list-group-item-danger {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); }
 
-.panel-body {
+.panel-body, .list.recipe .item-content, .card .item-content {
   padding: 15px; }
-  .panel-body:before, .panel-body:after {
+  .panel-body:before, .list.recipe .item-content:before, .card .item-content:before, .panel-body:after, .list.recipe .item-content:after, .card .item-content:after {
     content: " ";
     display: table; }
-  .panel-body:after {
+  .panel-body:after, .list.recipe .item-content:after, .card .item-content:after {
     clear: both; }
 
-.panel-heading {
+.panel-heading, .list.recipe .item-header, .card .item-header {
   padding: 10px 15px;
   border-bottom: 1px solid transparent;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px; }
-  .panel-heading > .dropdown .dropdown-toggle {
+  .panel-heading > .dropdown .dropdown-toggle, .list.recipe .item-header > .dropdown .dropdown-toggle, .card .item-header > .dropdown .dropdown-toggle {
     color: inherit; }
 
 .panel-title {
@@ -4587,259 +4593,269 @@ a.list-group-item-danger {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px; }
 
-.panel > .list-group,
-.panel > .panel-collapse > .list-group {
+.panel > .list-group, .list.recipe > .list-group, .card > .list-group,
+.panel > .panel-collapse > .list-group, .list.recipe > .panel-collapse > .list-group, .card > .panel-collapse > .list-group {
   margin-bottom: 0; }
-  .panel > .list-group .list-group-item,
-  .panel > .panel-collapse > .list-group .list-group-item {
+  .panel > .list-group .list-group-item, .list.recipe > .list-group .list-group-item, .card > .list-group .list-group-item,
+  .panel > .panel-collapse > .list-group .list-group-item, .list.recipe > .panel-collapse > .list-group .list-group-item, .card > .panel-collapse > .list-group .list-group-item {
     border-width: 1px 0;
     border-radius: 0; }
-  .panel > .list-group:first-child .list-group-item:first-child,
-  .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child {
+  .panel > .list-group:first-child .list-group-item:first-child, .list.recipe > .list-group:first-child .list-group-item:first-child, .card > .list-group:first-child .list-group-item:first-child,
+  .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child, .list.recipe > .panel-collapse > .list-group:first-child .list-group-item:first-child, .card > .panel-collapse > .list-group:first-child .list-group-item:first-child {
     border-top: 0;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px; }
-  .panel > .list-group:last-child .list-group-item:last-child,
-  .panel > .panel-collapse > .list-group:last-child .list-group-item:last-child {
+  .panel > .list-group:last-child .list-group-item:last-child, .list.recipe > .list-group:last-child .list-group-item:last-child, .card > .list-group:last-child .list-group-item:last-child,
+  .panel > .panel-collapse > .list-group:last-child .list-group-item:last-child, .list.recipe > .panel-collapse > .list-group:last-child .list-group-item:last-child, .card > .panel-collapse > .list-group:last-child .list-group-item:last-child {
     border-bottom: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px; }
 
-.panel-heading + .list-group .list-group-item:first-child {
+.panel-heading + .list-group .list-group-item:first-child, .list.recipe .item-header + .list-group .list-group-item:first-child, .card .item-header + .list-group .list-group-item:first-child {
   border-top-width: 0; }
 
 .list-group + .panel-footer {
   border-top-width: 0; }
 
-.panel > .table,
-.panel > .table-responsive > .table,
-.panel > .panel-collapse > .table {
+.panel > .table, .list.recipe > .table, .card > .table,
+.panel > .table-responsive > .table, .list.recipe > .table-responsive > .table, .card > .table-responsive > .table,
+.panel > .panel-collapse > .table, .list.recipe > .panel-collapse > .table, .card > .panel-collapse > .table {
   margin-bottom: 0; }
-  .panel > .table caption,
-  .panel > .table-responsive > .table caption,
-  .panel > .panel-collapse > .table caption {
+  .panel > .table caption, .list.recipe > .table caption, .card > .table caption,
+  .panel > .table-responsive > .table caption, .list.recipe > .table-responsive > .table caption, .card > .table-responsive > .table caption,
+  .panel > .panel-collapse > .table caption, .list.recipe > .panel-collapse > .table caption, .card > .panel-collapse > .table caption {
     padding-left: 15px;
     padding-right: 15px; }
 
-.panel > .table:first-child,
-.panel > .table-responsive:first-child > .table:first-child {
+.panel > .table:first-child, .list.recipe > .table:first-child, .card > .table:first-child,
+.panel > .table-responsive:first-child > .table:first-child, .list.recipe > .table-responsive:first-child > .table:first-child, .card > .table-responsive:first-child > .table:first-child {
   border-top-right-radius: 3px;
   border-top-left-radius: 3px; }
-  .panel > .table:first-child > thead:first-child > tr:first-child,
-  .panel > .table:first-child > tbody:first-child > tr:first-child,
-  .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child,
-  .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child {
+  .panel > .table:first-child > thead:first-child > tr:first-child, .list.recipe > .table:first-child > thead:first-child > tr:first-child, .card > .table:first-child > thead:first-child > tr:first-child,
+  .panel > .table:first-child > tbody:first-child > tr:first-child, .list.recipe > .table:first-child > tbody:first-child > tr:first-child, .card > .table:first-child > tbody:first-child > tr:first-child,
+  .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child, .list.recipe > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child, .card > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child,
+  .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child, .list.recipe > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child, .card > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child {
     border-top-left-radius: 3px;
     border-top-right-radius: 3px; }
-    .panel > .table:first-child > thead:first-child > tr:first-child td:first-child,
-    .panel > .table:first-child > thead:first-child > tr:first-child th:first-child,
-    .panel > .table:first-child > tbody:first-child > tr:first-child td:first-child,
-    .panel > .table:first-child > tbody:first-child > tr:first-child th:first-child,
-    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:first-child,
-    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child,
-    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:first-child,
-    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child {
+    .panel > .table:first-child > thead:first-child > tr:first-child td:first-child, .list.recipe > .table:first-child > thead:first-child > tr:first-child td:first-child, .card > .table:first-child > thead:first-child > tr:first-child td:first-child,
+    .panel > .table:first-child > thead:first-child > tr:first-child th:first-child, .list.recipe > .table:first-child > thead:first-child > tr:first-child th:first-child, .card > .table:first-child > thead:first-child > tr:first-child th:first-child,
+    .panel > .table:first-child > tbody:first-child > tr:first-child td:first-child, .list.recipe > .table:first-child > tbody:first-child > tr:first-child td:first-child, .card > .table:first-child > tbody:first-child > tr:first-child td:first-child,
+    .panel > .table:first-child > tbody:first-child > tr:first-child th:first-child, .list.recipe > .table:first-child > tbody:first-child > tr:first-child th:first-child, .card > .table:first-child > tbody:first-child > tr:first-child th:first-child,
+    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:first-child, .list.recipe > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:first-child, .card > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:first-child,
+    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child, .list.recipe > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child, .card > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child,
+    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:first-child, .list.recipe > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:first-child, .card > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:first-child,
+    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child, .list.recipe > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child, .card > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child {
       border-top-left-radius: 3px; }
-    .panel > .table:first-child > thead:first-child > tr:first-child td:last-child,
-    .panel > .table:first-child > thead:first-child > tr:first-child th:last-child,
-    .panel > .table:first-child > tbody:first-child > tr:first-child td:last-child,
-    .panel > .table:first-child > tbody:first-child > tr:first-child th:last-child,
-    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:last-child,
-    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child,
-    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:last-child,
-    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child {
+    .panel > .table:first-child > thead:first-child > tr:first-child td:last-child, .list.recipe > .table:first-child > thead:first-child > tr:first-child td:last-child, .card > .table:first-child > thead:first-child > tr:first-child td:last-child,
+    .panel > .table:first-child > thead:first-child > tr:first-child th:last-child, .list.recipe > .table:first-child > thead:first-child > tr:first-child th:last-child, .card > .table:first-child > thead:first-child > tr:first-child th:last-child,
+    .panel > .table:first-child > tbody:first-child > tr:first-child td:last-child, .list.recipe > .table:first-child > tbody:first-child > tr:first-child td:last-child, .card > .table:first-child > tbody:first-child > tr:first-child td:last-child,
+    .panel > .table:first-child > tbody:first-child > tr:first-child th:last-child, .list.recipe > .table:first-child > tbody:first-child > tr:first-child th:last-child, .card > .table:first-child > tbody:first-child > tr:first-child th:last-child,
+    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:last-child, .list.recipe > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:last-child, .card > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:last-child,
+    .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child, .list.recipe > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child, .card > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child,
+    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:last-child, .list.recipe > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:last-child, .card > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:last-child,
+    .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child, .list.recipe > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child, .card > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child {
       border-top-right-radius: 3px; }
 
-.panel > .table:last-child,
-.panel > .table-responsive:last-child > .table:last-child {
+.panel > .table:last-child, .list.recipe > .table:last-child, .card > .table:last-child,
+.panel > .table-responsive:last-child > .table:last-child, .list.recipe > .table-responsive:last-child > .table:last-child, .card > .table-responsive:last-child > .table:last-child {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px; }
-  .panel > .table:last-child > tbody:last-child > tr:last-child,
-  .panel > .table:last-child > tfoot:last-child > tr:last-child,
-  .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child,
-  .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child {
+  .panel > .table:last-child > tbody:last-child > tr:last-child, .list.recipe > .table:last-child > tbody:last-child > tr:last-child, .card > .table:last-child > tbody:last-child > tr:last-child,
+  .panel > .table:last-child > tfoot:last-child > tr:last-child, .list.recipe > .table:last-child > tfoot:last-child > tr:last-child, .card > .table:last-child > tfoot:last-child > tr:last-child,
+  .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child, .list.recipe > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child, .card > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child,
+  .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child, .list.recipe > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child, .card > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px; }
-    .panel > .table:last-child > tbody:last-child > tr:last-child td:first-child,
-    .panel > .table:last-child > tbody:last-child > tr:last-child th:first-child,
-    .panel > .table:last-child > tfoot:last-child > tr:last-child td:first-child,
-    .panel > .table:last-child > tfoot:last-child > tr:last-child th:first-child,
-    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:first-child,
-    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child,
-    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:first-child,
-    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child {
+    .panel > .table:last-child > tbody:last-child > tr:last-child td:first-child, .list.recipe > .table:last-child > tbody:last-child > tr:last-child td:first-child, .card > .table:last-child > tbody:last-child > tr:last-child td:first-child,
+    .panel > .table:last-child > tbody:last-child > tr:last-child th:first-child, .list.recipe > .table:last-child > tbody:last-child > tr:last-child th:first-child, .card > .table:last-child > tbody:last-child > tr:last-child th:first-child,
+    .panel > .table:last-child > tfoot:last-child > tr:last-child td:first-child, .list.recipe > .table:last-child > tfoot:last-child > tr:last-child td:first-child, .card > .table:last-child > tfoot:last-child > tr:last-child td:first-child,
+    .panel > .table:last-child > tfoot:last-child > tr:last-child th:first-child, .list.recipe > .table:last-child > tfoot:last-child > tr:last-child th:first-child, .card > .table:last-child > tfoot:last-child > tr:last-child th:first-child,
+    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:first-child, .list.recipe > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:first-child, .card > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:first-child,
+    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child, .list.recipe > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child, .card > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child,
+    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:first-child, .list.recipe > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:first-child, .card > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:first-child,
+    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child, .list.recipe > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child, .card > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child {
       border-bottom-left-radius: 3px; }
-    .panel > .table:last-child > tbody:last-child > tr:last-child td:last-child,
-    .panel > .table:last-child > tbody:last-child > tr:last-child th:last-child,
-    .panel > .table:last-child > tfoot:last-child > tr:last-child td:last-child,
-    .panel > .table:last-child > tfoot:last-child > tr:last-child th:last-child,
-    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:last-child,
-    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child,
-    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:last-child,
-    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child {
+    .panel > .table:last-child > tbody:last-child > tr:last-child td:last-child, .list.recipe > .table:last-child > tbody:last-child > tr:last-child td:last-child, .card > .table:last-child > tbody:last-child > tr:last-child td:last-child,
+    .panel > .table:last-child > tbody:last-child > tr:last-child th:last-child, .list.recipe > .table:last-child > tbody:last-child > tr:last-child th:last-child, .card > .table:last-child > tbody:last-child > tr:last-child th:last-child,
+    .panel > .table:last-child > tfoot:last-child > tr:last-child td:last-child, .list.recipe > .table:last-child > tfoot:last-child > tr:last-child td:last-child, .card > .table:last-child > tfoot:last-child > tr:last-child td:last-child,
+    .panel > .table:last-child > tfoot:last-child > tr:last-child th:last-child, .list.recipe > .table:last-child > tfoot:last-child > tr:last-child th:last-child, .card > .table:last-child > tfoot:last-child > tr:last-child th:last-child,
+    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:last-child, .list.recipe > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:last-child, .card > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:last-child,
+    .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child, .list.recipe > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child, .card > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child,
+    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:last-child, .list.recipe > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:last-child, .card > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:last-child,
+    .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child, .list.recipe > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child, .card > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child {
       border-bottom-right-radius: 3px; }
 
-.panel > .panel-body + .table,
-.panel > .panel-body + .table-responsive,
-.panel > .table + .panel-body,
-.panel > .table-responsive + .panel-body {
+.panel > .panel-body + .table, .list.recipe > .panel-body + .table, .card > .panel-body + .table, .list.recipe .panel > .item-content + .table, .list.recipe > .item-content + .table, .list.recipe .card > .item-content + .table, .card .panel > .item-content + .table, .card .list.recipe > .item-content + .table, .card > .item-content + .table,
+.panel > .panel-body + .table-responsive, .list.recipe > .panel-body + .table-responsive, .card > .panel-body + .table-responsive, .list.recipe
+.panel > .item-content + .table-responsive, .list.recipe > .item-content + .table-responsive, .list.recipe .card > .item-content + .table-responsive, .card
+.panel > .item-content + .table-responsive, .card .list.recipe > .item-content + .table-responsive, .card > .item-content + .table-responsive,
+.panel > .table + .panel-body, .list.recipe > .table + .panel-body, .card > .table + .panel-body, .list.recipe
+.panel > .table + .item-content, .list.recipe > .table + .item-content, .list.recipe .card > .table + .item-content, .card
+.panel > .table + .item-content, .card .list.recipe > .table + .item-content, .card > .table + .item-content,
+.panel > .table-responsive + .panel-body, .list.recipe > .table-responsive + .panel-body, .card > .table-responsive + .panel-body, .list.recipe
+.panel > .table-responsive + .item-content, .list.recipe > .table-responsive + .item-content, .list.recipe .card > .table-responsive + .item-content, .card
+.panel > .table-responsive + .item-content, .card .list.recipe > .table-responsive + .item-content, .card > .table-responsive + .item-content {
   border-top: 1px solid #ddd; }
 
-.panel > .table > tbody:first-child > tr:first-child th,
-.panel > .table > tbody:first-child > tr:first-child td {
+.panel > .table > tbody:first-child > tr:first-child th, .list.recipe > .table > tbody:first-child > tr:first-child th, .card > .table > tbody:first-child > tr:first-child th,
+.panel > .table > tbody:first-child > tr:first-child td, .list.recipe > .table > tbody:first-child > tr:first-child td, .card > .table > tbody:first-child > tr:first-child td {
   border-top: 0; }
 
-.panel > .table-bordered,
-.panel > .table-responsive > .table-bordered {
+.panel > .table-bordered, .list.recipe > .table-bordered, .card > .table-bordered,
+.panel > .table-responsive > .table-bordered, .list.recipe > .table-responsive > .table-bordered, .card > .table-responsive > .table-bordered {
   border: 0; }
-  .panel > .table-bordered > thead > tr > th:first-child,
-  .panel > .table-bordered > thead > tr > td:first-child,
-  .panel > .table-bordered > tbody > tr > th:first-child,
-  .panel > .table-bordered > tbody > tr > td:first-child,
-  .panel > .table-bordered > tfoot > tr > th:first-child,
-  .panel > .table-bordered > tfoot > tr > td:first-child,
-  .panel > .table-responsive > .table-bordered > thead > tr > th:first-child,
-  .panel > .table-responsive > .table-bordered > thead > tr > td:first-child,
-  .panel > .table-responsive > .table-bordered > tbody > tr > th:first-child,
-  .panel > .table-responsive > .table-bordered > tbody > tr > td:first-child,
-  .panel > .table-responsive > .table-bordered > tfoot > tr > th:first-child,
-  .panel > .table-responsive > .table-bordered > tfoot > tr > td:first-child {
+  .panel > .table-bordered > thead > tr > th:first-child, .list.recipe > .table-bordered > thead > tr > th:first-child, .card > .table-bordered > thead > tr > th:first-child,
+  .panel > .table-bordered > thead > tr > td:first-child, .list.recipe > .table-bordered > thead > tr > td:first-child, .card > .table-bordered > thead > tr > td:first-child,
+  .panel > .table-bordered > tbody > tr > th:first-child, .list.recipe > .table-bordered > tbody > tr > th:first-child, .card > .table-bordered > tbody > tr > th:first-child,
+  .panel > .table-bordered > tbody > tr > td:first-child, .list.recipe > .table-bordered > tbody > tr > td:first-child, .card > .table-bordered > tbody > tr > td:first-child,
+  .panel > .table-bordered > tfoot > tr > th:first-child, .list.recipe > .table-bordered > tfoot > tr > th:first-child, .card > .table-bordered > tfoot > tr > th:first-child,
+  .panel > .table-bordered > tfoot > tr > td:first-child, .list.recipe > .table-bordered > tfoot > tr > td:first-child, .card > .table-bordered > tfoot > tr > td:first-child,
+  .panel > .table-responsive > .table-bordered > thead > tr > th:first-child, .list.recipe > .table-responsive > .table-bordered > thead > tr > th:first-child, .card > .table-responsive > .table-bordered > thead > tr > th:first-child,
+  .panel > .table-responsive > .table-bordered > thead > tr > td:first-child, .list.recipe > .table-responsive > .table-bordered > thead > tr > td:first-child, .card > .table-responsive > .table-bordered > thead > tr > td:first-child,
+  .panel > .table-responsive > .table-bordered > tbody > tr > th:first-child, .list.recipe > .table-responsive > .table-bordered > tbody > tr > th:first-child, .card > .table-responsive > .table-bordered > tbody > tr > th:first-child,
+  .panel > .table-responsive > .table-bordered > tbody > tr > td:first-child, .list.recipe > .table-responsive > .table-bordered > tbody > tr > td:first-child, .card > .table-responsive > .table-bordered > tbody > tr > td:first-child,
+  .panel > .table-responsive > .table-bordered > tfoot > tr > th:first-child, .list.recipe > .table-responsive > .table-bordered > tfoot > tr > th:first-child, .card > .table-responsive > .table-bordered > tfoot > tr > th:first-child,
+  .panel > .table-responsive > .table-bordered > tfoot > tr > td:first-child, .list.recipe > .table-responsive > .table-bordered > tfoot > tr > td:first-child, .card > .table-responsive > .table-bordered > tfoot > tr > td:first-child {
     border-left: 0; }
-  .panel > .table-bordered > thead > tr > th:last-child,
-  .panel > .table-bordered > thead > tr > td:last-child,
-  .panel > .table-bordered > tbody > tr > th:last-child,
-  .panel > .table-bordered > tbody > tr > td:last-child,
-  .panel > .table-bordered > tfoot > tr > th:last-child,
-  .panel > .table-bordered > tfoot > tr > td:last-child,
-  .panel > .table-responsive > .table-bordered > thead > tr > th:last-child,
-  .panel > .table-responsive > .table-bordered > thead > tr > td:last-child,
-  .panel > .table-responsive > .table-bordered > tbody > tr > th:last-child,
-  .panel > .table-responsive > .table-bordered > tbody > tr > td:last-child,
-  .panel > .table-responsive > .table-bordered > tfoot > tr > th:last-child,
-  .panel > .table-responsive > .table-bordered > tfoot > tr > td:last-child {
+  .panel > .table-bordered > thead > tr > th:last-child, .list.recipe > .table-bordered > thead > tr > th:last-child, .card > .table-bordered > thead > tr > th:last-child,
+  .panel > .table-bordered > thead > tr > td:last-child, .list.recipe > .table-bordered > thead > tr > td:last-child, .card > .table-bordered > thead > tr > td:last-child,
+  .panel > .table-bordered > tbody > tr > th:last-child, .list.recipe > .table-bordered > tbody > tr > th:last-child, .card > .table-bordered > tbody > tr > th:last-child,
+  .panel > .table-bordered > tbody > tr > td:last-child, .list.recipe > .table-bordered > tbody > tr > td:last-child, .card > .table-bordered > tbody > tr > td:last-child,
+  .panel > .table-bordered > tfoot > tr > th:last-child, .list.recipe > .table-bordered > tfoot > tr > th:last-child, .card > .table-bordered > tfoot > tr > th:last-child,
+  .panel > .table-bordered > tfoot > tr > td:last-child, .list.recipe > .table-bordered > tfoot > tr > td:last-child, .card > .table-bordered > tfoot > tr > td:last-child,
+  .panel > .table-responsive > .table-bordered > thead > tr > th:last-child, .list.recipe > .table-responsive > .table-bordered > thead > tr > th:last-child, .card > .table-responsive > .table-bordered > thead > tr > th:last-child,
+  .panel > .table-responsive > .table-bordered > thead > tr > td:last-child, .list.recipe > .table-responsive > .table-bordered > thead > tr > td:last-child, .card > .table-responsive > .table-bordered > thead > tr > td:last-child,
+  .panel > .table-responsive > .table-bordered > tbody > tr > th:last-child, .list.recipe > .table-responsive > .table-bordered > tbody > tr > th:last-child, .card > .table-responsive > .table-bordered > tbody > tr > th:last-child,
+  .panel > .table-responsive > .table-bordered > tbody > tr > td:last-child, .list.recipe > .table-responsive > .table-bordered > tbody > tr > td:last-child, .card > .table-responsive > .table-bordered > tbody > tr > td:last-child,
+  .panel > .table-responsive > .table-bordered > tfoot > tr > th:last-child, .list.recipe > .table-responsive > .table-bordered > tfoot > tr > th:last-child, .card > .table-responsive > .table-bordered > tfoot > tr > th:last-child,
+  .panel > .table-responsive > .table-bordered > tfoot > tr > td:last-child, .list.recipe > .table-responsive > .table-bordered > tfoot > tr > td:last-child, .card > .table-responsive > .table-bordered > tfoot > tr > td:last-child {
     border-right: 0; }
-  .panel > .table-bordered > thead > tr:first-child > td,
-  .panel > .table-bordered > thead > tr:first-child > th,
-  .panel > .table-bordered > tbody > tr:first-child > td,
-  .panel > .table-bordered > tbody > tr:first-child > th,
-  .panel > .table-responsive > .table-bordered > thead > tr:first-child > td,
-  .panel > .table-responsive > .table-bordered > thead > tr:first-child > th,
-  .panel > .table-responsive > .table-bordered > tbody > tr:first-child > td,
-  .panel > .table-responsive > .table-bordered > tbody > tr:first-child > th {
+  .panel > .table-bordered > thead > tr:first-child > td, .list.recipe > .table-bordered > thead > tr:first-child > td, .card > .table-bordered > thead > tr:first-child > td,
+  .panel > .table-bordered > thead > tr:first-child > th, .list.recipe > .table-bordered > thead > tr:first-child > th, .card > .table-bordered > thead > tr:first-child > th,
+  .panel > .table-bordered > tbody > tr:first-child > td, .list.recipe > .table-bordered > tbody > tr:first-child > td, .card > .table-bordered > tbody > tr:first-child > td,
+  .panel > .table-bordered > tbody > tr:first-child > th, .list.recipe > .table-bordered > tbody > tr:first-child > th, .card > .table-bordered > tbody > tr:first-child > th,
+  .panel > .table-responsive > .table-bordered > thead > tr:first-child > td, .list.recipe > .table-responsive > .table-bordered > thead > tr:first-child > td, .card > .table-responsive > .table-bordered > thead > tr:first-child > td,
+  .panel > .table-responsive > .table-bordered > thead > tr:first-child > th, .list.recipe > .table-responsive > .table-bordered > thead > tr:first-child > th, .card > .table-responsive > .table-bordered > thead > tr:first-child > th,
+  .panel > .table-responsive > .table-bordered > tbody > tr:first-child > td, .list.recipe > .table-responsive > .table-bordered > tbody > tr:first-child > td, .card > .table-responsive > .table-bordered > tbody > tr:first-child > td,
+  .panel > .table-responsive > .table-bordered > tbody > tr:first-child > th, .list.recipe > .table-responsive > .table-bordered > tbody > tr:first-child > th, .card > .table-responsive > .table-bordered > tbody > tr:first-child > th {
     border-bottom: 0; }
-  .panel > .table-bordered > tbody > tr:last-child > td,
-  .panel > .table-bordered > tbody > tr:last-child > th,
-  .panel > .table-bordered > tfoot > tr:last-child > td,
-  .panel > .table-bordered > tfoot > tr:last-child > th,
-  .panel > .table-responsive > .table-bordered > tbody > tr:last-child > td,
-  .panel > .table-responsive > .table-bordered > tbody > tr:last-child > th,
-  .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > td,
-  .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > th {
+  .panel > .table-bordered > tbody > tr:last-child > td, .list.recipe > .table-bordered > tbody > tr:last-child > td, .card > .table-bordered > tbody > tr:last-child > td,
+  .panel > .table-bordered > tbody > tr:last-child > th, .list.recipe > .table-bordered > tbody > tr:last-child > th, .card > .table-bordered > tbody > tr:last-child > th,
+  .panel > .table-bordered > tfoot > tr:last-child > td, .list.recipe > .table-bordered > tfoot > tr:last-child > td, .card > .table-bordered > tfoot > tr:last-child > td,
+  .panel > .table-bordered > tfoot > tr:last-child > th, .list.recipe > .table-bordered > tfoot > tr:last-child > th, .card > .table-bordered > tfoot > tr:last-child > th,
+  .panel > .table-responsive > .table-bordered > tbody > tr:last-child > td, .list.recipe > .table-responsive > .table-bordered > tbody > tr:last-child > td, .card > .table-responsive > .table-bordered > tbody > tr:last-child > td,
+  .panel > .table-responsive > .table-bordered > tbody > tr:last-child > th, .list.recipe > .table-responsive > .table-bordered > tbody > tr:last-child > th, .card > .table-responsive > .table-bordered > tbody > tr:last-child > th,
+  .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > td, .list.recipe > .table-responsive > .table-bordered > tfoot > tr:last-child > td, .card > .table-responsive > .table-bordered > tfoot > tr:last-child > td,
+  .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > th, .list.recipe > .table-responsive > .table-bordered > tfoot > tr:last-child > th, .card > .table-responsive > .table-bordered > tfoot > tr:last-child > th {
     border-bottom: 0; }
 
-.panel > .table-responsive {
+.panel > .table-responsive, .list.recipe > .table-responsive, .card > .table-responsive {
   border: 0;
   margin-bottom: 0; }
 
 .panel-group {
   margin-bottom: 20px; }
-  .panel-group .panel {
+  .panel-group .panel, .panel-group .list.recipe, .panel-group .card {
     margin-bottom: 0;
     border-radius: 4px; }
-    .panel-group .panel + .panel {
+    .panel-group .panel + .panel, .panel-group .list.recipe + .panel, .panel-group .card + .panel, .panel-group .panel + .list.recipe, .panel-group .list.recipe + .list.recipe, .panel-group .card + .list.recipe, .panel-group .panel + .card, .panel-group .list.recipe + .card, .panel-group .card + .card {
       margin-top: 5px; }
-  .panel-group .panel-heading {
+  .panel-group .panel-heading, .panel-group .list.recipe .item-header, .list.recipe .panel-group .item-header, .panel-group .card .item-header, .card .panel-group .item-header {
     border-bottom: 0; }
-    .panel-group .panel-heading + .panel-collapse > .panel-body,
-    .panel-group .panel-heading + .panel-collapse > .list-group {
+    .panel-group .panel-heading + .panel-collapse > .panel-body, .panel-group .list.recipe .item-header + .panel-collapse > .panel-body, .list.recipe .panel-group .item-header + .panel-collapse > .panel-body, .panel-group .card .item-header + .panel-collapse > .panel-body, .card .panel-group .item-header + .panel-collapse > .panel-body, .panel-group .list.recipe .panel-heading + .panel-collapse > .item-content, .list.recipe .panel-group .panel-heading + .panel-collapse > .item-content, .panel-group .list.recipe .item-header + .panel-collapse > .item-content, .list.recipe .panel-group .item-header + .panel-collapse > .item-content, .panel-group .card .panel-heading + .panel-collapse > .item-content, .card .panel-group .panel-heading + .panel-collapse > .item-content, .panel-group .card .item-header + .panel-collapse > .item-content, .card .panel-group .item-header + .panel-collapse > .item-content,
+    .panel-group .panel-heading + .panel-collapse > .list-group,
+    .panel-group .list.recipe .item-header + .panel-collapse > .list-group, .list.recipe
+    .panel-group .item-header + .panel-collapse > .list-group,
+    .panel-group .card .item-header + .panel-collapse > .list-group, .card
+    .panel-group .item-header + .panel-collapse > .list-group {
       border-top: 1px solid #ddd; }
   .panel-group .panel-footer {
     border-top: 0; }
-    .panel-group .panel-footer + .panel-collapse .panel-body {
+    .panel-group .panel-footer + .panel-collapse .panel-body, .panel-group .panel-footer + .panel-collapse .list.recipe .item-content, .list.recipe .panel-group .panel-footer + .panel-collapse .item-content, .panel-group .panel-footer + .panel-collapse .card .item-content, .card .panel-group .panel-footer + .panel-collapse .item-content {
       border-bottom: 1px solid #ddd; }
 
 .panel-default {
   border-color: #ddd; }
-  .panel-default > .panel-heading {
+  .panel-default > .panel-heading, .list.recipe .panel-default > .item-header, .card .panel-default > .item-header {
     color: #333333;
     background-color: #f5f5f5;
     border-color: #ddd; }
-    .panel-default > .panel-heading + .panel-collapse > .panel-body {
+    .panel-default > .panel-heading + .panel-collapse > .panel-body, .list.recipe .panel-default > .item-header + .panel-collapse > .panel-body, .card .panel-default > .item-header + .panel-collapse > .panel-body, .list.recipe .panel-default > .panel-heading + .panel-collapse > .item-content, .list.recipe .panel-default > .item-header + .panel-collapse > .item-content, .card .panel-default > .panel-heading + .panel-collapse > .item-content, .card .panel-default > .item-header + .panel-collapse > .item-content {
       border-top-color: #ddd; }
-    .panel-default > .panel-heading .badge {
+    .panel-default > .panel-heading .badge, .list.recipe .panel-default > .item-header .badge, .card .panel-default > .item-header .badge {
       color: #f5f5f5;
       background-color: #333333; }
-  .panel-default > .panel-footer + .panel-collapse > .panel-body {
+  .panel-default > .panel-footer + .panel-collapse > .panel-body, .list.recipe .panel-default > .panel-footer + .panel-collapse > .item-content, .card .panel-default > .panel-footer + .panel-collapse > .item-content {
     border-bottom-color: #ddd; }
 
 .panel-primary {
   border-color: #337ab7; }
-  .panel-primary > .panel-heading {
+  .panel-primary > .panel-heading, .list.recipe .panel-primary > .item-header, .card .panel-primary > .item-header {
     color: #fff;
     background-color: #337ab7;
     border-color: #337ab7; }
-    .panel-primary > .panel-heading + .panel-collapse > .panel-body {
+    .panel-primary > .panel-heading + .panel-collapse > .panel-body, .list.recipe .panel-primary > .item-header + .panel-collapse > .panel-body, .card .panel-primary > .item-header + .panel-collapse > .panel-body, .list.recipe .panel-primary > .panel-heading + .panel-collapse > .item-content, .list.recipe .panel-primary > .item-header + .panel-collapse > .item-content, .card .panel-primary > .panel-heading + .panel-collapse > .item-content, .card .panel-primary > .item-header + .panel-collapse > .item-content {
       border-top-color: #337ab7; }
-    .panel-primary > .panel-heading .badge {
+    .panel-primary > .panel-heading .badge, .list.recipe .panel-primary > .item-header .badge, .card .panel-primary > .item-header .badge {
       color: #337ab7;
       background-color: #fff; }
-  .panel-primary > .panel-footer + .panel-collapse > .panel-body {
+  .panel-primary > .panel-footer + .panel-collapse > .panel-body, .list.recipe .panel-primary > .panel-footer + .panel-collapse > .item-content, .card .panel-primary > .panel-footer + .panel-collapse > .item-content {
     border-bottom-color: #337ab7; }
 
 .panel-success {
   border-color: #d6e9c6; }
-  .panel-success > .panel-heading {
+  .panel-success > .panel-heading, .list.recipe .panel-success > .item-header, .card .panel-success > .item-header {
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6; }
-    .panel-success > .panel-heading + .panel-collapse > .panel-body {
+    .panel-success > .panel-heading + .panel-collapse > .panel-body, .list.recipe .panel-success > .item-header + .panel-collapse > .panel-body, .card .panel-success > .item-header + .panel-collapse > .panel-body, .list.recipe .panel-success > .panel-heading + .panel-collapse > .item-content, .list.recipe .panel-success > .item-header + .panel-collapse > .item-content, .card .panel-success > .panel-heading + .panel-collapse > .item-content, .card .panel-success > .item-header + .panel-collapse > .item-content {
       border-top-color: #d6e9c6; }
-    .panel-success > .panel-heading .badge {
+    .panel-success > .panel-heading .badge, .list.recipe .panel-success > .item-header .badge, .card .panel-success > .item-header .badge {
       color: #dff0d8;
       background-color: #3c763d; }
-  .panel-success > .panel-footer + .panel-collapse > .panel-body {
+  .panel-success > .panel-footer + .panel-collapse > .panel-body, .list.recipe .panel-success > .panel-footer + .panel-collapse > .item-content, .card .panel-success > .panel-footer + .panel-collapse > .item-content {
     border-bottom-color: #d6e9c6; }
 
 .panel-info {
   border-color: #bce8f1; }
-  .panel-info > .panel-heading {
+  .panel-info > .panel-heading, .list.recipe .panel-info > .item-header, .card .panel-info > .item-header {
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1; }
-    .panel-info > .panel-heading + .panel-collapse > .panel-body {
+    .panel-info > .panel-heading + .panel-collapse > .panel-body, .list.recipe .panel-info > .item-header + .panel-collapse > .panel-body, .card .panel-info > .item-header + .panel-collapse > .panel-body, .list.recipe .panel-info > .panel-heading + .panel-collapse > .item-content, .list.recipe .panel-info > .item-header + .panel-collapse > .item-content, .card .panel-info > .panel-heading + .panel-collapse > .item-content, .card .panel-info > .item-header + .panel-collapse > .item-content {
       border-top-color: #bce8f1; }
-    .panel-info > .panel-heading .badge {
+    .panel-info > .panel-heading .badge, .list.recipe .panel-info > .item-header .badge, .card .panel-info > .item-header .badge {
       color: #d9edf7;
       background-color: #31708f; }
-  .panel-info > .panel-footer + .panel-collapse > .panel-body {
+  .panel-info > .panel-footer + .panel-collapse > .panel-body, .list.recipe .panel-info > .panel-footer + .panel-collapse > .item-content, .card .panel-info > .panel-footer + .panel-collapse > .item-content {
     border-bottom-color: #bce8f1; }
 
 .panel-warning {
   border-color: #faebcc; }
-  .panel-warning > .panel-heading {
+  .panel-warning > .panel-heading, .list.recipe .panel-warning > .item-header, .card .panel-warning > .item-header {
     color: #8a6d3b;
     background-color: #fcf8e3;
     border-color: #faebcc; }
-    .panel-warning > .panel-heading + .panel-collapse > .panel-body {
+    .panel-warning > .panel-heading + .panel-collapse > .panel-body, .list.recipe .panel-warning > .item-header + .panel-collapse > .panel-body, .card .panel-warning > .item-header + .panel-collapse > .panel-body, .list.recipe .panel-warning > .panel-heading + .panel-collapse > .item-content, .list.recipe .panel-warning > .item-header + .panel-collapse > .item-content, .card .panel-warning > .panel-heading + .panel-collapse > .item-content, .card .panel-warning > .item-header + .panel-collapse > .item-content {
       border-top-color: #faebcc; }
-    .panel-warning > .panel-heading .badge {
+    .panel-warning > .panel-heading .badge, .list.recipe .panel-warning > .item-header .badge, .card .panel-warning > .item-header .badge {
       color: #fcf8e3;
       background-color: #8a6d3b; }
-  .panel-warning > .panel-footer + .panel-collapse > .panel-body {
+  .panel-warning > .panel-footer + .panel-collapse > .panel-body, .list.recipe .panel-warning > .panel-footer + .panel-collapse > .item-content, .card .panel-warning > .panel-footer + .panel-collapse > .item-content {
     border-bottom-color: #faebcc; }
 
 .panel-danger {
   border-color: #ebccd1; }
-  .panel-danger > .panel-heading {
+  .panel-danger > .panel-heading, .list.recipe .panel-danger > .item-header, .card .panel-danger > .item-header {
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1; }
-    .panel-danger > .panel-heading + .panel-collapse > .panel-body {
+    .panel-danger > .panel-heading + .panel-collapse > .panel-body, .list.recipe .panel-danger > .item-header + .panel-collapse > .panel-body, .card .panel-danger > .item-header + .panel-collapse > .panel-body, .list.recipe .panel-danger > .panel-heading + .panel-collapse > .item-content, .list.recipe .panel-danger > .item-header + .panel-collapse > .item-content, .card .panel-danger > .panel-heading + .panel-collapse > .item-content, .card .panel-danger > .item-header + .panel-collapse > .item-content {
       border-top-color: #ebccd1; }
-    .panel-danger > .panel-heading .badge {
+    .panel-danger > .panel-heading .badge, .list.recipe .panel-danger > .item-header .badge, .card .panel-danger > .item-header .badge {
       color: #f2dede;
       background-color: #a94442; }
-  .panel-danger > .panel-footer + .panel-collapse > .panel-body {
+  .panel-danger > .panel-footer + .panel-collapse > .panel-body, .list.recipe .panel-danger > .panel-footer + .panel-collapse > .item-content, .card .panel-danger > .panel-footer + .panel-collapse > .item-content {
     border-bottom-color: #ebccd1; }
 
 .embed-responsive {
@@ -5440,10 +5456,10 @@ button.close {
   margin-left: auto;
   margin-right: auto; }
 
-.pull-right {
+.pull-right, .list.recipe .price-line, .card .price-line {
   float: right !important; }
 
-.pull-left {
+.pull-left, .list.recipe .item-name, .card .item-name {
   float: left !important; }
 
 .hide {
@@ -5640,3 +5656,65 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
+
+.list.recipe .item-header, .card .item-header {
+  background-color: #337ab7;
+  color: #fff; }
+
+.list.recipe, .list.recipe:last-child, .card, .card:last-child {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+
+.list.recipe.private .item-content, .card.private .item-content {
+  background: red; }
+
+.list.recipe.unverified .item-content, .card.unverified .item-content {
+  background: green; }
+
+.list.recipe .item-avatar, .card .item-avatar {
+  min-height: 0; }
+
+.list.recipe .list-fluid, .card .list-fluid {
+  margin-left: -16px;
+  margin-top: 8px; }
+  .list.recipe .list-fluid .title, .card .list-fluid .title {
+    margin-left: 16px; }
+
+.list.recipe.recipe-card .item-content, .card.recipe-card .item-content {
+  padding-right: 32px; }
+
+.list.recipe.strike .item-content, .list.recipe .strike-item, .card.strike .item-content, .card .strike-item {
+  background: #ddd; }
+
+.list.recipe .item-name, .card .item-name {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.list.recipe .title, .card .title {
+  position: relative;
+  left: -10px;
+  display: block; }
+  .list.recipe .title.strike .line, .card .title.strike .line {
+    position: absolute;
+    top: 9px;
+    left: 0px;
+    right: -54px;
+    height: 1px;
+    background: #444;
+    margin: 0px 50px 0px -4px; }
+
+.disabled.card .title {
+  color: #CCC; }
+
+.card.bag-list {
+  min-height: 250px; }
+  .card.bag-list .button {
+    margin: 100px auto 0px auto;
+    display: block; }
+    .card.bag-list .button:before {
+      font-size: 72px; }
+
+body {
+  background: #efefef; }
