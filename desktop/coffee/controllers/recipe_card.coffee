@@ -1,4 +1,4 @@
-angular.module('bag.controllers.recipe_card', []) 
+angular.module('bag.controllers.recipe_card', [])
 .controller 'RecipeCtrl', (
   $scope,
   socket,

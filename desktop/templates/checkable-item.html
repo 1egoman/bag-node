@@ -35,14 +35,14 @@
 
       <div class="pull-left" style="margin-left: 10px;">
         <p>{{item.desc}}</p>
-
-        <!-- delete button -->
-        <br/>
-        <button class="btn btn-danger" ng-click="deleteItem(item)" ng-if="!sortOpts.no_delete">
-          Delete
-        </button>
-
       </div>
+
+
+      <!-- delete button -->
+      <button class="btn btn-danger pull-right" ng-click="deleteItem(item)" ng-if="!sortOpts.no_delete">
+        Delete
+      </button>
+
 
     </div>
   </ion-item>

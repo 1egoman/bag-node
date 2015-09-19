@@ -1,14 +1,7 @@
-<div class="card recipe-card" ng-class="{private: item.private}">
-  <ion-item ng-controller="RecipeCtrl" class="item-icon-right">
+<div class="card recipe-card" ng-class="{private: item.private}" ng-controller="RecipeCtrl">
 
-    <!-- recipe header -->
-    <div class="item-avatar" style="padding-left: 4px;">
-      <h2 ng-click="moreInfo(recipe)">
-        {{recipe.name}}
-        <i class="pull-right icon ion-chevron-right icon-accessory"></i>
-      </h2>
-      <p>
-        {{recipe.tags.join(', ')}}
+  <div class="item-header">
+    {{recipe.name}}
 
 
         <!-- price for the entire recipe -->
@@ -22,16 +15,24 @@
           <span>{{calculate_total(recipe) | currency}}</span>
         </span>
 
-      </p>
-    </div>
+  </div>
+  
+  <div class="item-content">
+    {{recipe.desc}}
+
+    <!-- delete button -->
+    <button class="btn btn-danger pull-right" ng-click="deleteItem(recipe)" ng-if="!sortOpts.no_delete">
+      Delete
+    </button>
+
+  </div>
 
 
     <!-- a recipe card -->
-    <div class="list-fluid">
-
+    <ul class="list-group">
 
       <!-- all items within this recipe -->
-      <li href="#" class="item" ng-class="{'item-checkbox':
+      <li href="#" class="list-group-item" ng-class="{'item-checkbox':
         sortOpts.checks, 'strike-item': item.checked}" ng-repeat="item in get_all_content(recipe)">
 
         <!-- Check off the item -->
@@ -51,13 +52,6 @@
           </span>
         </span>
       </li>
-    </div>
+    </ul>
 
-
-      <!-- delete -->
-      <ion-option-button class="button-assertive" ng-click="deleteItem(recipe)" ng-if="!sortOpts.no_delete">
-        Delete
-      </ion-option-button>
-
-  </ion-item>
 </div>

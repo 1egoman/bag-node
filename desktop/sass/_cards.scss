@@ -1,0 +1,90 @@
+
+.list.recipe, .card {
+  @extend .panel;
+
+  .item-content {
+    @extend .panel-body;
+  }
+
+  .item-header {
+    @extend .panel-heading;
+    background-color: $brand-primary;
+    color: #fff;
+  }
+
+  &, &:last-child {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  &.private .item-content {
+    background: red;//lighten(desaturate($energized, 50%), 40%);
+  }
+
+  &.unverified .item-content {
+    background: green;//lighten($balanced, 40%);
+  }
+
+  .item-avatar {
+    min-height: 0;
+  }
+
+  // make recipe card items have higlighting that is full-width
+  .list-fluid {
+    margin-left: -16px;
+    margin-top: 8px;
+    .title {
+      margin-left: 16px;
+    }
+  }
+
+  // darken selected items
+  &.strike .item-content, .strike-item {
+    background: #ddd;
+  }
+
+  // move the price/quantity underneath the name line
+  .price-line {
+    @extend .pull-right;
+  }
+
+  .item-name {
+    @extend .pull-left;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .title {
+    position: relative;
+    left: -10px;
+    display: block;
+
+    &.strike .line {
+      position: absolute;
+      top: 9px;
+      left: 0px;
+      right: -54px;
+      height: 1px;
+      background: #444;
+      margin: 0px 50px 0px -4px;
+    }
+    // background-color: transparent;
+  }
+}
+
+.disabled.card .title {
+  color: #CCC;
+}
+
+.card.bag-list {
+  min-height: 250px;
+  .button {
+    margin: 100px auto 0px auto;
+    display: block;
+    &:before {
+      font-size: 72px;
+    }
+  }
+}
