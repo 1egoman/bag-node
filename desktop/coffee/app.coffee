@@ -38,12 +38,10 @@ angular.module 'bag', [
     $stateProvider
     
     # bag tab
-    .state 'tab.bag',
+    .state 'bag',
       url: '/bag'
-      views:
-        main:
-          templateUrl: 'templates/tab-bag.html'
-          controller: 'BagsCtrl'
+      templateUrl: 'templates/tab-bag.html'
+      controller: 'BagsCtrl'
 
     .state 'tab.select',
       url: '/select_sort_method'
@@ -109,7 +107,7 @@ angular.module 'bag', [
 
 
     # if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise '/tab/bag'
+    $urlRouterProvider.otherwise '/bag'
 
   # If the user isn't logged in / hasn't created an account with us yet....
   else

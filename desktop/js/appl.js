@@ -1,14 +1,10 @@
 (function() {
   angular.module('bag', ['ui.router', 'bag.controllers', 'bag.services', 'bag.directives']).config(function($stateProvider, $urlRouterProvider, authProvider) {
     if (authProvider.getSuccess()) {
-      $stateProvider.state('tab.bag', {
+      $stateProvider.state('bag', {
         url: '/bag',
-        views: {
-          main: {
-            templateUrl: 'templates/tab-bag.html',
-            controller: 'BagsCtrl'
-          }
-        }
+        templateUrl: 'templates/tab-bag.html',
+        controller: 'BagsCtrl'
       }).state('tab.select', {
         url: '/select_sort_method',
         views: {
@@ -66,7 +62,7 @@
           }
         }
       });
-      return $urlRouterProvider.otherwise('/tab/bag');
+      return $urlRouterProvider.otherwise('/bag');
     } else {
       $stateProvider.state('onboard', {
         url: '/onboarding/:step',
@@ -226,7 +222,7 @@
           token: data.token
         });
         return setTimeout(function() {
-          location.replace('#/tab/bag');
+          location.replace('#/bag');
           $ionicLoading.hide();
           return location.reload();
         }, 2000);
@@ -248,7 +244,7 @@
 }).call(this);
 
 (function() {
-  angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($scope, $ionicModal, socket, $state, $ionicListDelegate, AllItems, $timeout, persistant, $rootScope, searchItem, calculateTotal, pickPrice, stores, $cordovaDialogs, Bag) {
+  angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($scope, socket, $state, AllItems, $timeout, persistant, $rootScope, calculateTotal, pickPrice, stores, Bag) {
     var load_bag;
     load_bag = function(bag) {
       $scope.bag = bag;
@@ -281,12 +277,6 @@
     /*
      * Create new item
      */
-    $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      return $scope.modal = modal;
-    });
     $scope.open_add_modal = function() {
       return $scope.modal.show();
     };
@@ -795,13 +785,7 @@
 }).call(this);
 
 (function() {
-  angular.module('bag.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, $ionicModal, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
-    $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      return $scope.item_modal = modal;
-    });
+  angular.module('bag.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
     $scope.predefined_tags = getTagsForQuery;
     $scope.create_recipe = function(name, tags, desc) {
       var r_contents, r_contentsLists, recipe;
@@ -971,17 +955,11 @@
 }).call(this);
 
 (function() {
-  angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, user) {
+  angular.module('bag.controllers.tab_recipe', []).controller('RecipesCtrl', function($scope, persistant, $state, user) {
 
     /*
      * Choose to add a new foodstuff or a recipe
      */
-    $ionicModal.fromTemplateUrl('templates/modal-foodstuff-or-recipe.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      return $scope.foodstuff_or_recipe_modal = modal;
-    });
     $scope.open_foodstuff_or_recipe_modal = function() {
       return $scope.foodstuff_or_recipe_modal.show();
     };
@@ -992,12 +970,6 @@
     /*
      * Add a new foodstuff
      */
-    $ionicModal.fromTemplateUrl('templates/modal-add-foodstuff.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      return $scope.foodstuff_modal = modal;
-    });
     $scope.open_add_foodstuff_modal = function() {
       $scope.close_foodstuff_or_recipe_modal();
       return $scope.foodstuff_modal.show();
@@ -1009,12 +981,6 @@
     /*
      * Add a new recipe
      */
-    $ionicModal.fromTemplateUrl('templates/modal-add-recipe.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      return $scope.recipe_modal = modal;
-    });
     $scope.open_add_recipe_modal = function() {
       $scope.close_foodstuff_or_recipe_modal();
       return $scope.recipe_modal.show();
@@ -1101,7 +1067,7 @@
 }).call(this);
 
 (function() {
-  angular.module('bag.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, $sce, $sanitize, calculateTotal) {
+  angular.module('bag.controllers.recipe_card', []).controller('RecipeCtrl', function($scope, socket, $state, $location, calculateTotal) {
     $scope.calculate_total = calculateTotal;
 
     /*
@@ -1125,11 +1091,7 @@
       }
     };
     return $scope.format_name = function(n) {
-      if (window.innerWidth > 200 + 10 * n.length) {
-        return n;
-      } else {
-        return $sce.trustAsHtml('<span style=\'font-size: 75%;\'>' + $sanitize(n) + '</span>');
-      }
+      return n;
     };
 
     /*
@@ -1355,25 +1317,6 @@
         defer.resolve(evt.data);
       });
       return defer.promise;
-    };
-  }).factory('searchItem', function($ionicFilterBar) {
-    return function(all_items, update_cb) {
-      var $scope;
-      $scope = {};
-      $scope.open = function(on_close) {
-        return $scope.hide = $ionicFilterBar.show({
-          items: all_items,
-          update: function(filteredItems) {
-            all_items = filteredItems;
-            return update_cb && update_cb(all_items);
-          },
-          cancel: function() {
-            return on_close && on_close();
-          },
-          filterProperties: 'name'
-        });
-      };
-      return $scope;
     };
   }).factory('calculateTotal', function(pickPrice, user) {
     var calculate_total, get_all_content;

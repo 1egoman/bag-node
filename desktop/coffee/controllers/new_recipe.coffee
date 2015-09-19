@@ -3,7 +3,6 @@ angular.module 'bag.controllers.new_recipe', []
 .controller 'NewRecipeCtrl', (
   $scope,
   socket,
-  $ionicModal,
   AllItems,
   searchItem,
   $q
@@ -12,11 +11,11 @@ angular.module 'bag.controllers.new_recipe', []
 ) ->
 
   # new item modal of adding items to the recipe
-  $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html',
-    scope: $scope
-    animation: 'slide-in-up').then (modal) ->
-    $scope.item_modal = modal
-
+  # $ionicModal.fromTemplateUrl('templates/modal-add-to-bag.html',
+  #   scope: $scope
+  #   animation: 'slide-in-up').then (modal) ->
+  #   $scope.item_modal = modal
+  #
   # tags to search through
   $scope.predefined_tags = getTagsForQuery
 

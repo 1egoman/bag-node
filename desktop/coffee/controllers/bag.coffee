@@ -2,19 +2,15 @@ angular.module('bag.controllers.tab_bag', [])
   
 .controller 'BagsCtrl', (
   $scope,
-  $ionicModal,
   socket,
   $state,
-  $ionicListDelegate,
   AllItems,
   $timeout,
   persistant,
   $rootScope,
-  searchItem
   calculateTotal
   pickPrice
   stores
-  $cordovaDialogs
   Bag
 ) ->
   # get all bags
@@ -58,12 +54,12 @@ angular.module('bag.controllers.tab_bag', [])
   ###
   # Create new item
   ###
-  $ionicModal.fromTemplateUrl 'templates/modal-add-to-bag.html',
-    scope: $scope
-    animation: 'slide-in-up'
-  .then (modal) ->
-    $scope.modal = modal
-
+  # $ionicModal.fromTemplateUrl 'templates/modal-add-to-bag.html',
+  #   scope: $scope
+  #   animation: 'slide-in-up'
+  # .then (modal) ->
+  #   $scope.modal = modal
+  #
   # user wantes to add a new item
   $scope.open_add_modal = ->
     $scope.modal.show()

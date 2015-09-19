@@ -25,7 +25,7 @@ module.exports = (grunt) ->
         files: "**/*.scss"
         tasks: ["sass"]
       coffee:
-        files: "**/*.coffee"
+        files: "coffee/**/*.coffee"
         tasks: ["coffee"]
 
 

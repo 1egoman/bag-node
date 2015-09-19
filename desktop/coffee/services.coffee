@@ -99,24 +99,6 @@ angular.module('bag.services', [
     defer.promise
 
   
-# ionic filter bar wrapper that makes working with it sane
-.factory 'searchItem', ($ionicFilterBar) ->
-  (all_items, update_cb) ->
-    $scope = {}
-
-    $scope.open = (on_close) ->
-      $scope.hide = $ionicFilterBar.show(
-        items: all_items
-        update: (filteredItems) ->
-          all_items = filteredItems
-          update_cb and update_cb(all_items)
-        cancel: ->
-          on_close and on_close()
-        filterProperties: 'name')
-
-    $scope
-
-
 
 # calculate total price for a whole bag
 # this takes into account any sub-recipes

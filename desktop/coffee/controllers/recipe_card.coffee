@@ -4,8 +4,6 @@ angular.module('bag.controllers.recipe_card', [])
   socket,
   $state,
   $location,
-  $sce,
-  $sanitize
   calculateTotal
 ) ->
 
@@ -37,11 +35,7 @@ angular.module('bag.controllers.recipe_card', [])
 
   # format the name of a list
   # shrink down the text size when the name is too long
-  $scope.format_name = (n) ->
-    if window.innerWidth > 200 + 10 * n.length
-      n
-    else
-      $sce.trustAsHtml '<span style=\'font-size: 75%;\'>' + $sanitize(n) + '</span>'
+  $scope.format_name = (n) -> n
 
   ###
   # Intializers
