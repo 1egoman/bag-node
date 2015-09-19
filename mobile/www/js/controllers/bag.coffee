@@ -347,3 +347,4 @@ angular.module('bag.controllers.tab_bag', [])
   $scope.start_index = 0
   $scope.add_items_done = false
   $scope.amount_in_page = 25
+  $scope.host = window.host

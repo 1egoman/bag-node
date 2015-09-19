@@ -35,13 +35,13 @@
 
       <!-- show the matches -->
       <a
-        class="item item-icon-left"
+        class="item item-avatar"
         collection-repeat="item in add_items track by $index"
         item-height="55px"
         item-width="100%"
         ng-click="add_item_to_bag(item)"
       >
-        <i class="icon ion-ios-plus-outline"></i>
+        <img src="{{item.image || host+'/icon/'+item.name}}" style="top: 8px;" />
         <p>
           {{item.name}}
           <span class="pull-right">{{get_lowest_price(item) | currency}}</span>

@@ -887,7 +887,8 @@ angular.module('bag.controllers.tab_bag', []).controller('BagsCtrl', function($s
   $scope.add_items = [];
   $scope.start_index = 0;
   $scope.add_items_done = false;
-  return $scope.amount_in_page = 25;
+  $scope.amount_in_page = 25;
+  return $scope.host = window.host;
 });
 
 angular.module('bag.controllers.item_info', []).controller('ItemInfoCtrl', function($scope, socket, $stateParams, $state, AllItems, $ionicHistory, $ionicPopup, user, $ionicLoading, calculateTotal, stores, storePicker, Bag, $cordovaDialogs) {
