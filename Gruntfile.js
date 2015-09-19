@@ -114,6 +114,16 @@ module.exports = function (grunt) {
           'test/dist/**/spec_helper.js',
         ],
       },
+      payments: {
+        src: [
+          // add chai and sinon globally
+          'test/support/globals.js',
+
+          // tests
+          'test/dist/**/payments.spec.js',
+          'test/dist/**/spec_helper.js',
+        ],
+      },
     },
     // coverage: {
     //   default: {
@@ -190,6 +200,11 @@ module.exports = function (grunt) {
     'clean',
     'coffee',
     'simplemocha:backend',
+  ]);
+  grunt.registerTask('test:payments', [
+    'clean',
+    'coffee',
+    'simplemocha:payments',
   ]);
 
   grunt.registerTask('coverage', [
