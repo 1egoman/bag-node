@@ -4425,7 +4425,7 @@ a.thumbnail.active {
   padding-left: 0;
   list-style: none; }
 
-.list-group {
+.list-group, .autocomplete-menu {
   margin-bottom: 20px;
   padding-left: 0; }
 
@@ -4593,28 +4593,32 @@ a.list-group-item-danger {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px; }
 
-.panel > .list-group, .list.recipe > .list-group, .card > .list-group,
-.panel > .panel-collapse > .list-group, .list.recipe > .panel-collapse > .list-group, .card > .panel-collapse > .list-group {
+.panel > .list-group, .list.recipe > .list-group, .card > .list-group, .panel > .autocomplete-menu, .list.recipe > .autocomplete-menu, .card > .autocomplete-menu,
+.panel > .panel-collapse > .list-group, .list.recipe > .panel-collapse > .list-group, .card > .panel-collapse > .list-group,
+.panel > .panel-collapse > .autocomplete-menu, .list.recipe > .panel-collapse > .autocomplete-menu, .card > .panel-collapse > .autocomplete-menu {
   margin-bottom: 0; }
-  .panel > .list-group .list-group-item, .list.recipe > .list-group .list-group-item, .card > .list-group .list-group-item,
-  .panel > .panel-collapse > .list-group .list-group-item, .list.recipe > .panel-collapse > .list-group .list-group-item, .card > .panel-collapse > .list-group .list-group-item {
+  .panel > .list-group .list-group-item, .list.recipe > .list-group .list-group-item, .card > .list-group .list-group-item, .panel > .autocomplete-menu .list-group-item, .list.recipe > .autocomplete-menu .list-group-item, .card > .autocomplete-menu .list-group-item,
+  .panel > .panel-collapse > .list-group .list-group-item, .list.recipe > .panel-collapse > .list-group .list-group-item, .card > .panel-collapse > .list-group .list-group-item,
+  .panel > .panel-collapse > .autocomplete-menu .list-group-item, .list.recipe > .panel-collapse > .autocomplete-menu .list-group-item, .card > .panel-collapse > .autocomplete-menu .list-group-item {
     border-width: 1px 0;
     border-radius: 0; }
-  .panel > .list-group:first-child .list-group-item:first-child, .list.recipe > .list-group:first-child .list-group-item:first-child, .card > .list-group:first-child .list-group-item:first-child,
-  .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child, .list.recipe > .panel-collapse > .list-group:first-child .list-group-item:first-child, .card > .panel-collapse > .list-group:first-child .list-group-item:first-child {
+  .panel > .list-group:first-child .list-group-item:first-child, .list.recipe > .list-group:first-child .list-group-item:first-child, .card > .list-group:first-child .list-group-item:first-child, .panel > .autocomplete-menu:first-child .list-group-item:first-child, .list.recipe > .autocomplete-menu:first-child .list-group-item:first-child, .card > .autocomplete-menu:first-child .list-group-item:first-child,
+  .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child, .list.recipe > .panel-collapse > .list-group:first-child .list-group-item:first-child, .card > .panel-collapse > .list-group:first-child .list-group-item:first-child,
+  .panel > .panel-collapse > .autocomplete-menu:first-child .list-group-item:first-child, .list.recipe > .panel-collapse > .autocomplete-menu:first-child .list-group-item:first-child, .card > .panel-collapse > .autocomplete-menu:first-child .list-group-item:first-child {
     border-top: 0;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px; }
-  .panel > .list-group:last-child .list-group-item:last-child, .list.recipe > .list-group:last-child .list-group-item:last-child, .card > .list-group:last-child .list-group-item:last-child,
-  .panel > .panel-collapse > .list-group:last-child .list-group-item:last-child, .list.recipe > .panel-collapse > .list-group:last-child .list-group-item:last-child, .card > .panel-collapse > .list-group:last-child .list-group-item:last-child {
+  .panel > .list-group:last-child .list-group-item:last-child, .list.recipe > .list-group:last-child .list-group-item:last-child, .card > .list-group:last-child .list-group-item:last-child, .panel > .autocomplete-menu:last-child .list-group-item:last-child, .list.recipe > .autocomplete-menu:last-child .list-group-item:last-child, .card > .autocomplete-menu:last-child .list-group-item:last-child,
+  .panel > .panel-collapse > .list-group:last-child .list-group-item:last-child, .list.recipe > .panel-collapse > .list-group:last-child .list-group-item:last-child, .card > .panel-collapse > .list-group:last-child .list-group-item:last-child,
+  .panel > .panel-collapse > .autocomplete-menu:last-child .list-group-item:last-child, .list.recipe > .panel-collapse > .autocomplete-menu:last-child .list-group-item:last-child, .card > .panel-collapse > .autocomplete-menu:last-child .list-group-item:last-child {
     border-bottom: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px; }
 
-.panel-heading + .list-group .list-group-item:first-child, .list.recipe .item-header + .list-group .list-group-item:first-child, .card .item-header + .list-group .list-group-item:first-child {
+.panel-heading + .list-group .list-group-item:first-child, .list.recipe .item-header + .list-group .list-group-item:first-child, .card .item-header + .list-group .list-group-item:first-child, .panel-heading + .autocomplete-menu .list-group-item:first-child, .list.recipe .item-header + .autocomplete-menu .list-group-item:first-child, .card .item-header + .autocomplete-menu .list-group-item:first-child {
   border-top-width: 0; }
 
-.list-group + .panel-footer {
+.list-group + .panel-footer, .autocomplete-menu + .panel-footer {
   border-top-width: 0; }
 
 .panel > .table, .list.recipe > .table, .card > .table,
@@ -4767,7 +4771,12 @@ a.list-group-item-danger {
     .panel-group .list.recipe .item-header + .panel-collapse > .list-group, .list.recipe
     .panel-group .item-header + .panel-collapse > .list-group,
     .panel-group .card .item-header + .panel-collapse > .list-group, .card
-    .panel-group .item-header + .panel-collapse > .list-group {
+    .panel-group .item-header + .panel-collapse > .list-group,
+    .panel-group .panel-heading + .panel-collapse > .autocomplete-menu,
+    .panel-group .list.recipe .item-header + .panel-collapse > .autocomplete-menu, .list.recipe
+    .panel-group .item-header + .panel-collapse > .autocomplete-menu,
+    .panel-group .card .item-header + .panel-collapse > .autocomplete-menu, .card
+    .panel-group .item-header + .panel-collapse > .autocomplete-menu {
       border-top: 1px solid #ddd; }
   .panel-group .panel-footer {
     border-top: 0; }
@@ -5712,6 +5721,16 @@ button.close {
     display: block; }
     .card.bag-list .button:before {
       font-size: 72px; }
+
+.autocomplete-menu {
+  position: absolute;
+  z-index: 999999999999;
+  cursor: pointer;
+  min-width: 50%; }
+  .autocomplete-menu li {
+    height: 64px; }
+    .autocomplete-menu li h3 {
+      margin-top: 10px; }
 
 body {
   background: #efefef; }

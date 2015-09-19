@@ -1,38 +1,32 @@
-<!-- plus for adding an item or recipe to the bag -->
+
+<!-- add item to bag -->
+<input
+  type="text"
+  placeholder="Search for a new item"
+  ng-model="add_search"
+  ng-change="on_search_change(add_search)"
+  class="form-control"
+/>
+
+<!-- new items to be added to the bag -->
+<div class="autocomplete-menu" ng-if="add_search.length">
+
+  <!-- show the matches -->
+  <li
+    class="list-group-item"
+    ng-repeat="item in add_items"
+    ng-click="add_item_to_bag(item)"
+  >
+    <img src="{{item.image || host+'/icon/'+item.name}}" style="width:
+    50px; max-height: 50px;" class="pull-left" />
+
+    <h3>{{item.name}}</h3>
+  </a>
+
+</div>
 
 
-    <label class="item-input-wrapper">
-      <i class="icon ion-search placeholder-icon"></i>
-      <input
-        type="text"
-        placeholder="Search for a new item"
-        style="background: transparent;"
-        ng-model="add_search"
-        ng-change="on_search_change(add_search)"
-      />
-    </label>
-
-    <div class="list-group" ng-if="add_search.length">
-
-      <!-- show the matches -->
-      <li
-        class="list-group-item"
-        ng-repeat="item in add_items"
-        ng-click="add_item_to_bag(item)"
-        style="height: 64px;"
-      >
-        <img src="{{item.image || host+'/icon/'+item.name}}" style="width:
-        50px; max-height: 50px;" class="pull-left" />
-        {{item.name}}
-
-        <button ng-click="add_item_to_bag(item)">
-          Add
-        </button>
-      </a>
-
-    </div>
-
-
+<br/>
 
   <!-- content -->
   <div class="container">
@@ -43,10 +37,6 @@
 
         <!-- Nothing in bag? -->
         <div class="grayed item arrow-container" ng-if="bag && get_all_content(bag).length === 0">
-
-          <img src="img/arrow_filter.png" class="arrow arrow-filter" />
-          <img src="img/arrow_add.png" class="arrow arrow-add" />
-
           <span class="arrow arrow-desc">
             <h2>Your bag is empty</h2>
             <h4>And Lonely. You should add something.</h4>
