@@ -1,5 +1,5 @@
 angular.module "bag.controller.bag_ctrl", []
 
-.controller "BagCtrl", ($scope) ->
-
-  $scope.a = "123"
+.controller "BagCtrl", ($scope, Bag, socket) ->
+  Bag.index().then (data) ->
+    console.log data
