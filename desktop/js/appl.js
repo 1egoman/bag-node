@@ -17,14 +17,10 @@
             controller: 'ItemInfoCtrl'
           }
         }
-      }).state('tab.picks', {
+      }).state('picks', {
         url: '/picks',
-        views: {
-          main: {
-            templateUrl: 'templates/tab-picks.html',
-            controller: 'PicksCtrl'
-          }
-        }
+        templateUrl: 'templates/tab-picks.html',
+        controller: 'PicksCtrl'
       }).state('tab.recipes', {
         url: '/recipes',
         views: {
@@ -902,7 +898,7 @@
 }).call(this);
 
 (function() {
-  angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function($scope, $ionicModal, persistant, $state, $ionicPopup, socket) {
+  angular.module('bag.controllers.tab_picks', []).controller('PicksCtrl', function($scope, persistant, $state, socket) {
     var load_picks;
     load_picks = function() {
       socket.emit("pick:index");
@@ -918,9 +914,6 @@
     load_picks();
     $scope.do_refresh = function() {
       return load_picks();
-    };
-    $scope.to_user_recipes = function() {
-      return $state.go("tab.recipes");
     };
     $scope.more_info = function(item) {
       return $state.go("tab.recipeinfo", {

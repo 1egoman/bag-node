@@ -59,12 +59,10 @@ angular.module 'bag', [
 
 
     # user picks tab
-    .state 'tab.picks',
+    .state 'picks',
       url: '/picks'
-      views:
-        main:
-          templateUrl: 'templates/tab-picks.html'
-          controller: 'PicksCtrl'
+      templateUrl: 'templates/tab-picks.html'
+      controller: 'PicksCtrl'
 
 
     # user recipes tab

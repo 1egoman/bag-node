@@ -1,22 +1,11 @@
 angular.module('bag.controllers.tab_picks', [])
   
 .controller 'PicksCtrl', (
-  $scope,
-  $ionicModal,
-  persistant,
-  $state,
-  $ionicPopup
+  $scope
+  persistant
+  $state
   socket
 ) ->
-  # With the new view caching in Ionic, Controllers are only called
-  # when they are recreated or on app start, instead of every page change.
-  # To listen for when this page is active (for example, to refresh data),
-  # listen for the $ionicView.enter event:
-  #
-  #$scope.$on('$ionicView.enter', function(e) {
-  #});
-  #
- 
 
   load_picks = ->
     socket.emit "pick:index"
@@ -27,9 +16,6 @@ angular.module('bag.controllers.tab_picks', [])
   load_picks()
 
   $scope.do_refresh = -> load_picks()
-
-  # go to "my recipes" view
-  $scope.to_user_recipes = -> $state.go "tab.recipes"
 
   # more info for an item
   $scope.more_info = (item) ->
