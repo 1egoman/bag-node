@@ -1,0 +1,84 @@
+<ion-view view-title="{{title || 'Bag Setup'}}">
+  <ion-content class="padding">
+
+    <!-- name, and other personal details -->
+    <div ng-if="step === 'welcome'">
+      <br/>
+      <img src="/img/certificate.svg" class="foodstuff-recipe-icon" />
+      <p>We'd like to know your name. No, not that thing on your birth
+      certificate, we only care about your nickname.
+      </p>
+      <br/>
+      <label class="item item-input">
+        <input type="text" placeholder="What would you like us to call you?"
+        ng-model="user.realname" />
+      </label>
+
+      <!-- next button -->
+      <button 
+        class="button button-block button-positive"
+        ng-click="to_step('userdetails')"
+        ng-disabled="!user.realname.length"
+      >Next</button>
+    </div>
+
+    <!-- username and password -->
+    <div ng-if="step === 'userdetails'">
+      <p>
+        We'll also need some user information.
+      </p>
+      <label class="item item-input">
+        <input type="text" placeholder="Username" ng-model="user.name"
+        autocomplete="off" autocapitalize="off"
+        ng-change="check_user_unique(user.name)" />
+        <span class="icon ion-checkmark balanced" ng-show="username_clean"></span>
+        <span class="icon ion-alert energized" ng-show="!username_clean &&
+        user.name.length > 0" title="Username isn't unique" ></span>
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Password" ng-model="user.password" />
+      </label>
+
+      <!-- next button -->
+      <button
+        class="button button-block button-positive"
+        ng-click="to_step('email')"
+        ng-disabled="!( user.name.length > 0 && user.password.length > 0 &&
+        username_clean )"
+      >Next</button>
+    </div>
+
+
+    <!-- enter email -->
+    <div ng-if="step === 'email'">
+      <br/>
+      <img src="/img/email_at.svg" class="foodstuff-recipe-icon" style="height: 128px;" />
+      <p>Oh, and we'll need your email too. Don't worry, we'll only use it for
+      communication to you and will never send you spam.</p>
+      <br/>
+      <label class="item item-input">
+        <input type="text" placeholder="Email Address" ng-model="user.email" />
+      </label>
+
+      <!-- next button -->
+      <button 
+        class="button button-block button-positive"
+        ng-click="to_step('createaccount')"
+      >Next</button>
+    </div>
+
+
+
+
+    <div ng-if="step === 'createaccount'">
+      <p>Does everything look ok? If so, let's create your account!</p>
+      <button 
+        class="button button-block button-positive"
+        ng-click="create_account(user)"
+      >Create account</button>
+
+      <pre style="margin-top: 100px;">{{error_logs}}</pre>
+    </div>
+
+  </ion-content>
+</ion-view>

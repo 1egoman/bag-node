@@ -1,0 +1,61 @@
+<!-- add new bag -->
+<ion-modal-view>
+
+  <ion-header-bar class="bar-new-item">
+    <div class="title title-center header-item">Add New</div>
+
+    <label class="item-input-wrapper">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input
+        type="text"
+        placeholder="Search for a new item"
+        style="background: transparent;"
+        ng-model="add_search"
+        ng-change="on_search_change(add_search)"
+      />
+      {{add_search}}
+    </label>
+
+    <div class="buttons buttons-right">
+      <span class="right-buttons">
+        <button ng-click="close_add_modal()" class="button button-icon icon
+          ion-close-round activated"></button>
+      </span>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+    <!-- waiting message -->
+    <div class="item" ng-if="!add_items.length">
+      <h2>Give us a sec</h2>
+      <h4>We're loading all of your favorites...</h4>
+    </div>
+
+    <div class="list">
+
+      <!-- show the matches -->
+      <a
+        class="item item-avatar"
+        collection-repeat="item in add_items track by $index"
+        item-height="55px"
+        item-width="100%"
+        ng-click="add_item_to_bag(item)"
+      >
+        <img src="{{item.image || host+'/icon/'+item.name}}" style="top: 8px;" />
+        <p>
+          {{item.name}}
+          <span class="pull-right">{{get_lowest_price(item) | currency}}</span>
+        </p>
+      </a>
+
+      <ion-infinite-scroll
+        ng-if="!add_items_done"
+        on-infinite="on_load_more_add_items()"
+        distance="10%">
+      </ion-infinite-scroll>
+
+
+    </div>
+  </ion-content>
+
+</ion-modal-view>

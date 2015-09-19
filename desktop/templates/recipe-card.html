@@ -1,0 +1,63 @@
+<div class="card recipe-card" ng-class="{private: item.private}">
+  <ion-item ng-controller="RecipeCtrl" class="item-icon-right">
+
+    <!-- recipe header -->
+    <div class="item-avatar" style="padding-left: 4px;">
+      <h2 ng-click="moreInfo(recipe)">
+        {{recipe.name}}
+        <i class="pull-right icon ion-chevron-right icon-accessory"></i>
+      </h2>
+      <p>
+        {{recipe.tags.join(', ')}}
+
+
+        <!-- price for the entire recipe -->
+        <span class="pull-right" ng-show="recipe.quantity && calculate_total(recipe) !== null">
+
+          <!-- quantity box -->
+          <span ng-hide="sortOpts.no_quantity">
+            <span>{{recipe.quantity}}</span>
+            @&nbsp;
+          </span>
+          <span>{{calculate_total(recipe) | currency}}</span>
+        </span>
+
+      </p>
+    </div>
+
+
+    <!-- a recipe card -->
+    <div class="list-fluid">
+
+
+      <!-- all items within this recipe -->
+      <li href="#" class="item" ng-class="{'item-checkbox':
+        sortOpts.checks, 'strike-item': item.checked}" ng-repeat="item in get_all_content(recipe)">
+
+        <!-- Check off the item -->
+        <label class="checkbox" ng-if="sortOpts.checks && change">
+          <input type="checkbox" ng-model="item.checked"
+          ng-change="change(recipe, item)">
+        </label>
+
+        <!-- the title -->
+        <span class="title">
+          <span ng-bind-html="format_name(item.name)"></span>
+
+          <!-- rightmost icons -->
+          <span class="pull-right" style="margin-right: -16px;">
+          {{ (item.store && item.stores[item.store].price || item.price) ||
+          calculate_total(item) | currency}}
+          </span>
+        </span>
+      </li>
+    </div>
+
+
+      <!-- delete -->
+      <ion-option-button class="button-assertive" ng-click="deleteItem(recipe)" ng-if="!sortOpts.no_delete">
+        Delete
+      </ion-option-button>
+
+  </ion-item>
+</div>

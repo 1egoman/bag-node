@@ -1,0 +1,99 @@
+<ion-view view-title="{{view_title}}">
+
+  <!-- display clean list on left -->
+  <ion-nav-buttons side="left">
+
+    <button 
+      ng-click="to_list_mode()"
+      class="button button-icon icon ion-funnel"
+      >
+    </button>
+
+  </ion-nav-buttons>
+
+  <!-- add and search are on the right -->
+  <ion-nav-buttons side="right">
+
+    <!-- search for searching through the bag -->
+    <button 
+      ng-click="filter_bag_contents()" 
+      class="button button-icon icon ion-search"
+      >
+    </button>
+
+    <!-- plus for adding an item or recipe to the bag -->
+    <button 
+      ng-click="open_add_modal()" 
+      class="button button-icon icon ion-plus-round"
+      >
+    </button>
+
+  </ion-nav-buttons>
+
+  <!-- content -->
+  <ion-content>
+
+  <ion-refresher
+    pulling-text="Pull to reload bag..."
+    on-refresh="do_refresh()">
+  </ion-refresher>
+
+        <!-- wait for the stuff to come in -->
+        <loading-spinner complete="bag"></loading-spinner>
+
+        <!-- Nothing in bag? -->
+        <div class="grayed item arrow-container" ng-if="bag && get_all_content(bag).length === 0">
+
+          <img src="img/arrow_filter.png" class="arrow arrow-filter" />
+          <img src="img/arrow_add.png" class="arrow arrow-add" />
+
+          <span class="arrow arrow-desc">
+            <h2>Your bag is empty</h2>
+            <h4>And Lonely. You should add something.</h4>
+          </span>
+        </div>
+
+
+        <!-- show a combined list of recipes and foodstuffs -->
+        <ion-list ng-if="get_all_content(bag).length !== 0">
+
+          <div ng-repeat="(section, items) in (
+            filter_open ? 
+            {'Matching Results': filtered_items} :
+            sorted_bag
+          )">
+            <div class="item item-divider">
+              {{section || 'Default'}}
+              <span class="section-total pull-right">
+                {{calculate_total_section(items) | currency}}
+              </span>
+            </div>
+            <div ng-repeat="item in items">
+
+              <!-- if a recipe -->
+              <recipe-card
+                recipe="item"
+                ng-if="item.contents"
+                change="update_bag"
+                delete-item="delete_item(item)"
+                more-info="more_info(item)"
+                sort-opts="sort_opts"
+              ></recipe-card>
+
+              <!-- if a foodstuff -->
+              <checkable-item
+                item="item" 
+                change="update_bag"
+                ng-if="!(item.contents || item.contentsLists)"
+                delete-item="delete_item(item)"
+                more-info="more_info(item)"
+                sort-opts="sort_opts"
+              ></checkable-item>
+            </div>
+          </div>
+        </ion-list>
+    <br/>
+
+
+  </ion-content>
+</ion-view>
