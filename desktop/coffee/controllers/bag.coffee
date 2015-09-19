@@ -62,7 +62,8 @@ angular.module('bag.controllers.tab_bag', [])
   #
   # user wantes to add a new item
   $scope.open_add_modal = ->
-    $scope.modal.show()
+    # $scope.modal.show()
+    $state.go ""
 
   # infinte scroll handler to add more items to the list
   # this is also called right away and preloads the list at first
@@ -78,14 +79,6 @@ angular.module('bag.controllers.tab_bag', [])
       if items.length < $scope.amount_in_page
         $scope.add_items_done = true
       $scope.$broadcast 'scroll.infiniteScrollComplete'
-
-  # close the add modal
-  $scope.close_add_modal = ->
-    $scope.modal.hide()
-
-  # cleanup the modal when we're done with it
-  $scope.$on '$destroy', ->
-    $scope.modal.remove()
 
   # add a new item to the bag
   $scope.add_item_to_bag = (item) ->
@@ -116,7 +109,7 @@ angular.module('bag.controllers.tab_bag', [])
 
     # update everything!
     $scope.update_bag()
-    $scope.close_add_modal()
+    $scope.add_search = ''
 
   # search for a new item
   $scope.on_search_change = (txt) -> socket.emit "item:search", item: txt
@@ -341,3 +334,4 @@ angular.module('bag.controllers.tab_bag', [])
   $scope.add_items_done = false
   $scope.amount_in_page = 25
   $scope.host = window.host
+  $scope.add_search = ''

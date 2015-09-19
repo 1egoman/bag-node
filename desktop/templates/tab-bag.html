@@ -1,8 +1,37 @@
 <!-- plus for adding an item or recipe to the bag -->
-<button 
-  ng-click="open_add_modal()" 
-  class="button button-icon icon ion-plus-round"
->add</button>
+
+
+    <label class="item-input-wrapper">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input
+        type="text"
+        placeholder="Search for a new item"
+        style="background: transparent;"
+        ng-model="add_search"
+        ng-change="on_search_change(add_search)"
+      />
+    </label>
+
+    <div class="list-group" ng-if="add_search.length">
+
+      <!-- show the matches -->
+      <li
+        class="list-group-item"
+        ng-repeat="item in add_items"
+        ng-click="add_item_to_bag(item)"
+        style="height: 64px;"
+      >
+        <img src="{{item.image || host+'/icon/'+item.name}}" style="width:
+        50px; max-height: 50px;" class="pull-left" />
+        {{item.name}}
+
+        <button ng-click="add_item_to_bag(item)">
+          Add
+        </button>
+      </a>
+
+    </div>
+
 
 
   <!-- content -->

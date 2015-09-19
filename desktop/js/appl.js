@@ -274,7 +274,7 @@
      * Create new item
      */
     $scope.open_add_modal = function() {
-      return $scope.modal.show();
+      return $state.go("");
     };
     $scope.on_load_more_add_items = function(page_size) {
       if ($scope.add_items_done) {
@@ -289,12 +289,6 @@
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       });
     };
-    $scope.close_add_modal = function() {
-      return $scope.modal.hide();
-    };
-    $scope.$on('$destroy', function() {
-      return $scope.modal.remove();
-    });
     $scope.add_item_to_bag = function(item) {
       var item_in_bag;
       item.quantity = 1;
@@ -312,7 +306,7 @@
         $scope.bag.contents.push(item);
       }
       $scope.update_bag();
-      return $scope.close_add_modal();
+      return $scope.add_search = '';
     };
     $scope.on_search_change = function(txt) {
       return socket.emit("item:search", {
@@ -515,7 +509,8 @@
     $scope.start_index = 0;
     $scope.add_items_done = false;
     $scope.amount_in_page = 25;
-    return $scope.host = window.host;
+    $scope.host = window.host;
+    return $scope.add_search = '';
   });
 
 }).call(this);
