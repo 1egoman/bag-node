@@ -300,6 +300,7 @@ exports.checkout_complete = (req, res) ->
                   if err
                     res.send "Couldn't save user: #{err}"
                   else
+                    res.test_get_customer_id customer.id if res.test_get_customer_id
                     # wait for the charge to go through...
                     pending_charges[customer.id] =
                       req: req
