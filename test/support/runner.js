@@ -8,7 +8,12 @@ var Mocha = require('mocha');
 var mocha = new Mocha({ reporter: 'spec', ui: 'bdd'});
 
 function run(cb) {
-  var files = grunt.file.expand(__dirname + '/../dist/**/*.spec.js');
+  console.log(1, process.env.RUN)
+  if (process.env.RUN) {
+    files = grunt.file.expand(__dirname + '/../dist/**/'+process.env.RUN+'.spec.js');
+  } else {
+    files = grunt.file.expand(__dirname + '/../dist/**/*.spec.js');
+  }
   console.log(files)
   files.forEach(function (file) {
     mocha.addFile(file);

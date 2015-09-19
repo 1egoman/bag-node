@@ -10,8 +10,6 @@ USER_PASS = process.env.USER_PASS or "bacon"
 describe "payments testing", ->
 
   describe "page protection", ->
-
-
     it "does let in authorized users", (done) ->
       req =
         session: user:
@@ -42,7 +40,6 @@ describe "payments testing", ->
 
 
   describe "login a user", ->
-
     it "does let authorized users login", (done) ->
       req =
         session: {}
@@ -77,4 +74,8 @@ describe "payments testing", ->
           data.should.contain "Error"
           done()
 
+  describe "login page", ->
 
+    it "login page renders", ->
+      Account.login_get {}, send: (data) ->
+        data.should.contain "<html>"
