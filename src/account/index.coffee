@@ -59,8 +59,11 @@ format_page = (data) ->
 exports.protect = (req, res, next) ->
   if req.session.user
     User.findOne _id: req.session.user._id, (err, user) ->
-      req.session.user = user if not err
-      next()
+      if err
+        res.redirect "/login?redirect=#{req.url}"
+      else
+        req.session.user = user
+        next()
   else
     res.redirect "/login?redirect=#{req.url}"
 

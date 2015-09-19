@@ -24,9 +24,20 @@ describe "payments testing", ->
         # we're good here
         done()
 
+    it "doesn't let in empty users", (done) ->
+      req = session: {}
+
+      Account.protect req, redirect: (url) ->
+        # redirect on failure
+        url.should.not.be.empty
+        url.should.contain "/login?"
+        done()
+      , ->
+        # next callback
+        "unauthorized user let in".length.should.equal 0
 
     it "doesn't let in unauthorized users", (done) ->
-      req = session: {}
+      req = session: user: _id: "bogus"
 
       Account.protect req, redirect: (url) ->
         # redirect on failure
@@ -74,8 +85,8 @@ describe "payments testing", ->
           data.should.contain "Error"
           done()
 
-  describe "login page", ->
-
     it "login page renders", ->
       Account.login_get {}, send: (data) ->
         data.should.contain "<html>"
+
+
