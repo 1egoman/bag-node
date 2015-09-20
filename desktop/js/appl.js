@@ -53,6 +53,9 @@
             controller: 'StorePickerCtrl'
           }
         }
+      }).state('add_recipe', {
+        url: '/add_recipe',
+        templateUrl: 'templates/modal-add-recipe.html'
       });
       return $urlRouterProvider.otherwise('/bag');
     } else {
@@ -93,7 +96,7 @@
 
   auth_module = angular.module('bag.authorization', []);
 
-  if (localStorage.user) {
+  if (localStorage.user && localStorage.user.length) {
     ref = JSON.parse(localStorage.user);
     user_id = ref.id;
     user_token = ref.token;
@@ -215,7 +218,6 @@
         });
         return setTimeout(function() {
           location.replace('#/bag');
-          $ionicLoading.hide();
           return location.reload();
         }, 2000);
       }
@@ -769,7 +771,7 @@
 }).call(this);
 
 (function() {
-  angular.module('bag.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, AllItems, searchItem, $q, getTagsForQuery, $timeout) {
+  angular.module('bag.controllers.new_recipe', []).controller('NewRecipeCtrl', function($scope, socket, AllItems, $q, getTagsForQuery, $timeout) {
     $scope.predefined_tags = getTagsForQuery;
     $scope.create_recipe = function(name, tags, desc) {
       var r_contents, r_contentsLists, recipe;

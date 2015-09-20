@@ -21,7 +21,6 @@ angular.module 'bag.controllers.login', []
       # to get the page to re "pull in" all the stuff, reload
       setTimeout ->
         location.replace('#/bag')
-        $ionicLoading.hide()
         location.reload()
       , 2000
 

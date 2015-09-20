@@ -8,7 +8,7 @@ window.host = "http://api.getbag.io"
 # window.host = "http://bagd.herokuapp.com"
 
 auth_module = angular.module 'bag.authorization', []
-if localStorage.user
+if localStorage.user and localStorage.user.length
   # user_id = '55a84d00e4b06e29cb4eb960'
   # user_token='my_token'
   ref = JSON.parse localStorage.user
@@ -54,7 +54,6 @@ else
 # this is needed when doing client <-> server stuff
 # strip $hashkey
 window.strip_$$ = (a) -> angular.fromJson angular.toJson(a)
-
 
 angular.module 'bag.controllers', [
   'btford.socket-io'

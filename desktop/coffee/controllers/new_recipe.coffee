@@ -4,7 +4,7 @@ angular.module 'bag.controllers.new_recipe', []
   $scope,
   socket,
   AllItems,
-  searchItem,
+  # searchItem,
   $q
   getTagsForQuery
   $timeout

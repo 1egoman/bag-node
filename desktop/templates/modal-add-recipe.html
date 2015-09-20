@@ -1,24 +1,13 @@
-<!-- add new bag -->
 <ion-modal-view ng-controller="NewRecipeCtrl">
-
-  <ion-header-bar class="bar-balanced">
-    <div class="title title-center header-item">Add New Recipe</div>
-    <div class="buttons buttons-right">
-      <span class="right-buttons">
-        <button ng-click="close_add_recipe_modal()" class="button button-icon icon
-          ion-close-round activated"></button>
-      </span>
-    </div>
-  </ion-header-bar>
-
-  <!-- add the recipe -->
   <ion-content ng-hide="confirmed">
     <div class="list">
 
       <!-- basic info -->
       <label class="item item-input">
-        <input type="text" placeholder="Name" ng-model="new_recipe_name"/>
+        <input type="text" placeholder="Name" ng-model="new_recipe_name"
+        class="form-control" />
       </label>
+      <br/>
 
       <label class="item item-input">
         <tags-input ng-model="new_recipe_tags" placeholder="Tags">
@@ -31,7 +20,7 @@
           placeholder="Description"
           style="min-height: 100px;"
           ng-model="new_recipe_desc"
-          class="no-resize"></textarea>
+          class="form-control"></textarea>
       </label>
 
       <!-- all items within the recipe -->
@@ -55,9 +44,10 @@
           </ion-option-button>
         </ion-item>
       </div>
+      <br/>
 
       <!-- Add new foodstuff to the recipe -->
-      <ion-item class="item-icon-left" ng-click="open_add_item_modal()">
+      <ion-item class="btn btn-primary btn-sm" ng-click="open_add_item_modal()">
         <i class="icon ion-ios-plus-outline"></i>
         New Item
       </ion-item>
