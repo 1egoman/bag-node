@@ -1,4 +1,4 @@
-# bag [![Build Status](https://magnum.travis-ci.com/1egoman/bag.svg?token=8bebsu9MDHeXbvo4UpAX)](http://travis-ci.org/1egoman/bag)
+# Bag [![Build Status](https://magnum.travis-ci.com/1egoman/bag.svg?token=8bebsu9MDHeXbvo4UpAX)](http://travis-ci.org/1egoman/bag)
 
 Manage grocery items with ease! 
 
